@@ -6,19 +6,42 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Double Penis</h1>
-    <div id="verification">
-      <p>Please verify that you've joined our Telegram channel to proceed.</p>
-      <input type="text" id="telegramUsername" placeholder="Enter your Telegram username">
-      <button id="verifyButton">Verify</button>
-      <p id="verificationMessage"></p>
+  <div id="desktop">
+    <div id="taskbar">
+      <div id="start-button">
+        <img src="start-button.png" alt="Start">
+      </div>
+      <div id="taskbar-items">
+        <!-- Taskbar items can be added here -->
+      </div>
+      <div id="system-tray">
+        <!-- System tray icons -->
+      </div>
     </div>
-    <div id="referralSection" style="display: none;">
-      <p>Your referral link:</p>
-      <div class="referral-link">
-        <span id="referralLink">https://knckd.github.io/telegram-dpreferral-frontend/?referralCode=CODE</span>
-        <button id="copyButton">Copy</button>
+    <div id="window" class="window">
+      <div class="window-title-bar">
+        <div class="window-title">Verify Telegram Membership</div>
+        <div class="window-controls">
+          <div class="window-control minimize">_</div>
+          <div class="window-control maximize">☐</div>
+          <div class="window-control close">X</div>
+        </div>
+      </div>
+      <div class="window-content">
+        <h1>Double Penis</h1>
+        <div id="verification">
+          <p>Please verify that you've joined our Telegram channel to proceed.</p>
+          <input type="text" id="telegramUsername" placeholder="Enter your Telegram username">
+          <button id="verifyButton">Verify</button>
+          <p id="verificationMessage"></p>
+        </div>
+        <div id="referralSection" style="display: none;">
+          <p>Your referral link:</p>
+          <div class="referral-link">
+            <input type="text" id="referralLink" readonly>
+            <button id="copyButton">Copy</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
