@@ -1,5 +1,5 @@
-// Replace with your Render backend URL
-const backendUrl = 'https://your-backend-service.onrender.com';
+// Replace with your backend URL
+const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Update this to your actual backend URL
 
 // Check for referral code in URL
 const urlParams = new URLSearchParams(window.location.search);
