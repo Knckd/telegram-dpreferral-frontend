@@ -1,29 +1,120 @@
+/* General styles */
 body {
-  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: "Tahoma", sans-serif;
+  color: black;
+}
+
+#desktop {
+  width: 100vw;
+  height: 100vh;
+  background: url('windows-xp-background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
+}
+
+#taskbar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  background-color: #0C4EA2;
+  display: flex;
+  align-items: center;
+}
+
+#start-button {
+  width: 60px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+#start-button img {
+  width: 50px;
+}
+
+#taskbar-items {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+#system-tray {
+  width: 100px;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 10px;
+}
+
+.window {
+  width: 500px;
+  height: 400px;
+  background-color: #ECE9D8;
+  border: 2px solid #000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.window-title-bar {
+  background-color: #0A246A;
+  color: white;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.window-title {
+  padding-left: 10px;
+}
+
+.window-controls {
+  display: flex;
+}
+
+.window-control {
+  width: 30px;
   text-align: center;
-  background-color: #f2f2f2;
+  cursor: pointer;
 }
 
-.container {
-  margin-top: 50px;
+.window-control:hover {
+  background-color: #FF0000;
 }
 
-input {
-  padding: 10px;
-  width: 200px;
+.window-content {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+input[type="text"] {
+  padding: 5px;
+  width: 300px;
 }
 
 button {
-  padding: 10px 15px;
-  margin-left: 10px;
+  padding: 5px 10px;
+  margin-left: 5px;
+  cursor: pointer;
 }
 
 .referral-link {
   display: flex;
-  justify-content: center;
   align-items: center;
 }
 
-#referralLink {
-  margin-right: 10px;
+.referral-link input {
+  width: 300px;
+}
+
+h1 {
+  text-align: center;
+  color: #0A246A;
 }
