@@ -83,16 +83,5 @@ document.getElementById('copyButton').addEventListener('click', function () {
 
 // Function to start chaotic effects
 function startChaos() {
-  // Example chaotic effect: Change background color randomly every second
-  setInterval(() => {
-    const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-    document.getElementById('window').style.backgroundColor = randomColor;
-  }, 1000);
-
-  // Example chaotic effect: Move the window randomly
-  setInterval(() => {
-    const windowElement = document.getElementById('window');
-    windowElement.style.left = Math.random() * (window.innerWidth - 500) + 'px';
-    windowElement.style.top = Math.random() * (window.innerHeight - 400) + 'px';
-  }, 1500);
+  // ... [Your existing chaotic effects code] ...
 }
