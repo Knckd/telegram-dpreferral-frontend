@@ -32,7 +32,7 @@ document.getElementById('verifyButton').addEventListener('click', async function
       // Display the referral link
       document.getElementById('verification').style.display = 'none';
       document.getElementById('referralSection').style.display = 'block';
-      const referralLink = `https://your-username.github.io/telegram-referral-frontend/?referralCode=${data.referralCode}`;
+      const referralLink = `https://knckd.github.io/telegram-dpreferral-frontend/?referralCode=${data.referralCode}`;
       document.getElementById('referralLink').textContent = referralLink;
 
       // If there's a stored referral code, send it to the backend
