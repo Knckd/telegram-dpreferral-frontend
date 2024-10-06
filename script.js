@@ -1,5 +1,5 @@
 // Replace with your Render backend URL
-const backendUrl = 'https://telegram-dpreferral-backend.onrender.com';
+const backendUrl = 'https://your-backend-service.onrender.com';
 
 // Check for referral code in URL
 const urlParams = new URLSearchParams(window.location.search);
@@ -18,6 +18,9 @@ document.getElementById('verifyButton').addEventListener('click', async function
     return;
   }
 
+  // Disable button to prevent multiple submissions
+  document.getElementById('verifyButton').disabled = true;
+
   // Send verification request to the backend
   try {
     const response = await fetch(`${backendUrl}/api/verify`, {
@@ -33,7 +36,7 @@ document.getElementById('verifyButton').addEventListener('click', async function
       document.getElementById('verification').style.display = 'none';
       document.getElementById('referralSection').style.display = 'block';
       const referralLink = `https://knckd.github.io/telegram-dpreferral-frontend/?referralCode=${data.referralCode}`;
-      document.getElementById('referralLink').textContent = referralLink;
+      document.getElementById('referralLink').value = referralLink;
 
       // If there's a stored referral code, send it to the backend
       const storedReferralCode = localStorage.getItem('referralCode');
@@ -64,11 +67,13 @@ document.getElementById('verifyButton').addEventListener('click', async function
   } catch (error) {
     console.error('Error:', error);
     alert('An error occurred during verification.');
+  } finally {
+    document.getElementById('verifyButton').disabled = false;
   }
 });
 
 document.getElementById('copyButton').addEventListener('click', function () {
-  const referralLink = document.getElementById('referralLink').textContent;
+  const referralLink = document.getElementById('referralLink').value;
   navigator.clipboard.writeText(referralLink).then(() => {
     alert('Referral link copied to clipboard!');
     // Start chaotic effects
@@ -81,14 +86,13 @@ function startChaos() {
   // Example chaotic effect: Change background color randomly every second
   setInterval(() => {
     const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-    document.body.style.backgroundColor = randomColor;
+    document.getElementById('window').style.backgroundColor = randomColor;
   }, 1000);
 
-  // Example chaotic effect: Move the header randomly
+  // Example chaotic effect: Move the window randomly
   setInterval(() => {
-    const h1 = document.querySelector('h1');
-    h1.style.position = 'absolute';
-    h1.style.left = Math.random() * window.innerWidth + 'px';
-    h1.style.top = Math.random() * window.innerHeight + 'px';
-  }, 500);
+    const windowElement = document.getElementById('window');
+    windowElement.style.left = Math.random() * (window.innerWidth - 500) + 'px';
+    windowElement.style.top = Math.random() * (window.innerHeight - 400) + 'px';
+  }, 1500);
 }
