@@ -64,6 +64,7 @@ body {
   transform: translate(-50%, -50%);
   animation: windowOpen 0.5s ease-out;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  z-index: 100;
 }
 
 .window-title-bar {
@@ -179,6 +180,7 @@ h1 {
   position: absolute;
   z-index: 1000;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  animation: chaosWindowMove 1s linear infinite;
 }
 
 .chaos-window .window-title-bar {
@@ -254,6 +256,12 @@ body.no-scroll {
   content: 'X';
   display: block;
   line-height: 20px;
+}
+
+/* Styles for the original window during chaos */
+#window.chaos {
+  z-index: 1000;
+  position: absolute;
 }
 
 /* Responsive adjustments */
