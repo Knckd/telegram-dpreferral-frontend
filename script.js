@@ -86,12 +86,43 @@ document.getElementById('copyButton').addEventListener('click', function () {
   });
 });
 
+// Leaderboard Button Event Listener
+document.getElementById('leaderboardButton').addEventListener('click', function () {
+  openLeaderboard();
+});
+
+// Function to open the leaderboard window
+function openLeaderboard() {
+  const leaderboardWindow = document.getElementById('leaderboardWindow');
+  leaderboardWindow.style.display = 'block';
+  fetchLeaderboard();
+  makeDraggable(leaderboardWindow);
+}
+
+// Function to fetch and display the leaderboard
+function fetchLeaderboard() {
+  fetch(`${backendUrl}/api/leaderboard`)
+    .then(response => response.json())
+    .then(data => {
+      const leaderboardList = document.getElementById('leaderboardList');
+      leaderboardList.innerHTML = ''; // Clear existing list
+      data.forEach(user => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${user.username} - ${user.referralCount} referrals`;
+        leaderboardList.appendChild(listItem);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching leaderboard:', error);
+    });
+}
+
 // Function to start chaotic effects
 function startChaos() {
   let chaosInterval;
   let spawnInterval;
   let chaosWindows = [];
-  let chaosDuration = 100 * 60 * 60; // 100 hours in seconds
+  const chaosDuration = 100 * 60 * 60; // 100 hours in seconds
   let countdownTimer = chaosDuration;
 
   // Play sound effect (if desired)
@@ -110,6 +141,7 @@ function startChaos() {
   const countdownElement = document.getElementById('countdown');
   const countdownTimerElement = document.getElementById('countdownTimer');
   countdownElement.style.display = 'block';
+  document.getElementById('countdown').style.display = 'block';
 
   const countdownInterval = setInterval(() => {
     countdownTimer--;
@@ -133,9 +165,7 @@ function startChaos() {
       <div class="window-title-bar">
         <div class="window-title">Surprise!</div>
         <div class="window-controls">
-          <div class="window-control minimize"></div>
-          <div class="window-control maximize"></div>
-          <div class="window-control close"></div>
+          <div class="window-control close">X</div>
         </div>
       </div>
       <div class="window-content">
@@ -151,7 +181,6 @@ function startChaos() {
     newWindow.style.backgroundColor = getRandomColor();
 
     makeDraggable(newWindow);
-
     moveWindow(newWindow);
   }
 
@@ -196,7 +225,7 @@ function startChaos() {
     chaosInterval = setInterval(() => {
       moveWindow(originalWindow);
       chaosWindows.forEach(window => moveWindow(window));
-    }, 200); // Increased speed of movement
+    }, 200); // Increase speed of movement
 
     spawnInterval = setInterval(spawnNewWindow, 1500); // Faster window spawning
   }, 360000000); // After 100 hours (100 * 60 * 60 * 1000 ms), the chaos gets crazier
@@ -228,10 +257,17 @@ function startChaos() {
     // Hide countdown timer
     countdownElement.style.display = 'none';
 
-    // Display a surprise message or animation
-    alert('The chaos has ended! Thank you for your patience.');
+    // Hide chaos sound if it's playing
+    if (chaosSound) {
+      chaosSound.pause();
+      chaosSound.currentTime = 0;
+    }
 
-    // Optionally, redirect to another page or display additional content
+    // Return to referral copy section
+    document.getElementById('referralSection').scrollIntoView({ behavior: 'smooth' });
+
+    // Display a confirmation message without leaving the screen
+    alert('The chaos has ended! Thank you for your patience.');
   }
 
   // Optional: Allow the user to end the chaos early by pressing a key combination (e.g., Ctrl + Shift + X)
@@ -258,13 +294,65 @@ function makeDraggable(windowElement) {
 
   document.addEventListener('mousemove', function (e) {
     if (isDragging) {
-      windowElement.style.left = (e.clientX - offsetX) + 'px';
-      windowElement.style.top = (e.clientY - offsetY) + 'px';
+      let newX = e.clientX - offsetX;
+      let newY = e.clientY - offsetY;
+
+      // Prevent window from moving outside the viewport
+      newX = Math.max(0, Math.min(newX, window.innerWidth - windowElement.offsetWidth));
+      newY = Math.max(0, Math.min(newY, window.innerHeight - windowElement.offsetHeight - document.getElementById('taskbar').offsetHeight));
+
+      windowElement.style.left = newX + 'px';
+      windowElement.style.top = newY + 'px';
     }
   });
 
   document.addEventListener('mouseup', function () {
-    isDragging = false;
-    windowElement.style.transition = ''; // Restore transition
+    if (isDragging) {
+      isDragging = false;
+      windowElement.style.transition = ''; // Restore transition
+    }
   });
 }
+
+// Function to handle window control actions
+function handleWindowControls() {
+  // Main Window Controls
+  const mainWindow = document.getElementById('window');
+  const minimizeButton = mainWindow.querySelector('.window-control.minimize');
+  const maximizeButton = mainWindow.querySelector('.window-control.maximize');
+  const closeButton = mainWindow.querySelector('.window-control.close');
+
+  minimizeButton.addEventListener('click', () => {
+    mainWindow.style.display = 'none';
+  });
+
+  maximizeButton.addEventListener('click', () => {
+    if (mainWindow.style.width !== '100vw') {
+      mainWindow.style.width = '100vw';
+      mainWindow.style.height = '100vh';
+      mainWindow.style.left = '0';
+      mainWindow.style.top = '0';
+    } else {
+      mainWindow.style.width = '500px';
+      mainWindow.style.height = '400px';
+      mainWindow.style.left = '50%';
+      mainWindow.style.top = '50%';
+      mainWindow.style.transform = 'translate(-50%, -50%)';
+    }
+  });
+
+  closeButton.addEventListener('click', () => {
+    mainWindow.style.display = 'none';
+  });
+
+  // Leaderboard Window Controls
+  const leaderboardWindow = document.getElementById('leaderboardWindow');
+  const leaderboardCloseButton = leaderboardWindow.querySelector('.window-control.close');
+
+  leaderboardCloseButton.addEventListener('click', () => {
+    leaderboardWindow.style.display = 'none';
+  });
+}
+
+// Initialize window controls functionality
+handleWindowControls();
