@@ -1,3 +1,26 @@
+/* Loading bar styles */
+.loading-bar {
+  width: 100%;
+  background-color: #ddd;
+  border: 1px solid #aaa;
+  height: 20px;
+  margin-top: 10px;
+}
+
+.loading-bar .progress {
+  width: 0%;
+  height: 100%;
+  background-color: #4caf50;
+  animation: loading 3s linear forwards;
+}
+
+@keyframes loading {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* ... [Rest of your existing CSS styles] ... */
+
 /* General styles */
 body {
   margin: 0;
