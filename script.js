@@ -91,6 +91,34 @@ function startChaos() {
   let chaosInterval;
   let spawnInterval;
   let chaosWindows = [];
+  let chaosDuration = 15; // Duration of chaos in seconds
+  let countdownTimer = chaosDuration;
+
+  // Play sound effect (if desired)
+  const chaosSound = document.getElementById('chaosSound');
+  if (chaosSound) {
+    chaosSound.play();
+  }
+
+  // Disable scrolling
+  document.body.classList.add('no-scroll');
+
+  // Start animated background
+  document.body.style.animation = 'backgroundChaos 5s infinite';
+
+  // Show countdown timer
+  const countdownElement = document.getElementById('countdown');
+  const countdownTimerElement = document.getElementById('countdownTimer');
+  countdownElement.style.display = 'block';
+
+  const countdownInterval = setInterval(() => {
+    countdownTimer--;
+    countdownTimerElement.textContent = countdownTimer;
+    if (countdownTimer <= 0) {
+      clearInterval(countdownInterval);
+      endChaos();
+    }
+  }, 1000);
 
   // Function to spawn new windows
   function spawnNewWindow() {
@@ -98,7 +126,7 @@ function startChaos() {
     newWindow.classList.add('window', 'chaos-window');
     newWindow.innerHTML = `
       <div class="window-title-bar">
-        <div class="window-title">New Window</div>
+        <div class="window-title">Surprise!</div>
         <div class="window-controls">
           <div class="window-control minimize">_</div>
           <div class="window-control maximize">☐</div>
@@ -106,11 +134,16 @@ function startChaos() {
         </div>
       </div>
       <div class="window-content">
-        <p>Welcome to the chaos!</p>
+        <p>Enjoy the chaos!</p>
       </div>
     `;
     document.body.appendChild(newWindow);
     chaosWindows.push(newWindow);
+
+    // Randomize window size and background color
+    newWindow.style.width = Math.random() * 400 + 200 + 'px';
+    newWindow.style.height = Math.random() * 300 + 150 + 'px';
+    newWindow.style.backgroundColor = getRandomColor();
 
     moveWindow(newWindow);
   }
@@ -118,11 +151,17 @@ function startChaos() {
   // Function to randomly move a window
   function moveWindow(windowElement) {
     windowElement.style.position = 'absolute';
-    const moveSpeed = 200; // Speed of movement
+    windowElement.style.zIndex = 1000;
+    const moveSpeed = Math.random() * 300 + 200; // Random speed between 200ms and 500ms
     const windowMovementInterval = setInterval(() => {
-      windowElement.style.left = Math.random() * (window.innerWidth - 300) + 'px';
-      windowElement.style.top = Math.random() * (window.innerHeight - 200) + 'px';
+      windowElement.style.left = Math.random() * (window.innerWidth - windowElement.offsetWidth) + 'px';
+      windowElement.style.top = Math.random() * (window.innerHeight - windowElement.offsetHeight) + 'px';
     }, moveSpeed);
+  }
+
+  // Function to get a random color
+  function getRandomColor() {
+    return '#' + Math.floor(Math.random() * 16777215).toString(16);
   }
 
   // Move the original window fast
@@ -132,10 +171,10 @@ function startChaos() {
   // Ramp up the craziness by spawning more windows
   chaosInterval = setInterval(() => {
     moveWindow(originalWindow);
-  }, 500); // Speed up the movement
+  }, 300); // Speed up the movement
 
   // Start spawning windows
-  spawnInterval = setInterval(spawnNewWindow, 2000); // New window every 2 seconds
+  spawnInterval = setInterval(spawnNewWindow, 1500); // New window every 1.5 seconds
 
   // Escalating chaos: speed up window movement and spawn more windows faster
   setTimeout(() => {
@@ -145,8 +184,46 @@ function startChaos() {
     chaosInterval = setInterval(() => {
       moveWindow(originalWindow);
       chaosWindows.forEach(window => moveWindow(window));
-    }, 200); // Increase speed of movement
+    }, 100); // Increase speed of movement
 
-    spawnInterval = setInterval(spawnNewWindow, 1000); // Faster window spawning
-  }, 5000); // After 5 seconds, the chaos gets crazier
+    spawnInterval = setInterval(spawnNewWindow, 800); // Faster window spawning
+  }, 8000); // After 8 seconds, the chaos gets crazier
+
+  // Function to end the chaos
+  function endChaos() {
+    // Stop all intervals
+    clearInterval(chaosInterval);
+    clearInterval(spawnInterval);
+
+    // Remove chaos windows
+    chaosWindows.forEach(window => {
+      window.remove();
+    });
+    chaosWindows = [];
+
+    // Stop moving the original window
+    // Optionally reset its position
+    originalWindow.style.position = 'static';
+
+    // Stop animated background
+    document.body.style.animation = '';
+
+    // Enable scrolling
+    document.body.classList.remove('no-scroll');
+
+    // Hide countdown timer
+    countdownElement.style.display = 'none';
+
+    // Display a surprise message or animation
+    alert('The chaos has ended! Thank you for your patience.');
+
+    // Optionally, redirect to another page or display additional content
+  }
+
+  // Optional: Allow the user to end the chaos early by pressing a key combination (e.g., Ctrl + Shift + X)
+  document.addEventListener('keydown', function (event) {
+    if (event.ctrlKey && event.shiftKey && event.key === 'X') {
+      endChaos();
+    }
+  });
 }
