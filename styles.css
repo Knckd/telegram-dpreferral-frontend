@@ -37,6 +37,33 @@ body {
   background-size: cover;
   position: relative;
 }
+.chaos-window {
+  width: 300px;
+  height: 200px;
+  background-color: #f1f1f1;
+  border: 2px solid #000;
+  position: absolute;
+}
+
+.window-title-bar {
+  background-color: #0078d7;
+  color: white;
+  padding: 5px;
+  cursor: move;
+}
+
+.window-title {
+  font-weight: bold;
+  display: inline-block;
+}
+
+.window-controls {
+  float: right;
+}
+
+.window-content {
+  padding: 10px;
+}
 
 #taskbar {
   position: absolute;
