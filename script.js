@@ -11,15 +11,18 @@ if (referralCode) {
 }
 
 document.getElementById('verifyButton').addEventListener('click', async function () {
-  const telegramUsername = document.getElementById('telegramUsername').value.trim();
+  let telegramUsername = document.getElementById('telegramUsername').value.trim();
 
   if (!telegramUsername) {
     alert('Please enter your Telegram username.');
     return;
   }
 
-  // Disable button to prevent multiple submissions
-  document.getElementById('verifyButton').disabled = true;
+  telegramUsername = telegramUsername.toLowerCase();
+
+  // Show loading bar
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('verification').style.display = 'none';
 
   // Send verification request to the backend
   try {
@@ -33,7 +36,7 @@ document.getElementById('verifyButton').addEventListener('click', async function
 
     if (data.success) {
       // Display the referral link
-      document.getElementById('verification').style.display = 'none';
+      document.getElementById('loading').style.display = 'none';
       document.getElementById('referralSection').style.display = 'block';
       const referralLink = `https://knckd.github.io/telegram-dpreferral-frontend/?referralCode=${data.referralCode}`;
       document.getElementById('referralLink').value = referralLink;
@@ -62,13 +65,15 @@ document.getElementById('verifyButton').addEventListener('click', async function
           });
       }
     } else {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('verification').style.display = 'block';
       document.getElementById('verificationMessage').textContent = data.message;
     }
   } catch (error) {
     console.error('Error:', error);
     alert('An error occurred during verification.');
-  } finally {
-    document.getElementById('verifyButton').disabled = false;
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('verification').style.display = 'block';
   }
 });
 
@@ -83,5 +88,16 @@ document.getElementById('copyButton').addEventListener('click', function () {
 
 // Function to start chaotic effects
 function startChaos() {
-  // ... [Your existing chaotic effects code] ...
+  // Example chaotic effect: Change background color randomly every second
+  setInterval(() => {
+    const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+    document.getElementById('window').style.backgroundColor = randomColor;
+  }, 1000);
+
+  // Example chaotic effect: Move the window randomly
+  setInterval(() => {
+    const windowElement = document.getElementById('window');
+    windowElement.style.left = Math.random() * (window.innerWidth - 500) + 'px';
+    windowElement.style.top = Math.random() * (window.innerHeight - 400) + 'px';
+  }, 1500);
 }
