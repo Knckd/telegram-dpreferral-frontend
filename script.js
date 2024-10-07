@@ -150,6 +150,8 @@ function startChaos() {
     newWindow.style.height = Math.random() * 150 + 100 + 'px';
     newWindow.style.backgroundColor = getRandomColor();
 
+    makeDraggable(newWindow);
+
     moveWindow(newWindow);
   }
 
@@ -157,7 +159,7 @@ function startChaos() {
   function moveWindow(windowElement) {
     windowElement.style.position = 'absolute';
     windowElement.style.zIndex = 1000;
-    const moveSpeed = Math.random() * 200 + 100; // Random speed between 100ms and 300ms
+    const moveSpeed = Math.random() * 300 + 200; // Random speed between 200ms and 500ms
 
     const windowMovementInterval = setInterval(() => {
       windowElement.style.left = Math.random() * (window.innerWidth - windowElement.offsetWidth) + 'px';
@@ -173,17 +175,18 @@ function startChaos() {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
   }
 
-  // Move the original window fast
+  // Make the main window draggable
   const originalWindow = document.getElementById('window');
+  makeDraggable(originalWindow);
   moveWindow(originalWindow);
 
   // Ramp up the craziness by spawning more windows
   chaosInterval = setInterval(() => {
     moveWindow(originalWindow);
-  }, 300); // Speed up the movement
+  }, 500); // Adjusted to 500ms for slower movement
 
   // Start spawning windows
-  spawnInterval = setInterval(spawnNewWindow, 1500); // New window every 1.5 seconds
+  spawnInterval = setInterval(spawnNewWindow, 3000); // New window every 3 seconds
 
   // Escalating chaos: speed up window movement and spawn more windows faster
   setTimeout(() => {
@@ -193,10 +196,10 @@ function startChaos() {
     chaosInterval = setInterval(() => {
       moveWindow(originalWindow);
       chaosWindows.forEach(window => moveWindow(window));
-    }, 100); // Increase speed of movement
+    }, 200); // Increased speed of movement
 
-    spawnInterval = setInterval(spawnNewWindow, 800); // Faster window spawning
-  }, 360000000); // After 100 hours (360,000,000 milliseconds), the chaos gets crazier
+    spawnInterval = setInterval(spawnNewWindow, 1500); // Faster window spawning
+  }, 360000000); // After 100 hours (100 * 60 * 60 * 1000 ms), the chaos gets crazier
 
   // Function to end the chaos
   function endChaos() {
@@ -236,5 +239,32 @@ function startChaos() {
     if (event.ctrlKey && event.shiftKey && event.key === 'X') {
       endChaos();
     }
+  });
+}
+
+// Function to make a window draggable
+function makeDraggable(windowElement) {
+  const titleBar = windowElement.querySelector('.window-title-bar');
+  let isDragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  titleBar.addEventListener('mousedown', function (e) {
+    isDragging = true;
+    offsetX = e.clientX - windowElement.offsetLeft;
+    offsetY = e.clientY - windowElement.offsetTop;
+    windowElement.style.transition = 'none'; // Remove transition for smooth dragging
+  });
+
+  document.addEventListener('mousemove', function (e) {
+    if (isDragging) {
+      windowElement.style.left = (e.clientX - offsetX) + 'px';
+      windowElement.style.top = (e.clientY - offsetY) + 'px';
+    }
+  });
+
+  document.addEventListener('mouseup', function () {
+    isDragging = false;
+    windowElement.style.transition = ''; // Restore transition
   });
 }
