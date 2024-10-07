@@ -7,17 +7,21 @@
 </head>
 <body>
   <div id="desktop">
+    <!-- Taskbar -->
     <div id="taskbar">
       <div id="start-button">
         <img src="start-button.png" alt="Start">
       </div>
       <div id="taskbar-items">
-        <!-- Taskbar items can be added here -->
+        <!-- Additional taskbar items can be added here -->
       </div>
       <div id="system-tray">
-        <!-- System tray icons -->
+        <!-- System tray icons can be added here -->
+        <button id="leaderboardButton">Leaderboard</button>
       </div>
     </div>
+
+    <!-- Main Window -->
     <div id="window" class="window">
       <div class="window-title-bar">
         <div class="window-title">Verify Telegram Membership</div>
@@ -31,7 +35,13 @@
         <h1>Welcome to the Retro Verification Portal</h1>
         <div id="verification">
           <p>Please verify that you've joined our Telegram channel to proceed.</p>
-          <p>Before verifying, please join our Telegram channel <a href="https://t.me/+DOUilvfhtS9lODIx" target="_blank">@DubPTEST</a>, then <a href="https://t.me/DoublePenisVerifyBot" target="_blank">start a chat with our bot</a> and send <code>/verify</code>.</p>
+          <p>
+            Before verifying, please join our Telegram channel 
+            <a href="https://t.me/+DOUilvfhtS9lODIx" target="_blank">@DubPTEST</a>, 
+            then 
+            <a href="https://t.me/DoublePenisVerifyBot" target="_blank">start a chat with our bot</a> 
+            and send <code>/verify</code>.
+          </p>
 
           <input type="text" id="telegramUsername" placeholder="Enter your Telegram username">
           <button id="verifyButton">Verify</button>
@@ -56,9 +66,27 @@
         </div>
       </div>
     </div>
+
+    <!-- Leaderboard Window (Hidden by Default) -->
+    <div id="leaderboardWindow" class="window" style="display: none;">
+      <div class="window-title-bar">
+        <div class="window-title">Leaderboard</div>
+        <div class="window-controls">
+          <div class="window-control close">X</div>
+        </div>
+      </div>
+      <div class="window-content">
+        <h2>Top 5 Referrers</h2>
+        <ol id="leaderboardList">
+          <!-- Leaderboard entries will be populated here -->
+        </ol>
+      </div>
+    </div>
   </div>
+
   <!-- Optional Sound Effect -->
   <audio id="chaosSound" src="chaos.mp3" preload="auto"></audio>
+
   <script src="script.js"></script>
 </body>
 </html>
