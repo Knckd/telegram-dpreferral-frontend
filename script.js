@@ -88,16 +88,65 @@ document.getElementById('copyButton').addEventListener('click', function () {
 
 // Function to start chaotic effects
 function startChaos() {
-  // Example chaotic effect: Change background color randomly every second
-  setInterval(() => {
-    const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-    document.getElementById('window').style.backgroundColor = randomColor;
-  }, 1000);
+  let chaosInterval;
+  let spawnInterval;
+  let chaosWindows = [];
 
-  // Example chaotic effect: Move the window randomly
-  setInterval(() => {
-    const windowElement = document.getElementById('window');
-    windowElement.style.left = Math.random() * (window.innerWidth - 500) + 'px';
-    windowElement.style.top = Math.random() * (window.innerHeight - 400) + 'px';
-  }, 1500);
+  // Function to spawn new windows
+  function spawnNewWindow() {
+    const newWindow = document.createElement('div');
+    newWindow.classList.add('window', 'chaos-window');
+    newWindow.innerHTML = `
+      <div class="window-title-bar">
+        <div class="window-title">New Window</div>
+        <div class="window-controls">
+          <div class="window-control minimize">_</div>
+          <div class="window-control maximize">☐</div>
+          <div class="window-control close">X</div>
+        </div>
+      </div>
+      <div class="window-content">
+        <p>Welcome to the chaos!</p>
+      </div>
+    `;
+    document.body.appendChild(newWindow);
+    chaosWindows.push(newWindow);
+
+    moveWindow(newWindow);
+  }
+
+  // Function to randomly move a window
+  function moveWindow(windowElement) {
+    windowElement.style.position = 'absolute';
+    const moveSpeed = 200; // Speed of movement
+    const windowMovementInterval = setInterval(() => {
+      windowElement.style.left = Math.random() * (window.innerWidth - 300) + 'px';
+      windowElement.style.top = Math.random() * (window.innerHeight - 200) + 'px';
+    }, moveSpeed);
+  }
+
+  // Move the original window fast
+  const originalWindow = document.getElementById('window');
+  moveWindow(originalWindow);
+
+  // Ramp up the craziness by spawning more windows
+  chaosInterval = setInterval(() => {
+    moveWindow(originalWindow);
+  }, 500); // Speed up the movement
+
+  // Start spawning windows
+  spawnInterval = setInterval(spawnNewWindow, 2000); // New window every 2 seconds
+
+  // Escalating chaos: speed up window movement and spawn more windows faster
+  setTimeout(() => {
+    clearInterval(chaosInterval);
+    clearInterval(spawnInterval);
+
+    chaosInterval = setInterval(() => {
+      moveWindow(originalWindow);
+      chaosWindows.forEach(window => moveWindow(window));
+    }, 200); // Increase speed of movement
+
+    spawnInterval = setInterval(spawnNewWindow, 1000); // Faster window spawning
+  }, 5000); // After 5 seconds, the chaos gets crazier
 }
