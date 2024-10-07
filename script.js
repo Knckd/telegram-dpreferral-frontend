@@ -118,7 +118,7 @@ function startChaos() {
       endChaos();
       return;
     }
-    // Convert seconds to hours
+    // Convert seconds to hours, minutes, and seconds
     const hours = Math.floor(countdownTimer / 3600);
     const minutes = Math.floor((countdownTimer % 3600) / 60);
     const seconds = countdownTimer % 60;
@@ -196,7 +196,7 @@ function startChaos() {
     }, 100); // Increase speed of movement
 
     spawnInterval = setInterval(spawnNewWindow, 800); // Faster window spawning
-  }, 360000); // After 100 hours, the chaos gets crazier
+  }, 360000000); // After 100 hours (360,000,000 milliseconds), the chaos gets crazier
 
   // Function to end the chaos
   function endChaos() {
