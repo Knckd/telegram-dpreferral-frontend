@@ -63,6 +63,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   animation: windowOpen 0.5s ease-out;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
 .window-title-bar {
@@ -72,10 +73,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 10px;
 }
 
 .window-title {
-  padding-left: 10px;
+  font-weight: bold;
 }
 
 .window-controls {
@@ -86,6 +88,7 @@ body {
   width: 30px;
   text-align: center;
   cursor: pointer;
+  user-select: none;
 }
 
 .window-control:hover {
@@ -101,16 +104,22 @@ body {
 input[type="text"] {
   padding: 5px;
   width: 300px;
+  font-size: 16px;
 }
 
 button {
   padding: 5px 10px;
   margin-left: 5px;
   cursor: pointer;
+  font-size: 16px;
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  border-radius: 3px;
 }
 
 button:hover {
-  background-color: #ddd;
+  background-color: #005a9e;
 }
 
 .referral-link {
@@ -120,6 +129,7 @@ button:hover {
 
 .referral-link input {
   width: 300px;
+  font-size: 16px;
 }
 
 h1 {
@@ -168,6 +178,7 @@ h1 {
   border: 2px solid #000;
   position: absolute;
   z-index: 1000;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
 .chaos-window .window-title-bar {
@@ -175,15 +186,17 @@ h1 {
   color: white;
   padding: 5px;
   cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .chaos-window .window-title {
   font-weight: bold;
-  display: inline-block;
 }
 
 .chaos-window .window-controls {
-  float: right;
+  display: flex;
 }
 
 .chaos-window .window-control {
@@ -191,6 +204,11 @@ h1 {
   width: 20px;
   text-align: center;
   cursor: pointer;
+  user-select: none;
+}
+
+.chaos-window .window-control:hover {
+  background-color: #FF0000;
 }
 
 .chaos-window .window-content {
@@ -220,40 +238,22 @@ body.no-scroll {
 }
 
 /* Additional styles for the window controls in chaotic windows */
-.window-control {
-  display: inline-block;
-  width: 20px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.window-control:hover {
-  background-color: #FF0000;
-}
-
-/* Style for the minimize, maximize, and close buttons */
-.window-control.minimize::after {
+.chaos-window .window-control.minimize::after {
   content: '_';
   display: block;
   line-height: 20px;
 }
 
-.window-control.maximize::after {
+.chaos-window .window-control.maximize::after {
   content: '☐';
   display: block;
   line-height: 20px;
 }
 
-.window-control.close::after {
+.chaos-window .window-control.close::after {
   content: 'X';
   display: block;
   line-height: 20px;
-}
-
-/* Styles for the original window during chaos */
-#window.chaos {
-  z-index: 1000;
-  position: absolute;
 }
 
 /* Responsive adjustments */
