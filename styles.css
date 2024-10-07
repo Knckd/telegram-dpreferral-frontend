@@ -65,6 +65,7 @@ body {
   animation: windowOpen 0.5s ease-out;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
   z-index: 100;
+  cursor: default; /* Change to default to prevent unwanted text selection */
 }
 
 .window-title-bar {
@@ -75,6 +76,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 10px;
+  cursor: move; /* Indicate draggable area */
 }
 
 .window-title {
@@ -180,14 +182,14 @@ h1 {
   position: absolute;
   z-index: 1000;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  animation: chaosWindowMove 1s linear infinite;
+  cursor: default; /* Prevent text selection */
 }
 
 .chaos-window .window-title-bar {
   background-color: #0078d7;
   color: white;
   padding: 5px;
-  cursor: move;
+  cursor: move; /* Indicate draggable area */
   display: flex;
   align-items: center;
   justify-content: space-between;
