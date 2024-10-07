@@ -49,10 +49,16 @@
             <input type="text" id="referralLink" readonly>
             <button id="copyButton">Copy</button>
           </div>
+          <!-- Countdown Timer -->
+          <div id="countdown" style="display: none;">
+            <p>Chaos ends in <span id="countdownTimer">10</span> seconds...</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
+  <!-- Optional Sound Effect -->
+  <audio id="chaosSound" src="chaos.mp3" preload="auto"></audio>
   <script src="script.js"></script>
 </body>
 </html>
