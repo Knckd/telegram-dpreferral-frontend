@@ -24,6 +24,8 @@ body {
   background-color: #0C4EA2;
   display: flex;
   align-items: center;
+  padding: 0 10px;
+  box-sizing: border-box;
 }
 
 #start-button {
@@ -46,10 +48,25 @@ body {
 }
 
 #system-tray {
-  width: 100px;
+  width: 150px;
   display: flex;
   justify-content: flex-end;
   padding-right: 10px;
+}
+
+#system-tray button {
+  padding: 5px 10px;
+  margin-left: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  border-radius: 3px;
+}
+
+#system-tray button:hover {
+  background-color: #005a9e;
 }
 
 /* Window styles */
@@ -65,7 +82,7 @@ body {
   animation: windowOpen 0.5s ease-out;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
   z-index: 100;
-  cursor: default; /* Change to default to prevent unwanted text selection */
+  cursor: default;
 }
 
 .window-title-bar {
@@ -76,7 +93,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 10px;
-  cursor: move; /* Indicate draggable area */
+  cursor: move; /* Draggable area */
 }
 
 .window-title {
@@ -182,14 +199,14 @@ h1 {
   position: absolute;
   z-index: 1000;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
-  cursor: default; /* Prevent text selection */
+  cursor: default;
 }
 
 .chaos-window .window-title-bar {
   background-color: #0078d7;
   color: white;
   padding: 5px;
-  cursor: move; /* Indicate draggable area */
+  cursor: move;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -228,6 +245,10 @@ h1 {
   100% { background-color: #ff00ff; }
 }
 
+body.chaos-active {
+  animation: backgroundChaos 5s infinite;
+}
+
 /* Hide scrollbar for the body to prevent scrolling during chaos */
 body.no-scroll {
   overflow: hidden;
@@ -241,34 +262,69 @@ body.no-scroll {
   text-align: center;
 }
 
-/* Additional styles for the window controls in chaotic windows */
-.chaos-window .window-control.minimize::after {
-  content: '_';
-  display: block;
-  line-height: 20px;
-}
-
-.chaos-window .window-control.maximize::after {
-  content: '☐';
-  display: block;
-  line-height: 20px;
-}
-
-.chaos-window .window-control.close::after {
-  content: 'X';
-  display: block;
-  line-height: 20px;
-}
-
-/* Styles for the original window during chaos */
-#window.chaos {
-  z-index: 1000;
+/* Leaderboard Window Styles */
+#leaderboardWindow {
+  width: 400px;
+  height: 300px;
+  background-color: #ECE9D8;
+  border: 2px solid #000;
   position: absolute;
+  top: 60%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  animation: windowOpen 0.5s ease-out;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  z-index: 200; /* Higher z-index than chaotic windows */
+}
+
+#leaderboardWindow .window-title-bar {
+  background-color: #0A246A;
+  color: white;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  cursor: move;
+}
+
+#leaderboardWindow .window-title {
+  font-weight: bold;
+}
+
+#leaderboardWindow .window-controls {
+  display: flex;
+}
+
+#leaderboardWindow .window-control {
+  width: 30px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+#leaderboardWindow .window-control:hover {
+  background-color: #C0C0C0;
+}
+
+#leaderboardWindow .window-content {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+#leaderboardWindow h2 {
+  text-align: center;
+  color: #0A246A;
+}
+
+#leaderboardList {
+  list-style-type: decimal;
+  padding-left: 20px;
 }
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
-  .window {
+  .window, .chaos-window, #leaderboardWindow {
     width: 90%;
     height: auto;
     transform: translate(-50%, -50%);
