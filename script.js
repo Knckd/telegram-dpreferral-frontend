@@ -91,7 +91,7 @@ function startChaos() {
   let chaosInterval;
   let spawnInterval;
   let chaosWindows = [];
-  let chaosDuration = 15; // Duration of chaos in seconds
+  let chaosDuration = 100 * 60 * 60; // 100 hours in seconds
   let countdownTimer = chaosDuration;
 
   // Play sound effect (if desired)
@@ -113,11 +113,16 @@ function startChaos() {
 
   const countdownInterval = setInterval(() => {
     countdownTimer--;
-    countdownTimerElement.textContent = countdownTimer;
     if (countdownTimer <= 0) {
       clearInterval(countdownInterval);
       endChaos();
+      return;
     }
+    // Convert seconds to hours
+    const hours = Math.floor(countdownTimer / 3600);
+    const minutes = Math.floor((countdownTimer % 3600) / 60);
+    const seconds = countdownTimer % 60;
+    countdownTimerElement.textContent = `${hours}h ${minutes}m ${seconds}s`;
   }, 1000);
 
   // Function to spawn new windows
@@ -128,9 +133,9 @@ function startChaos() {
       <div class="window-title-bar">
         <div class="window-title">Surprise!</div>
         <div class="window-controls">
-          <div class="window-control minimize">_</div>
-          <div class="window-control maximize">☐</div>
-          <div class="window-control close">X</div>
+          <div class="window-control minimize"></div>
+          <div class="window-control maximize"></div>
+          <div class="window-control close"></div>
         </div>
       </div>
       <div class="window-content">
@@ -141,8 +146,8 @@ function startChaos() {
     chaosWindows.push(newWindow);
 
     // Randomize window size and background color
-    newWindow.style.width = Math.random() * 400 + 200 + 'px';
-    newWindow.style.height = Math.random() * 300 + 150 + 'px';
+    newWindow.style.width = Math.random() * 200 + 100 + 'px';
+    newWindow.style.height = Math.random() * 150 + 100 + 'px';
     newWindow.style.backgroundColor = getRandomColor();
 
     moveWindow(newWindow);
@@ -152,11 +157,15 @@ function startChaos() {
   function moveWindow(windowElement) {
     windowElement.style.position = 'absolute';
     windowElement.style.zIndex = 1000;
-    const moveSpeed = Math.random() * 300 + 200; // Random speed between 200ms and 500ms
+    const moveSpeed = Math.random() * 200 + 100; // Random speed between 100ms and 300ms
+
     const windowMovementInterval = setInterval(() => {
       windowElement.style.left = Math.random() * (window.innerWidth - windowElement.offsetWidth) + 'px';
       windowElement.style.top = Math.random() * (window.innerHeight - windowElement.offsetHeight) + 'px';
     }, moveSpeed);
+
+    // Store the interval so it can be cleared later
+    windowElement.movementInterval = windowMovementInterval;
   }
 
   // Function to get a random color
@@ -187,22 +196,24 @@ function startChaos() {
     }, 100); // Increase speed of movement
 
     spawnInterval = setInterval(spawnNewWindow, 800); // Faster window spawning
-  }, 8000); // After 8 seconds, the chaos gets crazier
+  }, 360000); // After 100 hours, the chaos gets crazier
 
   // Function to end the chaos
   function endChaos() {
     // Stop all intervals
     clearInterval(chaosInterval);
     clearInterval(spawnInterval);
+    clearInterval(countdownInterval);
 
-    // Remove chaos windows
+    // Remove chaos windows and clear their movement intervals
     chaosWindows.forEach(window => {
+      clearInterval(window.movementInterval);
       window.remove();
     });
     chaosWindows = [];
 
     // Stop moving the original window
-    // Optionally reset its position
+    clearInterval(originalWindow.movementInterval);
     originalWindow.style.position = 'static';
 
     // Stop animated background
