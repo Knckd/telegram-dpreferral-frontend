@@ -164,12 +164,18 @@ function startChaos() {
       <div class="window-title-bar">
         <div class="window-title">
           <img src="ie-icon.png" alt="IE Icon" class="window-icon">
-          Surprise! - Microsoft Internet Explorer
+          Surprise!
         </div>
         <div class="window-controls">
-          <div class="window-control minimize">_</div>
-          <div class="window-control maximize">☐</div>
-          <div class="window-control close">X</div>
+          <div class="window-control minimize">
+            <img src="minimize-button.png" alt="_">
+          </div>
+          <div class="window-control maximize">
+            <img src="maximize-button.png" alt="☐">
+          </div>
+          <div class="window-control close">
+            <img src="close-button.png" alt="X">
+          </div>
         </div>
       </div>
       <div class="window-content">
@@ -179,10 +185,9 @@ function startChaos() {
     document.body.appendChild(newWindow);
     chaosWindows.push(newWindow);
 
-    // Randomize window size and background color
+    // Randomize window size
     newWindow.style.width = Math.random() * 200 + 300 + 'px';
     newWindow.style.height = Math.random() * 150 + 200 + 'px';
-    // newWindow.style.backgroundColor = getRandomColor();
 
     makeDraggable(newWindow);
     moveWindow(newWindow);
@@ -217,15 +222,6 @@ function startChaos() {
       clearInterval(newWindow.movementInterval);
       newWindow.remove();
     });
-
-    // Open new browser windows in the 'chaos' state
-    openChaosBrowser();
-  }
-
-  // Function to open new browser windows in the 'chaos' state
-  function openChaosBrowser() {
-    const newWindow = window.open(window.location.href, '_blank', 'width=600,height=500');
-    // Optionally, you can use window features to remove toolbars and menus
   }
 
   // Function to randomly move a window
@@ -241,11 +237,6 @@ function startChaos() {
 
     // Store the interval so it can be cleared later
     windowElement.movementInterval = windowMovementInterval;
-  }
-
-  // Function to get a random color
-  function getRandomColor() {
-    return '#' + Math.floor(Math.random() * 16777215).toString(16);
   }
 
   // Make the main window draggable
@@ -382,9 +373,9 @@ function handleWindowControls() {
     } else {
       // Maximize window
       mainWindow.style.width = '100vw';
-      mainWindow.style.height = 'calc(100vh - 40px - 30px)'; // Adjust for taskbar and toolbar height
+      mainWindow.style.height = 'calc(100vh - 40px)'; // Adjust for taskbar height
       mainWindow.style.left = '0';
-      mainWindow.style.top = '30px'; // Below the toolbar
+      mainWindow.style.top = '0';
       mainWindow.style.transform = 'none';
       mainWindow.classList.add('maximized');
     }
@@ -405,33 +396,3 @@ function handleWindowControls() {
 
 // Initialize window controls functionality
 handleWindowControls();
-
-// Tab functionality
-const tabs = document.querySelectorAll('.tab');
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    // Remove active class from all tabs
-    tabs.forEach(t => t.classList.remove('active'));
-    // Add active class to clicked tab
-    tab.classList.add('active');
-    // Open the URL in a new window or tab
-    window.open(tab.getAttribute('data-url'), '_blank');
-  });
-});
-
-// IE Toolbar Button Functionality
-document.querySelector('.back-button').addEventListener('click', () => {
-  alert('Back button clicked!');
-});
-
-document.querySelector('.forward-button').addEventListener('click', () => {
-  alert('Forward button clicked!');
-});
-
-document.querySelector('.refresh-button').addEventListener('click', () => {
-  location.reload();
-});
-
-document.querySelector('.home-button').addEventListener('click', () => {
-  window.location.href = 'https://www.yoursite.com'; // Replace with your home URL
-});
