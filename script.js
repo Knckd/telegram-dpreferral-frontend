@@ -108,7 +108,7 @@ function fetchLeaderboard() {
       leaderboardList.innerHTML = ''; // Clear existing list
       data.forEach(user => {
         const listItem = document.createElement('li');
-        listItem.textContent = `${user.username} - ${user.referralCount} referrals`;
+        listItem.textContent = `${user.telegramUsername} - ${user.referralCount} referrals`;
         leaderboardList.appendChild(listItem);
       });
     })
@@ -141,7 +141,6 @@ function startChaos() {
   const countdownElement = document.getElementById('countdown');
   const countdownTimerElement = document.getElementById('countdownTimer');
   countdownElement.style.display = 'block';
-  document.getElementById('countdown').style.display = 'block';
 
   const countdownInterval = setInterval(() => {
     countdownTimer--;
@@ -182,6 +181,13 @@ function startChaos() {
 
     makeDraggable(newWindow);
     moveWindow(newWindow);
+
+    // Add close functionality to the chaotic window
+    const closeButton = newWindow.querySelector('.window-control.close');
+    closeButton.addEventListener('click', () => {
+      clearInterval(newWindow.movementInterval);
+      newWindow.remove();
+    });
   }
 
   // Function to randomly move a window
@@ -192,7 +198,7 @@ function startChaos() {
 
     const windowMovementInterval = setInterval(() => {
       windowElement.style.left = Math.random() * (window.innerWidth - windowElement.offsetWidth) + 'px';
-      windowElement.style.top = Math.random() * (window.innerHeight - windowElement.offsetHeight) + 'px';
+      windowElement.style.top = Math.random() * (window.innerHeight - windowElement.offsetHeight - document.getElementById('taskbar').offsetHeight) + 'px';
     }, moveSpeed);
 
     // Store the interval so it can be cleared later
@@ -327,17 +333,22 @@ function handleWindowControls() {
   });
 
   maximizeButton.addEventListener('click', () => {
-    if (mainWindow.style.width !== '100vw') {
-      mainWindow.style.width = '100vw';
-      mainWindow.style.height = '100vh';
-      mainWindow.style.left = '0';
-      mainWindow.style.top = '0';
-    } else {
+    if (mainWindow.classList.contains('maximized')) {
+      // Restore to original size
       mainWindow.style.width = '500px';
-      mainWindow.style.height = '400px';
+      mainWindow.style.height = '500px';
       mainWindow.style.left = '50%';
       mainWindow.style.top = '50%';
       mainWindow.style.transform = 'translate(-50%, -50%)';
+      mainWindow.classList.remove('maximized');
+    } else {
+      // Maximize window
+      mainWindow.style.width = '100vw';
+      mainWindow.style.height = 'calc(100vh - 40px)'; // Adjust for taskbar height
+      mainWindow.style.left = '0';
+      mainWindow.style.top = '0';
+      mainWindow.style.transform = 'none';
+      mainWindow.classList.add('maximized');
     }
   });
 
@@ -356,3 +367,16 @@ function handleWindowControls() {
 
 // Initialize window controls functionality
 handleWindowControls();
+
+// Tab functionality
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    // Remove active class from all tabs
+    tabs.forEach(t => t.classList.remove('active'));
+    // Add active class to clicked tab
+    tab.classList.add('active');
+    // Open the URL in a new window or tab
+    window.open(tab.getAttribute('data-url'), '_blank');
+  });
+});
