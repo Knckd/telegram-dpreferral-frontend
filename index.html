@@ -2,35 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Retro Verification Portal</title>
+  <title>Windows XP Verification Portal</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Internet Explorer Toolbar -->
-  <div id="ie-toolbar">
-    <div id="ie-toolbar-left">
-      <button class="ie-button back-button">Back</button>
-      <button class="ie-button forward-button">Forward</button>
-      <button class="ie-button refresh-button">Refresh</button>
-      <button class="ie-button home-button">Home</button>
-    </div>
-    <div id="ie-toolbar-right">
-      <input type="text" id="address-bar" value="https://www.yoursite.com" readonly>
-    </div>
-  </div>
-
   <div id="desktop">
     <!-- Taskbar -->
     <div id="taskbar">
       <div id="start-button">
-        <img src="start-button.png" alt="Start">
+        <img src="start-button-xp.png" alt="Start">
       </div>
       <div id="taskbar-items">
-        <!-- Additional taskbar items can be added here -->
+        <!-- Taskbar items can be added here -->
+        <div class="taskbar-item">
+          <img src="ie-icon.png" alt="IE Icon" class="taskbar-icon">
+          Verify Telegram Membership
+        </div>
       </div>
       <div id="system-tray">
         <!-- System tray icons can be added here -->
-        <button id="leaderboardButton">Leaderboard</button>
+        <img src="volume-icon.png" alt="Volume" class="system-tray-icon">
+        <img src="network-icon.png" alt="Network" class="system-tray-icon">
+        <img src="clock-icon.png" alt="Clock" class="system-tray-icon">
       </div>
     </div>
 
@@ -39,24 +32,24 @@
       <div class="window-title-bar">
         <div class="window-title">
           <img src="ie-icon.png" alt="IE Icon" class="window-icon">
-          Verify Telegram Membership - Microsoft Internet Explorer
+          Verify Telegram Membership
         </div>
         <div class="window-controls">
-          <div class="window-control minimize">_</div>
-          <div class="window-control maximize">☐</div>
-          <div class="window-control close">X</div>
+          <div class="window-control minimize">
+            <img src="minimize-button.png" alt="_">
+          </div>
+          <div class="window-control maximize">
+            <img src="maximize-button.png" alt="☐">
+          </div>
+          <div class="window-control close">
+            <img src="close-button.png" alt="X">
+          </div>
         </div>
       </div>
 
-      <!-- Tabs Bar -->
-      <div class="tabs-bar">
-        <div class="tab active" data-url="https://dexscreener.com/">Dexscreener</div>
-        <div class="tab" data-url="https://t.me/YourTelegramChannel">Telegram</div>
-        <div class="tab" data-url="https://twitter.com/YourTwitterHandle">Twitter/X</div>
-      </div>
-
+      <!-- Content Area -->
       <div class="window-content">
-        <h1>Welcome to the Retro Verification Portal</h1>
+        <h1>Welcome to the Windows XP Verification Portal</h1>
         <div id="verification">
           <p>Please verify that you've joined our Telegram channel to proceed.</p>
           <p>
@@ -96,10 +89,12 @@
       <div class="window-title-bar">
         <div class="window-title">
           <img src="ie-icon.png" alt="IE Icon" class="window-icon">
-          Leaderboard - Microsoft Internet Explorer
+          Leaderboard
         </div>
         <div class="window-controls">
-          <div class="window-control close">X</div>
+          <div class="window-control close">
+            <img src="close-button.png" alt="X">
+          </div>
         </div>
       </div>
       <div class="window-content">
