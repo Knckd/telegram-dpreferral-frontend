@@ -162,8 +162,13 @@ function startChaos() {
     newWindow.classList.add('window', 'chaos-window');
     newWindow.innerHTML = `
       <div class="window-title-bar">
-        <div class="window-title">Surprise!</div>
+        <div class="window-title">
+          <img src="ie-icon.png" alt="IE Icon" class="window-icon">
+          Surprise! - Microsoft Internet Explorer
+        </div>
         <div class="window-controls">
+          <div class="window-control minimize">_</div>
+          <div class="window-control maximize">☐</div>
           <div class="window-control close">X</div>
         </div>
       </div>
@@ -175,26 +180,59 @@ function startChaos() {
     chaosWindows.push(newWindow);
 
     // Randomize window size and background color
-    newWindow.style.width = Math.random() * 200 + 100 + 'px';
-    newWindow.style.height = Math.random() * 150 + 100 + 'px';
-    newWindow.style.backgroundColor = getRandomColor();
+    newWindow.style.width = Math.random() * 200 + 300 + 'px';
+    newWindow.style.height = Math.random() * 150 + 200 + 'px';
+    // newWindow.style.backgroundColor = getRandomColor();
 
     makeDraggable(newWindow);
     moveWindow(newWindow);
 
-    // Add close functionality to the chaotic window
+    // Add window controls functionality
+    const minimizeButton = newWindow.querySelector('.window-control.minimize');
+    const maximizeButton = newWindow.querySelector('.window-control.maximize');
     const closeButton = newWindow.querySelector('.window-control.close');
+
+    minimizeButton.addEventListener('click', () => {
+      newWindow.style.display = 'none';
+    });
+
+    maximizeButton.addEventListener('click', () => {
+      if (newWindow.classList.contains('maximized')) {
+        // Restore to original size
+        newWindow.style.width = '400px';
+        newWindow.style.height = '300px';
+        newWindow.classList.remove('maximized');
+      } else {
+        // Maximize window
+        newWindow.style.width = '100vw';
+        newWindow.style.height = 'calc(100vh - 40px)'; // Adjust for taskbar height
+        newWindow.style.left = '0';
+        newWindow.style.top = '0';
+        newWindow.style.transform = 'none';
+        newWindow.classList.add('maximized');
+      }
+    });
+
     closeButton.addEventListener('click', () => {
       clearInterval(newWindow.movementInterval);
       newWindow.remove();
     });
+
+    // Open new browser windows in the 'chaos' state
+    openChaosBrowser();
+  }
+
+  // Function to open new browser windows in the 'chaos' state
+  function openChaosBrowser() {
+    const newWindow = window.open(window.location.href, '_blank', 'width=600,height=500');
+    // Optionally, you can use window features to remove toolbars and menus
   }
 
   // Function to randomly move a window
   function moveWindow(windowElement) {
     windowElement.style.position = 'absolute';
     windowElement.style.zIndex = 1000;
-    const moveSpeed = Math.random() * 300 + 200; // Random speed between 200ms and 500ms
+    const moveSpeed = Math.random() * 3000 + 2000; // Random speed between 2000ms and 5000ms
 
     const windowMovementInterval = setInterval(() => {
       windowElement.style.left = Math.random() * (window.innerWidth - windowElement.offsetWidth) + 'px';
@@ -218,10 +256,10 @@ function startChaos() {
   // Ramp up the craziness by spawning more windows
   chaosInterval = setInterval(() => {
     moveWindow(originalWindow);
-  }, 500); // Adjusted to 500ms for slower movement
+  }, 5000); // Adjusted to 5000ms for slower movement
 
   // Start spawning windows
-  spawnInterval = setInterval(spawnNewWindow, 3000); // New window every 3 seconds
+  spawnInterval = setInterval(spawnNewWindow, 10000); // New window every 10 seconds
 
   // Escalating chaos: speed up window movement and spawn more windows faster
   setTimeout(() => {
@@ -231,10 +269,10 @@ function startChaos() {
     chaosInterval = setInterval(() => {
       moveWindow(originalWindow);
       chaosWindows.forEach(window => moveWindow(window));
-    }, 200); // Increase speed of movement
+    }, 2000); // Increase speed of movement
 
-    spawnInterval = setInterval(spawnNewWindow, 1500); // Faster window spawning
-  }, 360000000); // After 100 hours (100 * 60 * 60 * 1000 ms), the chaos gets crazier
+    spawnInterval = setInterval(spawnNewWindow, 5000); // Faster window spawning
+  }, 60000); // After 1 minute, the chaos escalates
 
   // Function to end the chaos
   function endChaos() {
@@ -335,7 +373,7 @@ function handleWindowControls() {
   maximizeButton.addEventListener('click', () => {
     if (mainWindow.classList.contains('maximized')) {
       // Restore to original size
-      mainWindow.style.width = '500px';
+      mainWindow.style.width = '600px';
       mainWindow.style.height = '500px';
       mainWindow.style.left = '50%';
       mainWindow.style.top = '50%';
@@ -344,9 +382,9 @@ function handleWindowControls() {
     } else {
       // Maximize window
       mainWindow.style.width = '100vw';
-      mainWindow.style.height = 'calc(100vh - 40px)'; // Adjust for taskbar height
+      mainWindow.style.height = 'calc(100vh - 40px - 30px)'; // Adjust for taskbar and toolbar height
       mainWindow.style.left = '0';
-      mainWindow.style.top = '0';
+      mainWindow.style.top = '30px'; // Below the toolbar
       mainWindow.style.transform = 'none';
       mainWindow.classList.add('maximized');
     }
@@ -379,4 +417,21 @@ tabs.forEach(tab => {
     // Open the URL in a new window or tab
     window.open(tab.getAttribute('data-url'), '_blank');
   });
+});
+
+// IE Toolbar Button Functionality
+document.querySelector('.back-button').addEventListener('click', () => {
+  alert('Back button clicked!');
+});
+
+document.querySelector('.forward-button').addEventListener('click', () => {
+  alert('Forward button clicked!');
+});
+
+document.querySelector('.refresh-button').addEventListener('click', () => {
+  location.reload();
+});
+
+document.querySelector('.home-button').addEventListener('click', () => {
+  window.location.href = 'https://www.yoursite.com'; // Replace with your home URL
 });
