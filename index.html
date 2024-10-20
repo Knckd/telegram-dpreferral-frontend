@@ -6,6 +6,19 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Internet Explorer Toolbar -->
+  <div id="ie-toolbar">
+    <div id="ie-toolbar-left">
+      <button class="ie-button back-button">Back</button>
+      <button class="ie-button forward-button">Forward</button>
+      <button class="ie-button refresh-button">Refresh</button>
+      <button class="ie-button home-button">Home</button>
+    </div>
+    <div id="ie-toolbar-right">
+      <input type="text" id="address-bar" value="https://www.yoursite.com" readonly>
+    </div>
+  </div>
+
   <div id="desktop">
     <!-- Taskbar -->
     <div id="taskbar">
@@ -24,7 +37,10 @@
     <!-- Main Window -->
     <div id="window" class="window">
       <div class="window-title-bar">
-        <div class="window-title">Verify Telegram Membership</div>
+        <div class="window-title">
+          <img src="ie-icon.png" alt="IE Icon" class="window-icon">
+          Verify Telegram Membership - Microsoft Internet Explorer
+        </div>
         <div class="window-controls">
           <div class="window-control minimize">_</div>
           <div class="window-control maximize">☐</div>
@@ -78,7 +94,10 @@
     <!-- Leaderboard Window (Hidden by Default) -->
     <div id="leaderboardWindow" class="window" style="display: none;">
       <div class="window-title-bar">
-        <div class="window-title">Leaderboard</div>
+        <div class="window-title">
+          <img src="ie-icon.png" alt="IE Icon" class="window-icon">
+          Leaderboard - Microsoft Internet Explorer
+        </div>
         <div class="window-controls">
           <div class="window-control close">X</div>
         </div>
