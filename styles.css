@@ -7,12 +7,65 @@ body {
   color: black;
 }
 
+/* Internet Explorer Toolbar */
+#ie-toolbar {
+  width: 100%;
+  height: 30px;
+  background-color: #D4D0C8;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #808080;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+#ie-toolbar-left {
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+}
+
+.ie-button {
+  width: 60px;
+  height: 24px;
+  margin-right: 5px;
+  background-color: #D4D0C8;
+  border: 1px solid #808080;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.ie-button:hover {
+  background-color: #E4E0D8;
+}
+
+#ie-toolbar-right {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+#address-bar {
+  width: 100%;
+  height: 20px;
+  padding: 2px;
+  margin-right: 10px;
+  font-size: 12px;
+  border: 1px inset #808080;
+  background-color: #FFFFFF;
+}
+
+/* Desktop styles */
 #desktop {
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 30px); /* Adjust for toolbar height */
   background: url('windows-xp-background.jpg') no-repeat center center fixed;
   background-size: cover;
-  position: relative;
+  position: absolute;
+  top: 30px; /* Adjust for toolbar height */
+  left: 0;
 }
 
 /* Taskbar styles */
@@ -21,11 +74,12 @@ body {
   bottom: 0;
   width: 100%;
   height: 40px;
-  background-color: #0C4EA2;
+  background-color: #C0C0C0;
   display: flex;
   align-items: center;
   padding: 0 10px;
   box-sizing: border-box;
+  border-top: 1px solid #808080;
 }
 
 #start-button {
@@ -59,46 +113,53 @@ body {
   margin-left: 5px;
   cursor: pointer;
   font-size: 14px;
-  background-color: #0078d7;
-  color: white;
-  border: none;
-  border-radius: 3px;
+  background-color: #D4D0C8;
+  color: black;
+  border: 1px solid #808080;
 }
 
 #system-tray button:hover {
-  background-color: #005a9e;
+  background-color: #E4E0D8;
 }
 
 /* Window styles */
 .window {
-  width: 500px;
-  height: 500px; /* Increased height to accommodate tabs */
-  background-color: #C0C0C0; /* Old grey color */
+  width: 600px;
+  height: 500px;
+  background-color: #FFFFFF;
   border: 2px solid #000;
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 40%;
+  left: 40%;
   transform: translate(-50%, -50%);
   animation: windowOpen 0.5s ease-out;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
   z-index: 100;
   cursor: default;
 }
 
 .window-title-bar {
-  background-color: #C0C0C0; /* Old grey color */
-  color: black; /* Black lettering */
-  height: 30px;
+  background-color: #D4D0C8;
+  color: black;
+  height: 25px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
-  border-bottom: 1px solid #808080; /* Darker grey line */
+  padding: 0 5px;
+  border-bottom: 1px solid #808080;
   cursor: move; /* Draggable area */
 }
 
+.window-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
 .window-title {
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
 }
 
 .window-controls {
@@ -106,30 +167,34 @@ body {
 }
 
 .window-control {
-  width: 30px;
+  width: 25px;
+  height: 20px;
   text-align: center;
   cursor: pointer;
   user-select: none;
-  background-color: #C0C0C0;
+  background-color: #D4D0C8;
   color: black;
   border: 1px solid #808080;
   margin-left: 2px;
+  line-height: 18px;
+  font-size: 12px;
 }
 
 .window-control:hover {
-  background-color: #A0A0A0;
+  background-color: #E4E0D8;
 }
 
 .window-content {
   padding: 10px;
   overflow-y: auto;
-  height: calc(100% - 60px); /* Adjusted for title bar and tabs bar */
+  height: calc(100% - 55px); /* Adjusted for title bar and tabs bar */
+  font-size: 12px;
 }
 
 /* Tabs Bar Styles */
 .tabs-bar {
   display: flex;
-  background-color: #E0E0E0;
+  background-color: #D4D0C8;
   border-bottom: 1px solid #808080;
   height: 30px;
 }
@@ -137,9 +202,10 @@ body {
 .tab {
   padding: 5px 10px;
   cursor: pointer;
-  background-color: #E0E0E0;
+  background-color: #D4D0C8;
   color: black;
   border-right: 1px solid #808080;
+  font-size: 12px;
 }
 
 .tab.active {
@@ -149,29 +215,30 @@ body {
 }
 
 .tab:hover {
-  background-color: #FFFFFF;
+  background-color: #E4E0D8;
 }
 
 /* Input and button styles */
 input[type="text"] {
   padding: 5px;
   width: 300px;
-  font-size: 16px;
+  font-size: 12px;
+  border: 1px inset #808080;
+  background-color: #FFFFFF;
 }
 
 button {
   padding: 5px 10px;
   margin-left: 5px;
   cursor: pointer;
-  font-size: 16px;
-  background-color: #0078d7;
-  color: white;
-  border: none;
-  border-radius: 3px;
+  font-size: 12px;
+  background-color: #D4D0C8;
+  color: black;
+  border: 1px solid #808080;
 }
 
 button:hover {
-  background-color: #005a9e;
+  background-color: #E4E0D8;
 }
 
 .referral-link {
@@ -181,12 +248,19 @@ button:hover {
 
 .referral-link input {
   width: 300px;
-  font-size: 16px;
+  font-size: 12px;
 }
 
 h1 {
   text-align: center;
   color: black;
+  font-size: 16px;
+}
+
+h2 {
+  text-align: center;
+  color: black;
+  font-size: 14px;
 }
 
 /* Loading bar styles */
@@ -224,29 +298,38 @@ h1 {
 
 /* Styles for chaotic windows */
 .chaos-window {
-  width: 300px;
-  height: 200px;
-  background-color: #f1f1f1;
+  width: 400px;
+  height: 300px;
+  background-color: #FFFFFF;
   border: 2px solid #000;
   position: absolute;
   z-index: 1000;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
   cursor: default;
 }
 
 .chaos-window .window-title-bar {
-  background-color: #C0C0C0;
+  background-color: #D4D0C8;
   color: black;
-  padding: 5px;
+  padding: 0 5px;
   cursor: move;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #808080;
+  height: 25px;
 }
 
 .chaos-window .window-title {
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.chaos-window .window-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
 }
 
 .chaos-window .window-controls {
@@ -254,23 +337,26 @@ h1 {
 }
 
 .chaos-window .window-control {
-  display: inline-block;
-  width: 20px;
+  width: 25px;
+  height: 20px;
   text-align: center;
   cursor: pointer;
   user-select: none;
-  background-color: #C0C0C0;
+  background-color: #D4D0C8;
   color: black;
   border: 1px solid #808080;
   margin-left: 2px;
+  line-height: 18px;
+  font-size: 12px;
 }
 
 .chaos-window .window-control:hover {
-  background-color: #A0A0A0;
+  background-color: #E4E0D8;
 }
 
 .chaos-window .window-content {
   padding: 10px;
+  font-size: 12px;
 }
 
 /* Animated Background */
@@ -295,7 +381,7 @@ body.no-scroll {
 #countdown {
   margin-top: 20px;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 14px;
   text-align: center;
 }
 
@@ -303,31 +389,39 @@ body.no-scroll {
 #leaderboardWindow {
   width: 400px;
   height: 300px;
-  background-color: #C0C0C0;
+  background-color: #FFFFFF;
   border: 2px solid #000;
   position: absolute;
   top: 60%;
   left: 60%;
   transform: translate(-50%, -50%);
   animation: windowOpen 0.5s ease-out;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
   z-index: 200; /* Higher z-index than chaotic windows */
 }
 
 #leaderboardWindow .window-title-bar {
-  background-color: #C0C0C0;
+  background-color: #D4D0C8;
   color: black;
-  height: 30px;
+  height: 25px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 0 5px;
   cursor: move;
   border-bottom: 1px solid #808080;
 }
 
 #leaderboardWindow .window-title {
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+#leaderboardWindow .window-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
 }
 
 #leaderboardWindow .window-controls {
@@ -335,28 +429,27 @@ body.no-scroll {
 }
 
 #leaderboardWindow .window-control {
-  width: 30px;
+  width: 25px;
+  height: 20px;
   text-align: center;
   cursor: pointer;
   user-select: none;
-  background-color: #C0C0C0;
+  background-color: #D4D0C8;
   color: black;
   border: 1px solid #808080;
   margin-left: 2px;
+  line-height: 18px;
+  font-size: 12px;
 }
 
 #leaderboardWindow .window-control:hover {
-  background-color: #A0A0A0;
+  background-color: #E4E0D8;
 }
 
 #leaderboardWindow .window-content {
   padding: 20px;
   overflow-y: auto;
-}
-
-#leaderboardWindow h2 {
-  text-align: center;
-  color: black;
+  font-size: 12px;
 }
 
 #leaderboardList {
