@@ -83,8 +83,21 @@ document.getElementById('copyButton').addEventListener('click', function () {
     alert('Referral link copied to clipboard!');
     // Start chaotic effects
     startChaos();
+    // Notify the backend of chaos starting
+    notifyBackendOfChaos();
   });
 });
+
+function notifyBackendOfChaos() {
+  fetch(`${backendUrl}/api/startChaos`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: 'Chaos started!' }),
+  })
+  .then(response => response.json())
+  .then(data => console.log('Chaos event logged:', data))
+  .catch(error => console.error('Error logging chaos event:', error));
+}
 
 // Leaderboard Button Event Listener
 document.getElementById('leaderboardButton').addEventListener('click', function () {
@@ -117,7 +130,7 @@ function fetchLeaderboard() {
     });
 }
 
-// Function to start chaotic effects
+// Function to start chaotic effects (enhanced chaos behavior)
 function startChaos() {
   let chaosInterval;
   let spawnInterval;
@@ -346,51 +359,6 @@ function makeDraggable(windowElement) {
       isDragging = false;
       windowElement.style.transition = ''; // Restore transition
     }
-  });
-}
-
-// Function to handle window control actions
-function handleWindowControls() {
-  // Main Window Controls
-  const mainWindow = document.getElementById('window');
-  const minimizeButton = mainWindow.querySelector('.window-control.minimize');
-  const maximizeButton = mainWindow.querySelector('.window-control.maximize');
-  const closeButton = mainWindow.querySelector('.window-control.close');
-
-  minimizeButton.addEventListener('click', () => {
-    mainWindow.style.display = 'none';
-  });
-
-  maximizeButton.addEventListener('click', () => {
-    if (mainWindow.classList.contains('maximized')) {
-      // Restore to original size
-      mainWindow.style.width = '600px';
-      mainWindow.style.height = '500px';
-      mainWindow.style.left = '50%';
-      mainWindow.style.top = '50%';
-      mainWindow.style.transform = 'translate(-50%, -50%)';
-      mainWindow.classList.remove('maximized');
-    } else {
-      // Maximize window
-      mainWindow.style.width = '100vw';
-      mainWindow.style.height = 'calc(100vh - 40px)'; // Adjust for taskbar height
-      mainWindow.style.left = '0';
-      mainWindow.style.top = '0';
-      mainWindow.style.transform = 'none';
-      mainWindow.classList.add('maximized');
-    }
-  });
-
-  closeButton.addEventListener('click', () => {
-    mainWindow.style.display = 'none';
-  });
-
-  // Leaderboard Window Controls
-  const leaderboardWindow = document.getElementById('leaderboardWindow');
-  const leaderboardCloseButton = leaderboardWindow.querySelector('.window-control.close');
-
-  leaderboardCloseButton.addEventListener('click', () => {
-    leaderboardWindow.style.display = 'none';
   });
 }
 
