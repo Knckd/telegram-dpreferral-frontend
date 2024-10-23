@@ -26,7 +26,7 @@ document.getElementById('verifyButton').addEventListener('click', async function
 
   // Send verification request to the backend
   try {
-    const response = await fetch(${backendUrl}/api/verify, {
+    const response = await fetch(`${backendUrl}/api/verify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ telegramUsername }),
@@ -38,14 +38,14 @@ document.getElementById('verifyButton').addEventListener('click', async function
       // Display the referral link
       document.getElementById('loading').style.display = 'none';
       document.getElementById('referralSection').style.display = 'block';
-      const referralLink = https://knckd.github.io/telegram-dpreferral-frontend/?referralCode=${data.referralCode};
+      const referralLink = `https://knckd.github.io/telegram-dpreferral-frontend/?referralCode=${data.referralCode}`;
       document.getElementById('referralLink').value = referralLink;
 
       // If there's a stored referral code, send it to the backend
       const storedReferralCode = localStorage.getItem('referralCode');
 
       if (storedReferralCode) {
-        fetch(${backendUrl}/api/referral, {
+        fetch(`${backendUrl}/api/referral`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ referralCode: storedReferralCode }),
@@ -83,8 +83,21 @@ document.getElementById('copyButton').addEventListener('click', function () {
     alert('Referral link copied to clipboard!');
     // Start chaotic effects
     startChaos();
+    // Notify the backend of chaos starting
+    notifyBackendOfChaos();
   });
 });
+
+function notifyBackendOfChaos() {
+  fetch(`${backendUrl}/api/startChaos`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: 'Chaos started!' }),
+  })
+  .then(response => response.json())
+  .then(data => console.log('Chaos event logged:', data))
+  .catch(error => console.error('Error logging chaos event:', error));
+}
 
 // Leaderboard Button Event Listener
 document.getElementById('leaderboardButton').addEventListener('click', function () {
@@ -101,14 +114,14 @@ function openLeaderboard() {
 
 // Function to fetch and display the leaderboard
 function fetchLeaderboard() {
-  fetch(${backendUrl}/api/leaderboard)
+  fetch(`${backendUrl}/api/leaderboard`)
     .then(response => response.json())
     .then(data => {
       const leaderboardList = document.getElementById('leaderboardList');
       leaderboardList.innerHTML = ''; // Clear existing list
       data.forEach(user => {
         const listItem = document.createElement('li');
-        listItem.textContent = ${user.telegramUsername} - ${user.referralCount} referrals;
+        listItem.textContent = `${user.telegramUsername} - ${user.referralCount} referrals`;
         leaderboardList.appendChild(listItem);
       });
     })
@@ -117,7 +130,7 @@ function fetchLeaderboard() {
     });
 }
 
-// Function to start chaotic effects
+// Function to start chaotic effects (enhanced chaos behavior)
 function startChaos() {
   let chaosInterval;
   let spawnInterval;
@@ -153,14 +166,14 @@ function startChaos() {
     const hours = Math.floor(countdownTimer / 3600);
     const minutes = Math.floor((countdownTimer % 3600) / 60);
     const seconds = countdownTimer % 60;
-    countdownTimerElement.textContent = ${hours}h ${minutes}m ${seconds}s;
+    countdownTimerElement.textContent = `${hours}h ${minutes}m ${seconds}s`;
   }, 1000);
 
   // Function to spawn new windows
   function spawnNewWindow() {
     const newWindow = document.createElement('div');
     newWindow.classList.add('window', 'chaos-window');
-    newWindow.innerHTML = 
+    newWindow.innerHTML = `
       <div class="window-title-bar">
         <div class="window-title">
           <img src="ie-icon.png" alt="IE Icon" class="window-icon">
@@ -181,7 +194,7 @@ function startChaos() {
       <div class="window-content">
         <p>Enjoy the chaos!</p>
       </div>
-    ;
+    `;
     document.body.appendChild(newWindow);
     chaosWindows.push(newWindow);
 
@@ -346,51 +359,6 @@ function makeDraggable(windowElement) {
       isDragging = false;
       windowElement.style.transition = ''; // Restore transition
     }
-  });
-}
-
-// Function to handle window control actions
-function handleWindowControls() {
-  // Main Window Controls
-  const mainWindow = document.getElementById('window');
-  const minimizeButton = mainWindow.querySelector('.window-control.minimize');
-  const maximizeButton = mainWindow.querySelector('.window-control.maximize');
-  const closeButton = mainWindow.querySelector('.window-control.close');
-
-  minimizeButton.addEventListener('click', () => {
-    mainWindow.style.display = 'none';
-  });
-
-  maximizeButton.addEventListener('click', () => {
-    if (mainWindow.classList.contains('maximized')) {
-      // Restore to original size
-      mainWindow.style.width = '600px';
-      mainWindow.style.height = '500px';
-      mainWindow.style.left = '50%';
-      mainWindow.style.top = '50%';
-      mainWindow.style.transform = 'translate(-50%, -50%)';
-      mainWindow.classList.remove('maximized');
-    } else {
-      // Maximize window
-      mainWindow.style.width = '100vw';
-      mainWindow.style.height = 'calc(100vh - 40px)'; // Adjust for taskbar height
-      mainWindow.style.left = '0';
-      mainWindow.style.top = '0';
-      mainWindow.style.transform = 'none';
-      mainWindow.classList.add('maximized');
-    }
-  });
-
-  closeButton.addEventListener('click', () => {
-    mainWindow.style.display = 'none';
-  });
-
-  // Leaderboard Window Controls
-  const leaderboardWindow = document.getElementById('leaderboardWindow');
-  const leaderboardCloseButton = leaderboardWindow.querySelector('.window-control.close');
-
-  leaderboardCloseButton.addEventListener('click', () => {
-    leaderboardWindow.style.display = 'none';
   });
 }
 
