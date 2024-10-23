@@ -13,104 +13,20 @@
     Your browser does not support the video tag.
   </video>
 
-  <div id="desktop">
-    <!-- Taskbar -->
-    <div id="taskbar">
-      <div id="start-button" aria-label="Start Button" role="button" tabindex="0">
-        <img src="start-button-xp.png" alt="Start">
-      </div>
-      <div id="taskbar-items">
-        <div class="taskbar-item" role="button" tabindex="0">
-          <img src="ie-icon.png" alt="IE Icon" class="taskbar-icon">
-          Verify Telegram Membership
-        </div>
-      </div>
-      <div id="system-tray">
-        <img src="volume-icon.png" alt="Volume" class="system-tray-icon">
-        <img src="network-icon.png" alt="Network" class="system-tray-icon">
-        <img src="clock-icon.png" alt="Clock" class="system-tray-icon">
-      </div>
-    </div>
+  <!-- Top Tabs -->
+  <div id="tabs" class="tabs">
+    <button class="tab-button active" data-tab="home">Home</button>
+    <button class="tab-button" data-tab="verification">Verification</button>
+    <button class="tab-button" data-tab="referral">Referral</button>
+    <button class="tab-button" data-tab="dexscreener">Dexscreener</button>
+    <button class="tab-button" data-tab="telegram">Telegram</button>
+  </div>
 
-    <!-- Main Window -->
-    <div id="window" class="window" role="dialog" aria-labelledby="windowTitle">
-      <div class="window-title-bar">
-        <div class="window-title" id="windowTitle">
-          <img src="ie-icon.png" alt="IE Icon" class="window-icon">
-          Verify Telegram Membership
-        </div>
-        <div class="window-controls">
-          <button class="window-control minimize" aria-label="Minimize Window">_</button>
-          <button class="window-control maximize" aria-label="Maximize Window">▢</button>
-          <button class="window-control close" aria-label="Close Window">✕</button>
-        </div>
-      </div>
-
-      <!-- Content Area -->
-      <div class="window-content">
-        <!-- Tabs -->
-        <div class="tabs" role="tablist">
-          <button class="tab-button active" data-tab="verification" role="tab" aria-selected="true">Verification</button>
-          <button class="tab-button" data-tab="dexscreener" role="tab">Dexscreener</button>
-          <button class="tab-button" data-tab="x" role="tab">X</button>
-          <button class="tab-button" data-tab="telegram" role="tab">Telegram</button>
-          <button class="tab-button" data-tab="video" role="tab">Video</button>
-        </div>
-
-        <!-- Tab Contents -->
-        <div id="verification" class="tab-content active" role="tabpanel">
-          <h1>Welcome to the Telegram DP Referral Portal</h1>
-          <div id="verificationContent">
-            <p>Please verify that you've joined our Telegram channel to proceed.</p>
-            <p>
-              Before verifying, please join our Telegram channel
-              <a href="https://t.me/+DOUilvfhtS9lODIx" target="_blank" rel="noopener noreferrer">@DubPTEST</a>,
-              then
-              <a href="https://t.me/DoublePenisVerifyBot" target="_blank" rel="noopener noreferrer">start a chat with our bot</a>
-              and send <code>/verify</code>.
-            </p>
-
-            <input type="text" id="telegramUsername" placeholder="Enter your Telegram username" aria-label="Telegram Username">
-            <button id="verifyButton">Verify</button>
-            <p id="verificationMessage" aria-live="polite"></p>
-          </div>
-          <div id="loading" class="loading-container" style="display: none;" aria-live="polite">
-            <p>Verifying, please wait...</p>
-            <div class="loading-bar">
-              <div class="progress"></div>
-            </div>
-          </div>
-          <div id="referralSection" class="referral-container" style="display: none;">
-            <p>Your referral link:</p>
-            <div class="referral-link">
-              <input type="text" id="referralLink" readonly aria-label="Referral Link">
-              <button id="copyButton">Copy</button>
-            </div>
-          </div>
-        </div>
-
-        <div id="dexscreener" class="tab-content" role="tabpanel">
-          <!-- Dexscreener iframe or content -->
-          <iframe src="https://dexscreener.com/" width="100%" height="400px" title="Dexscreener"></iframe>
-        </div>
-        <div id="x" class="tab-content" role="tabpanel">
-          <!-- X (Twitter) embed or content -->
-          <a class="twitter-timeline" href="https://twitter.com/yourprofile">Tweets by YourProfile</a>
-          <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-        </div>
-        <div id="telegram" class="tab-content" role="tabpanel">
-          <!-- Telegram content -->
-          <p>Join our Telegram channel: <a href="https://t.me/yourchannel" target="_blank" rel="noopener noreferrer">@YourChannel</a></p>
-        </div>
-        <div id="video" class="tab-content" role="tabpanel">
-          <!-- Video content -->
-          <video controls width="100%" aria-label="Promotional Video">
-            <source src="0000-0322.mov" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      </div>
-    </div>
+  <!-- Main Content -->
+  <div id="mainContent" class="main-content">
+    <h1>Claim 350 Free Tokens</h1>
+    <button id="claimButton" class="claim-button">Claim</button>
+    <p id="claimMessage" aria-live="polite"></p>
   </div>
 
   <!-- Optional Sound Effect -->
