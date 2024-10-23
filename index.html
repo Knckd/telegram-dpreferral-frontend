@@ -2,81 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Double Penis Token</title>
+  <title>Telegram DP Referral Portal</title>
   <link rel="stylesheet" href="styles.css">
-  <!-- Favicon -->
-  <link rel="icon" href="assets/images/IMG_2853.jpg" type="image/jpeg">
+  <link rel="icon" href="favicon.ico"> <!-- Add a favicon if available -->
 </head>
 <body>
   <!-- Background Video -->
   <video id="backgroundVideo" autoplay muted loop playsinline>
-    <source src="assets/videos/0000-0322.mov" type="video/mp4">
+    <source src="0000-0322.mov" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 
-  <!-- Tabs Bar -->
-  <div class="tabs-bar">
-    <div class="tab active">
-      <span class="tab-title">Home</span>
-      <span class="tab-close" title="Close Tab">✕</span>
-    </div>
-    <div class="tab">
-      <span class="tab-title">Verification</span>
-      <span class="tab-close" title="Close Tab">✕</span>
-    </div>
-    <div class="tab">
-      <span class="tab-title">Telegram</span>
-      <span class="tab-close" title="Close Tab">✕</span>
-    </div>
-    <div class="tab">
-      <span class="tab-title">Dexscreener</span>
-      <span class="tab-close" title="Close Tab">✕</span>
-    </div>
-    <div class="tab">
-      <span class="tab-title">Referral Leaderboard</span>
-      <span class="tab-close" title="Close Tab">✕</span>
-    </div>
-    <!-- Add more tabs as needed -->
+  <!-- Top Tabs -->
+  <div id="tabs" class="tabs">
+    <button class="tab-button active" data-tab="home">Home</button>
+    <button class="tab-button" data-tab="verification">Verification</button>
+    <button class="tab-button" data-tab="referral">Referral</button>
+    <button class="tab-button" data-tab="dexscreener">Dexscreener</button>
+    <button class="tab-button" data-tab="telegram">Telegram</button>
   </div>
 
-  <!-- Browser-Like Window -->
-  <div id="browserWindow" class="browser-window">
-    <!-- Window Header -->
-    <div class="window-header">
-      <!-- Window Title -->
-      <span class="window-title">Double Penis Token</span>
-      <!-- Window Control Buttons -->
-      <div class="window-controls">
-        <button class="control-button minimize" title="Minimize">–</button>
-        <button class="control-button maximize" title="Maximize">□</button>
-        <button class="control-button close" title="Close">✕</button>
-      </div>
-    </div>
-
-    <!-- Window Content -->
-    <div class="window-content">
-      <!-- Main Content -->
-      <div class="main-content">
-        <h1>Claim 3,500 Free Tokens</h1>
-        <button id="claimButton" class="claim-button">Claim</button>
-        <p id="claimMessage" aria-live="polite"></p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Claim Modal -->
-  <div id="claimModal" class="modal">
-    <div class="modal-content">
-      <span class="close-button" id="closeModal">&times;</span>
-      <h2>Enter Your Telegram Username</h2>
-      <input type="text" id="telegramUsername" placeholder="@yourusername" aria-label="Telegram Username">
-      <button id="submitUsername" class="submit-button">Submit</button>
-      <p id="modalMessage" aria-live="polite"></p>
-    </div>
+  <!-- Main Content -->
+  <div id="mainContent" class="main-content">
+    <h1>Claim 350 Free Tokens</h1>
+    <button id="claimButton" class="claim-button">Claim</button>
+    <p id="claimMessage" aria-live="polite"></p>
   </div>
 
   <!-- Optional Sound Effect -->
-  <audio id="chaosSound" src="assets/audio/chaos.mp3" preload="auto"></audio>
+  <audio id="chaosSound" src="chaos.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
 </body>
