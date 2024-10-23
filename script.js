@@ -1,4 +1,4 @@
-// script.js
+// public/script.js
 
 // Backend URL (Replace with your actual backend URL)
 const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Update this if your backend is hosted elsewhere
