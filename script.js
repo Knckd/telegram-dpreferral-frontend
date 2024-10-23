@@ -148,7 +148,7 @@ const tabContentLinks = document.querySelectorAll('.tab-content-link');
 tabContentLinks.forEach(link => {
   link.addEventListener('click', (event) => {
     // Allow default link behavior
-    // You can add additional functionality here if needed
+    // Additional functionality can be added here if needed
   });
 });
 
