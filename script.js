@@ -11,6 +11,10 @@ const submitUsernameButton = document.getElementById('submitUsername');
 const telegramUsernameInput = document.getElementById('telegramUsername');
 const modalMessage = document.getElementById('modalMessage');
 const mainContent = document.querySelector('.main-content');
+const browserWindow = document.getElementById('browserWindow');
+const minimizeButton = document.querySelector('.control-button.minimize');
+const maximizeButton = document.querySelector('.control-button.maximize');
+const closeButton = document.querySelector('.control-button.close');
 
 // Handle Claim Button Click
 claimButton.addEventListener('click', () => {
@@ -142,14 +146,107 @@ async function notifyBackendOfChaos() {
   }
 }
 
-// Tab functionality - Fully functional links
-const tabContentLinks = document.querySelectorAll('.tab-content-link');
+// Tab functionality - Handle tab close
+const tabCloseButtons = document.querySelectorAll('.tab-close');
 
-tabContentLinks.forEach(link => {
-  link.addEventListener('click', (event) => {
-    // Allow default link behavior
-    // Additional functionality can be added here if needed
+tabCloseButtons.forEach(button => {
+  button.addEventListener('click', (event) => {
+    event.stopPropagation(); // Prevent triggering tab click
+    const tab = event.target.parentElement;
+    tab.remove();
+
+    // If the removed tab was active, set the first tab as active
+    const remainingTabs = document.querySelectorAll('.tab');
+    if (tab.classList.contains('active') && remainingTabs.length > 0) {
+      remainingTabs[0].classList.add('active');
+    }
   });
+});
+
+// Window Control Buttons Functionality
+
+// Minimize Button
+minimizeButton.addEventListener('click', () => {
+  browserWindow.style.display = 'none';
+  createMinimizedBar();
+});
+
+// Maximize Button
+let isMaximized = false;
+maximizeButton.addEventListener('click', () => {
+  if (!isMaximized) {
+    browserWindow.style.width = '100%';
+    browserWindow.style.height = '100%';
+    browserWindow.style.top = '0';
+    browserWindow.style.left = '0';
+    isMaximized = true;
+    maximizeButton.textContent = '❐'; // Restore icon
+    maximizeButton.title = 'Restore';
+  } else {
+    browserWindow.style.width = '800px';
+    browserWindow.style.height = '600px';
+    browserWindow.style.top = '50%';
+    browserWindow.style.left = '50%';
+    browserWindow.style.transform = 'translate(-50%, -50%)';
+    isMaximized = false;
+    maximizeButton.textContent = '□'; // Maximize icon
+    maximizeButton.title = 'Maximize';
+  }
+});
+
+// Close Button
+closeButton.addEventListener('click', () => {
+  browserWindow.style.display = 'none';
+  removeMinimizedBar();
+});
+
+// Create Minimized Bar
+function createMinimizedBar() {
+  let minimizedBar = document.getElementById('minimizedBar');
+  if (!minimizedBar) {
+    minimizedBar = document.createElement('div');
+    minimizedBar.id = 'minimizedBar';
+    minimizedBar.className = 'minimized-bar';
+    minimizedBar.textContent = 'Double Penis Token';
+    minimizedBar.addEventListener('click', () => {
+      browserWindow.style.display = 'flex';
+      minimizedBar.remove();
+    });
+    document.body.appendChild(minimizedBar);
+  }
+}
+
+// Remove Minimized Bar
+function removeMinimizedBar() {
+  const minimizedBar = document.getElementById('minimizedBar');
+  if (minimizedBar) {
+    minimizedBar.remove();
+  }
+}
+
+// Make the browser window draggable
+let isDragging = false;
+let offsetX, offsetY;
+
+const windowHeader = document.querySelector('.window-header');
+
+windowHeader.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  offsetX = e.clientX - browserWindow.offsetLeft;
+  offsetY = e.clientY - browserWindow.offsetTop;
+  browserWindow.style.transition = 'none';
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (isDragging) {
+    browserWindow.style.left = `${e.clientX - offsetX}px`;
+    browserWindow.style.top = `${e.clientY - offsetY}px`;
+  }
+});
+
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+  browserWindow.style.transition = 'all 0.3s ease';
 });
 
 // Function to start chaotic effects by duplicating browser windows
