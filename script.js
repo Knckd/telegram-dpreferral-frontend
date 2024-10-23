@@ -116,12 +116,10 @@ tabButtons.forEach(button => {
   });
 });
 
-// Function to start chaotic effects (enhanced chaos behavior)
+// Function to start chaotic effects by duplicating browser windows
 function startChaos() {
-  let chaosWindows = [];
-  let chaosCount = 0;
   let chaosInterval;
-  let chaosTimeout;
+  let chaosCount = 0;
 
   // Play sound effect if available
   const chaosSound = document.getElementById('chaosSound');
@@ -148,7 +146,7 @@ function startChaos() {
   }, 500);
 
   // Stop the chaos after a certain time or based on user interaction
-  chaosTimeout = setTimeout(() => {
+  setTimeout(() => {
     endChaos();
   }, 60000); // Chaos lasts for 60 seconds
 
@@ -158,88 +156,84 @@ function startChaos() {
       endChaos();
     }
   });
+}
 
-  function createChaosWindow() {
-    const chaosWindow = window.open('', '_blank', 'width=300,height=200');
+function createChaosWindow() {
+  const chaosWindow = window.open('', '_blank', 'width=300,height=200');
 
-    if (chaosWindow) {
-      chaosWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <title>Chaos Window</title>
-          <style>
-            body {
-              margin: 0;
-              padding: 0;
-              background-color: yellow;
-              color: black;
-              font-family: "Tahoma", sans-serif;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              height: 100vh;
-              overflow: hidden;
-            }
-            h1 {
-              font-size: 24px;
-              animation: shake 0.5s infinite;
-            }
-            @keyframes shake {
-              0% { transform: translate(1px, 1px) rotate(0deg); }
-              10% { transform: translate(-1px, -2px) rotate(-1deg); }
-              20% { transform: translate(-3px, 0px) rotate(1deg); }
-              30% { transform: translate(3px, 2px) rotate(0deg); }
-              40% { transform: translate(1px, -1px) rotate(1deg); }
-              50% { transform: translate(-1px, 2px) rotate(-1deg); }
-              60% { transform: translate(-3px, 1px) rotate(0deg); }
-              70% { transform: translate(3px, 1px) rotate(-1deg); }
-              80% { transform: translate(-1px, -1px) rotate(1deg); }
-              90% { transform: translate(1px, 2px) rotate(0deg); }
-              100% { transform: translate(1px, -2px) rotate(-1deg); }
-            }
-          </style>
-        </head>
-        <body>
-          <h1>You are an idiot!</h1>
-        </body>
-        </html>
-      `);
+  if (chaosWindow) {
+    chaosWindow.document.write(`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <title>Chaos Window</title>
+        <style>
+          body {
+            margin: 0;
+            padding: 0;
+            background-color: yellow;
+            color: black;
+            font-family: "Tahoma", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+          }
+          h1 {
+            font-size: 24px;
+            animation: shake 0.5s infinite;
+          }
+          @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+          }
+        </style>
+      </head>
+      <body>
+        <h1>You are an idiot!</h1>
+      </body>
+      </html>
+    `);
 
-      // Move the window to a random position after a short delay
-      setTimeout(() => {
-        const x = Math.floor(Math.random() * (screen.width - 300));
-        const y = Math.floor(Math.random() * (screen.height - 200));
-        chaosWindow.moveTo(x, y);
-      }, 1000);
+    // Move the window to a random position after a short delay
+    setTimeout(() => {
+      const x = Math.floor(Math.random() * (screen.width - 300));
+      const y = Math.floor(Math.random() * (screen.height - 200));
+      chaosWindow.moveTo(x, y);
+    }, 1000);
 
-      // Close the window after a random time between 5-15 seconds
-      setTimeout(() => {
-        chaosWindow.close();
-      }, Math.random() * 10000 + 5000);
-    } else {
-      console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
-      endChaos(); // End chaos if pop-ups are blocked
-    }
+    // Close the window after a random time between 5-15 seconds
+    setTimeout(() => {
+      chaosWindow.close();
+    }, Math.random() * 10000 + 5000);
+  } else {
+    console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
+    endChaos(); // End chaos if pop-ups are blocked
+  }
+}
+
+function endChaos() {
+  // Clear all intervals by resetting the chaos effect
+  // Since we don't track all opened windows, users need to manually close them or rely on auto-close
+  // Remove no-scroll class
+  document.body.classList.remove('no-scroll');
+
+  // Stop sound
+  const chaosSound = document.getElementById('chaosSound');
+  if (chaosSound) {
+    chaosSound.pause();
+    chaosSound.currentTime = 0;
   }
 
-  function endChaos() {
-    clearInterval(chaosInterval);
-    clearTimeout(chaosTimeout);
-
-    // Close all opened chaos windows
-    // Note: Modern browsers restrict access to windows opened from different origins or after certain time
-    // Hence, it's challenging to track and close all chaos windows effectively
-
-    // Remove no-scroll class
-    document.body.classList.remove('no-scroll');
-
-    // Stop sound
-    if (chaosSound) {
-      chaosSound.pause();
-      chaosSound.currentTime = 0;
-    }
-
-    alert('The chaos has ended!');
-  }
+  alert('The chaos has ended!');
 }
