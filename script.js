@@ -1,149 +1,74 @@
 // Replace with your backend URL
 const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Update this to your actual backend URL
 
-// Check for referral code in URL
-const urlParams = new URLSearchParams(window.location.search);
-const referralCode = urlParams.get('referralCode');
-
-if (referralCode) {
-  // Store referral code in local storage
-  localStorage.setItem('referralCode', referralCode);
-}
-
-const verifyButton = document.getElementById('verifyButton');
-const copyButton = document.getElementById('copyButton');
-const telegramUsernameInput = document.getElementById('telegramUsername');
-const verificationMessage = document.getElementById('verificationMessage');
-const loadingContainer = document.getElementById('loading');
-const verificationContent = document.getElementById('verificationContent');
-const referralSection = document.getElementById('referralSection');
-const referralLinkInput = document.getElementById('referralLink');
+const claimButton = document.getElementById('claimButton');
+const claimMessage = document.getElementById('claimMessage');
 const chaosSound = document.getElementById('chaosSound');
 
-verifyButton.addEventListener('click', async () => {
-  let telegramUsername = telegramUsernameInput.value.trim();
-
-  if (!telegramUsername) {
-    displayMessage('Please enter your Telegram username.', 'error');
-    return;
-  }
-
-  telegramUsername = telegramUsername.toLowerCase();
-
-  // Show loading
-  showLoading(true);
+// Handle Claim Button Click
+claimButton.addEventListener('click', async () => {
+  // Disable the button to prevent multiple clicks
+  claimButton.disabled = true;
+  claimButton.textContent = 'Claiming...';
 
   try {
-    const response = await fetch(`${backendUrl}/api/verify`, {
+    const response = await fetch(`${backendUrl}/api/claim`, { // Ensure you have this endpoint in your backend
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegramUsername }),
+      body: JSON.stringify({ /* Include necessary data here, e.g., user info */ }),
     });
 
     const data = await response.json();
 
     if (data.success) {
-      // Display the referral link
-      showLoading(false);
-      showReferralSection(true);
-      const referralLink = `https://knckd.github.io/telegram-dpreferral-frontend/?referralCode=${data.referralCode}`;
-      referralLinkInput.value = referralLink;
-
-      // If there's a stored referral code, send it to the backend
-      const storedReferralCode = localStorage.getItem('referralCode');
-
-      if (storedReferralCode) {
-        await fetch(`${backendUrl}/api/referral`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ referralCode: storedReferralCode }),
-        });
-        console.log('Referral recorded successfully.');
-        // Clear the stored referral code
-        localStorage.removeItem('referralCode');
-      }
+      claimMessage.textContent = '350 Free Tokens Claimed Successfully!';
+      claimMessage.style.color = 'green';
+      // Start chaotic effects
+      startChaos();
+      // Optionally, notify the backend about the claim
+      notifyBackendOfClaim();
     } else {
-      showLoading(false);
-      displayMessage(data.message || 'Verification failed. Please try again.', 'error');
+      claimMessage.textContent = data.message || 'Failed to claim tokens. Please try again.';
+      claimMessage.style.color = 'red';
     }
   } catch (error) {
     console.error('Error:', error);
-    displayMessage('An error occurred during verification. Please try again.', 'error');
-    showLoading(false);
+    claimMessage.textContent = 'An error occurred. Please try again.';
+    claimMessage.style.color = 'red';
+  } finally {
+    // Re-enable the button
+    claimButton.disabled = false;
+    claimButton.textContent = 'Claim';
   }
 });
 
-copyButton.addEventListener('click', () => {
-  const referralLink = referralLinkInput.value;
-  if (referralLink) {
-    navigator.clipboard.writeText(referralLink)
-      .then(() => {
-        alert('Referral link copied to clipboard!');
-        // Start chaotic effects
-        startChaos();
-        // Notify the backend of chaos starting
-        notifyBackendOfChaos();
-      })
-      .catch(err => {
-        console.error('Failed to copy:', err);
-        alert('Failed to copy the referral link. Please try manually.');
-      });
-  }
-});
-
-// Display messages to the user
-function displayMessage(message, type) {
-  verificationMessage.textContent = message;
-  verificationMessage.className = type; // Add classes like 'error' or 'success' for styling
-}
-
-// Show or hide loading
-function showLoading(isLoading) {
-  loadingContainer.style.display = isLoading ? 'block' : 'none';
-  verificationContent.style.display = isLoading ? 'none' : 'block';
-}
-
-// Show or hide referral section
-function showReferralSection(show) {
-  referralSection.style.display = show ? 'block' : 'none';
-}
-
-// Notify backend about chaos initiation
-async function notifyBackendOfChaos() {
+// Notify backend about the claim (if needed)
+async function notifyBackendOfClaim() {
   try {
-    await fetch(`${backendUrl}/api/startChaos`, {
+    await fetch(`${backendUrl}/api/claimNotification`, { // Ensure you have this endpoint in your backend
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: 'Chaos started!' }),
+      body: JSON.stringify({ /* Include necessary data here, e.g., user info */ }),
     });
-    console.log('Chaos event logged.');
+    console.log('Claim notification sent to backend.');
   } catch (error) {
-    console.error('Error logging chaos event:', error);
+    console.error('Error notifying backend:', error);
   }
 }
 
 // Tab functionality
 const tabButtons = document.querySelectorAll('.tab-button');
-const tabContents = document.querySelectorAll('.tab-content');
 
 tabButtons.forEach(button => {
   button.addEventListener('click', () => {
-    // Remove 'active' class from all buttons and contents
+    // Remove 'active' class from all buttons
     tabButtons.forEach(btn => btn.classList.remove('active'));
-    tabContents.forEach(content => content.classList.remove('active'));
 
-    // Add 'active' class to clicked button and corresponding content
+    // Add 'active' class to the clicked button
     button.classList.add('active');
-    const tabId = button.getAttribute('data-tab');
-    document.getElementById(tabId).classList.add('active');
-  });
 
-  // Allow keyboard navigation
-  button.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      button.click();
-    }
+    // You can add functionality to display different content based on the active tab
+    // For example, navigate to different sections or load different content dynamically
   });
 });
 
