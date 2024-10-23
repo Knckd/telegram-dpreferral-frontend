@@ -20,6 +20,11 @@ document.getElementById('verifyButton').addEventListener('click', async function
     return;
   }
 
+  // Remove '@' symbol if present
+  if (telegramUsername.startsWith('@')) {
+    telegramUsername = telegramUsername.substring(1);
+  }
+
   telegramUsername = telegramUsername.toLowerCase();
 
   // Show loading bar
