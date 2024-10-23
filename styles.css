@@ -168,6 +168,40 @@ body::after {
   flex-direction: column;
 }
 
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.tab-button {
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: #E3E3E3;
+  border: none;
+  outline: none;
+}
+
+.tab-button:not(:last-child) {
+  border-right: 1px solid #ccc;
+}
+
+.tab-button.active {
+  background-color: #FFFFFF;
+  font-weight: bold;
+}
+
+.tab-content {
+  display: none;
+  padding: 10px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.tab-content.active {
+  display: block;
+}
+
 input[type="text"] {
   padding: 5px;
   width: 300px;
@@ -246,45 +280,11 @@ h2 {
   }
 }
 
-/* Tabs */
-.tabs {
-  display: flex;
-  border-bottom: 1px solid #ccc;
-}
-
-.tab-button {
-  padding: 5px 10px;
-  cursor: pointer;
-  background-color: #E3E3E3;
-  border: none;
-  outline: none;
-}
-
-.tab-button:not(:last-child) {
-  border-right: 1px solid #ccc;
-}
-
-.tab-button.active {
-  background-color: #FFFFFF;
-  font-weight: bold;
-}
-
-.tab-content {
-  display: none;
-  padding: 10px;
-  overflow-y: auto;
-  flex-grow: 1;
-}
-
-.tab-content.active {
-  display: block;
-}
-
 /* Styles for chaotic windows */
 .chaos-window {
-  width: 200px;
-  height: 150px;
-  background-color: #F0F0F0;
+  width: 300px;
+  height: 200px;
+  background-color: yellow;
   border: 2px solid #000;
   position: absolute;
   z-index: 1000;
