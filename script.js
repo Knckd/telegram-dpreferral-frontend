@@ -260,37 +260,46 @@ function makeDraggable(windowElement) {
 function handleWindowControls() {
   // Main Window Controls
   const mainWindow = document.getElementById('window');
+  if (!mainWindow) {
+    console.warn('❗ Main window element not found.');
+    return;
+  }
+
   const minimizeButton = mainWindow.querySelector('.window-control.minimize');
   const maximizeButton = mainWindow.querySelector('.window-control.maximize');
   const closeButton = mainWindow.querySelector('.window-control.close');
 
-  minimizeButton.addEventListener('click', () => {
-    mainWindow.style.display = 'none';
-  });
+  if (minimizeButton && maximizeButton && closeButton) {
+    minimizeButton.addEventListener('click', () => {
+      mainWindow.style.display = 'none';
+    });
 
-  maximizeButton.addEventListener('click', () => {
-    if (mainWindow.classList.contains('maximized')) {
-      // Restore to original size
-      mainWindow.style.width = '800px';
-      mainWindow.style.height = '600px';
-      mainWindow.style.left = '50%';
-      mainWindow.style.top = '50%';
-      mainWindow.style.transform = 'translate(-50%, -50%)';
-      mainWindow.classList.remove('maximized');
-    } else {
-      // Maximize window
-      mainWindow.style.width = '100vw';
-      mainWindow.style.height = 'calc(100vh - 40px)'; // Adjust for taskbar height
-      mainWindow.style.left = '0';
-      mainWindow.style.top = '0';
-      mainWindow.style.transform = 'none';
-      mainWindow.classList.add('maximized');
-    }
-  });
+    maximizeButton.addEventListener('click', () => {
+      if (mainWindow.classList.contains('maximized')) {
+        // Restore to original size
+        mainWindow.style.width = '800px';
+        mainWindow.style.height = '600px';
+        mainWindow.style.left = '50%';
+        mainWindow.style.top = '50%';
+        mainWindow.style.transform = 'translate(-50%, -50%)';
+        mainWindow.classList.remove('maximized');
+      } else {
+        // Maximize window
+        mainWindow.style.width = '100vw';
+        mainWindow.style.height = 'calc(100vh - 40px)'; // Adjust for taskbar height
+        mainWindow.style.left = '0';
+        mainWindow.style.top = '0';
+        mainWindow.style.transform = 'none';
+        mainWindow.classList.add('maximized');
+      }
+    });
 
-  closeButton.addEventListener('click', () => {
-    mainWindow.style.display = 'none';
-  });
+    closeButton.addEventListener('click', () => {
+      mainWindow.style.display = 'none';
+    });
+  } else {
+    console.warn('❗ One or more window control buttons not found.');
+  }
 }
 
 handleWindowControls();
