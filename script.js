@@ -22,7 +22,7 @@ document.getElementById('verifyButton').addEventListener('click', async function
 
   // Show loading bar
   document.getElementById('loading').style.display = 'block';
-  document.getElementById('verification').style.display = 'none';
+  document.getElementById('verificationContent').style.display = 'none';
 
   // Send verification request to the backend
   try {
@@ -66,14 +66,14 @@ document.getElementById('verifyButton').addEventListener('click', async function
       }
     } else {
       document.getElementById('loading').style.display = 'none';
-      document.getElementById('verification').style.display = 'block';
+      document.getElementById('verificationContent').style.display = 'block';
       document.getElementById('verificationMessage').textContent = data.message;
     }
   } catch (error) {
     console.error('Error:', error);
     alert('An error occurred during verification.');
     document.getElementById('loading').style.display = 'none';
-    document.getElementById('verification').style.display = 'block';
+    document.getElementById('verificationContent').style.display = 'block';
   }
 });
 
@@ -99,46 +99,30 @@ function notifyBackendOfChaos() {
   .catch(error => console.error('Error logging chaos event:', error));
 }
 
-// Leaderboard Button Event Listener
-document.getElementById('leaderboardButton').addEventListener('click', function () {
-  openLeaderboard();
+// Tab functionality
+const tabButtons = document.querySelectorAll('.tab-button');
+const tabContents = document.querySelectorAll('.tab-content');
+
+tabButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    // Remove 'active' class from all buttons and contents
+    tabButtons.forEach(btn => btn.classList.remove('active'));
+    tabContents.forEach(content => content.classList.remove('active'));
+
+    // Add 'active' class to clicked button and corresponding content
+    button.classList.add('active');
+    const tabId = button.getAttribute('data-tab');
+    document.getElementById(tabId).classList.add('active');
+  });
 });
-
-// Function to open the leaderboard window
-function openLeaderboard() {
-  const leaderboardWindow = document.getElementById('leaderboardWindow');
-  leaderboardWindow.style.display = 'block';
-  fetchLeaderboard();
-  makeDraggable(leaderboardWindow);
-}
-
-// Function to fetch and display the leaderboard
-function fetchLeaderboard() {
-  fetch(`${backendUrl}/api/leaderboard`)
-    .then(response => response.json())
-    .then(data => {
-      const leaderboardList = document.getElementById('leaderboardList');
-      leaderboardList.innerHTML = ''; // Clear existing list
-      data.forEach(user => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${user.telegramUsername} - ${user.referralCount} referrals`;
-        leaderboardList.appendChild(listItem);
-      });
-    })
-    .catch(error => {
-      console.error('Error fetching leaderboard:', error);
-    });
-}
 
 // Function to start chaotic effects (enhanced chaos behavior)
 function startChaos() {
-  let chaosInterval;
-  let spawnInterval;
   let chaosWindows = [];
-  const chaosDuration = 100 * 60 * 60; // 100 hours in seconds
-  let countdownTimer = chaosDuration;
+  let chaosCount = 0;
+  let chaosInterval;
 
-  // Play sound effect (if desired)
+  // Play sound effect if available
   const chaosSound = document.getElementById('chaosSound');
   if (chaosSound) {
     chaosSound.play();
@@ -147,183 +131,102 @@ function startChaos() {
   // Disable scrolling
   document.body.classList.add('no-scroll');
 
-  // Start animated background
-  document.body.style.animation = 'backgroundChaos 5s infinite';
+  // Start the chaos by spawning windows rapidly
+  chaosInterval = setInterval(() => {
+    createChaosWindow();
+    chaosCount++;
 
-  // Show countdown timer
-  const countdownElement = document.getElementById('countdown');
-  const countdownTimerElement = document.getElementById('countdownTimer');
-  countdownElement.style.display = 'block';
-
-  const countdownInterval = setInterval(() => {
-    countdownTimer--;
-    if (countdownTimer <= 0) {
-      clearInterval(countdownInterval);
-      endChaos();
-      return;
+    // Escalate the chaos by increasing spawn rate
+    if (chaosCount === 20) {
+      clearInterval(chaosInterval);
+      chaosInterval = setInterval(createChaosWindow, 200);
+    } else if (chaosCount === 50) {
+      clearInterval(chaosInterval);
+      chaosInterval = setInterval(createChaosWindow, 100);
     }
-    // Convert seconds to hours, minutes, and seconds
-    const hours = Math.floor(countdownTimer / 3600);
-    const minutes = Math.floor((countdownTimer % 3600) / 60);
-    const seconds = countdownTimer % 60;
-    countdownTimerElement.textContent = `${hours}h ${minutes}m ${seconds}s`;
-  }, 1000);
+  }, 500);
 
-  // Function to spawn new windows
-  function spawnNewWindow() {
-    const newWindow = document.createElement('div');
-    newWindow.classList.add('window', 'chaos-window');
-    newWindow.innerHTML = `
+  // Stop the chaos after a certain time or based on user interaction
+  setTimeout(() => {
+    endChaos();
+  }, 60000); // Chaos lasts for 60 seconds
+
+  // Allow user to end the chaos with a key combination
+  document.addEventListener('keydown', function (event) {
+    if (event.ctrlKey && event.shiftKey && event.key === 'X') {
+      endChaos();
+    }
+  });
+
+  function createChaosWindow() {
+    const chaosWindow = document.createElement('div');
+    chaosWindow.classList.add('window', 'chaos-window');
+    chaosWindow.innerHTML = `
       <div class="window-title-bar">
-        <div class="window-title">
-          <img src="ie-icon.png" alt="IE Icon" class="window-icon">
-          Surprise!
-        </div>
+        <div class="window-title">You Are an Idiot!</div>
         <div class="window-controls">
-          <div class="window-control minimize">
-            <img src="minimize-button.png" alt="_">
-          </div>
-          <div class="window-control maximize">
-            <img src="maximize-button.png" alt="☐">
-          </div>
-          <div class="window-control close">
-            <img src="close-button.png" alt="X">
-          </div>
+          <div class="window-control close">✕</div>
         </div>
       </div>
       <div class="window-content">
-        <p>Enjoy the chaos!</p>
+        <p>You are an idiot!</p>
       </div>
     `;
-    document.body.appendChild(newWindow);
-    chaosWindows.push(newWindow);
 
-    // Randomize window size
-    newWindow.style.width = Math.random() * 200 + 300 + 'px';
-    newWindow.style.height = Math.random() * 150 + 200 + 'px';
+    // Randomize position
+    chaosWindow.style.left = Math.random() * (window.innerWidth - 200) + 'px';
+    chaosWindow.style.top = Math.random() * (window.innerHeight - 100) + 'px';
 
-    makeDraggable(newWindow);
-    moveWindow(newWindow);
+    // Randomize background color
+    chaosWindow.style.backgroundColor = getRandomColor();
 
-    // Add window controls functionality
-    const minimizeButton = newWindow.querySelector('.window-control.minimize');
-    const maximizeButton = newWindow.querySelector('.window-control.maximize');
-    const closeButton = newWindow.querySelector('.window-control.close');
+    document.body.appendChild(chaosWindow);
+    chaosWindows.push(chaosWindow);
 
-    minimizeButton.addEventListener('click', () => {
-      newWindow.style.display = 'none';
-    });
+    // Make window draggable and moving
+    makeDraggable(chaosWindow);
+    moveWindow(chaosWindow);
 
-    maximizeButton.addEventListener('click', () => {
-      if (newWindow.classList.contains('maximized')) {
-        // Restore to original size
-        newWindow.style.width = '400px';
-        newWindow.style.height = '300px';
-        newWindow.classList.remove('maximized');
-      } else {
-        // Maximize window
-        newWindow.style.width = '100vw';
-        newWindow.style.height = 'calc(100vh - 40px)'; // Adjust for taskbar height
-        newWindow.style.left = '0';
-        newWindow.style.top = '0';
-        newWindow.style.transform = 'none';
-        newWindow.classList.add('maximized');
-      }
-    });
-
+    // Close button functionality
+    const closeButton = chaosWindow.querySelector('.window-control.close');
     closeButton.addEventListener('click', () => {
-      clearInterval(newWindow.movementInterval);
-      newWindow.remove();
+      chaosWindow.remove();
     });
   }
 
-  // Function to randomly move a window
   function moveWindow(windowElement) {
-    windowElement.style.position = 'absolute';
-    windowElement.style.zIndex = 1000;
-    const moveSpeed = Math.random() * 3000 + 2000; // Random speed between 2000ms and 5000ms
-
-    const windowMovementInterval = setInterval(() => {
-      windowElement.style.left = Math.random() * (window.innerWidth - windowElement.offsetWidth) + 'px';
-      windowElement.style.top = Math.random() * (window.innerHeight - windowElement.offsetHeight - document.getElementById('taskbar').offsetHeight) + 'px';
-    }, moveSpeed);
-
-    // Store the interval so it can be cleared later
-    windowElement.movementInterval = windowMovementInterval;
+    const speed = Math.random() * 3000 + 2000; // Random speed between 2000ms and 5000ms
+    windowElement.movementInterval = setInterval(() => {
+      windowElement.style.left = Math.random() * (window.innerWidth - 200) + 'px';
+      windowElement.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+    }, speed);
   }
 
-  // Make the main window draggable
-  const originalWindow = document.getElementById('window');
-  makeDraggable(originalWindow);
-  moveWindow(originalWindow);
-
-  // Ramp up the craziness by spawning more windows
-  chaosInterval = setInterval(() => {
-    moveWindow(originalWindow);
-  }, 5000); // Adjusted to 5000ms for slower movement
-
-  // Start spawning windows
-  spawnInterval = setInterval(spawnNewWindow, 10000); // New window every 10 seconds
-
-  // Escalating chaos: speed up window movement and spawn more windows faster
-  setTimeout(() => {
-    clearInterval(chaosInterval);
-    clearInterval(spawnInterval);
-
-    chaosInterval = setInterval(() => {
-      moveWindow(originalWindow);
-      chaosWindows.forEach(window => moveWindow(window));
-    }, 2000); // Increase speed of movement
-
-    spawnInterval = setInterval(spawnNewWindow, 5000); // Faster window spawning
-  }, 60000); // After 1 minute, the chaos escalates
-
-  // Function to end the chaos
   function endChaos() {
-    // Stop all intervals
-    clearInterval(chaosInterval);
-    clearInterval(spawnInterval);
-    clearInterval(countdownInterval);
-
-    // Remove chaos windows and clear their movement intervals
     chaosWindows.forEach(window => {
       clearInterval(window.movementInterval);
       window.remove();
     });
     chaosWindows = [];
 
-    // Stop moving the original window
-    clearInterval(originalWindow.movementInterval);
-    originalWindow.style.position = 'static';
-
-    // Stop animated background
-    document.body.style.animation = '';
-
-    // Enable scrolling
     document.body.classList.remove('no-scroll');
 
-    // Hide countdown timer
-    countdownElement.style.display = 'none';
-
-    // Hide chaos sound if it's playing
     if (chaosSound) {
       chaosSound.pause();
       chaosSound.currentTime = 0;
     }
 
-    // Return to referral copy section
-    document.getElementById('referralSection').scrollIntoView({ behavior: 'smooth' });
-
-    // Display a confirmation message without leaving the screen
-    alert('The chaos has ended! Thank you for your patience.');
+    alert('The chaos has ended!');
   }
 
-  // Optional: Allow the user to end the chaos early by pressing a key combination (e.g., Ctrl + Shift + X)
-  document.addEventListener('keydown', function (event) {
-    if (event.ctrlKey && event.shiftKey && event.key === 'X') {
-      endChaos();
+  function getRandomColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
     }
-  });
+    return color;
+  }
 }
 
 // Function to make a window draggable
@@ -363,4 +266,40 @@ function makeDraggable(windowElement) {
 }
 
 // Initialize window controls functionality
+function handleWindowControls() {
+  // Main Window Controls
+  const mainWindow = document.getElementById('window');
+  const minimizeButton = mainWindow.querySelector('.window-control minimize');
+  const maximizeButton = mainWindow.querySelector('.window-control maximize');
+  const closeButton = mainWindow.querySelector('.window-control close');
+
+  minimizeButton.addEventListener('click', () => {
+    mainWindow.style.display = 'none';
+  });
+
+  maximizeButton.addEventListener('click', () => {
+    if (mainWindow.classList.contains('maximized')) {
+      // Restore to original size
+      mainWindow.style.width = '800px';
+      mainWindow.style.height = '600px';
+      mainWindow.style.left = '50%';
+      mainWindow.style.top = '50%';
+      mainWindow.style.transform = 'translate(-50%, -50%)';
+      mainWindow.classList.remove('maximized');
+    } else {
+      // Maximize window
+      mainWindow.style.width = '100vw';
+      mainWindow.style.height = 'calc(100vh - 40px)'; // Adjust for taskbar height
+      mainWindow.style.left = '0';
+      mainWindow.style.top = '0';
+      mainWindow.style.transform = 'none';
+      mainWindow.classList.add('maximized');
+    }
+  });
+
+  closeButton.addEventListener('click', () => {
+    mainWindow.style.display = 'none';
+  });
+}
+
 handleWindowControls();
