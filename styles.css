@@ -88,6 +88,10 @@ body {
   display: inline;
 }
 
+.tabs .tab:last-child {
+  margin-right: auto;
+}
+
 /* Main Content */
 .main-content {
   position: absolute;
