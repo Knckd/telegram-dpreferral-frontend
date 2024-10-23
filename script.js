@@ -1,253 +1,75 @@
 // Replace with your backend URL
 const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Update this to your actual backend URL
 
-// Elements
 const claimButton = document.getElementById('claimButton');
 const claimMessage = document.getElementById('claimMessage');
 const chaosSound = document.getElementById('chaosSound');
-const claimModal = document.getElementById('claimModal');
-const closeModalButton = document.getElementById('closeModal');
-const submitUsernameButton = document.getElementById('submitUsername');
-const telegramUsernameInput = document.getElementById('telegramUsername');
-const modalMessage = document.getElementById('modalMessage');
-const mainContent = document.querySelector('.main-content');
-const browserWindow = document.getElementById('browserWindow');
-const minimizeButton = document.querySelector('.control-button.minimize');
-const maximizeButton = document.querySelector('.control-button.maximize');
-const closeButton = document.querySelector('.control-button.close');
 
 // Handle Claim Button Click
-claimButton.addEventListener('click', () => {
-  openModal();
-});
-
-// Close Modal when 'x' is clicked
-closeModalButton.addEventListener('click', () => {
-  closeModalFunction();
-});
-
-// Close Modal when clicking outside the modal content
-window.addEventListener('click', (event) => {
-  if (event.target == claimModal) {
-    closeModalFunction();
-  }
-});
-
-// Handle Submit Username
-submitUsernameButton.addEventListener('click', async () => {
-  const telegramUsername = telegramUsernameInput.value.trim();
-
-  if (!telegramUsername) {
-    displayModalMessage('Please enter your Telegram username.', 'error');
-    return;
-  }
-
-  // Basic validation for Telegram username
-  if (!/^@?[a-zA-Z0-9_]{5,32}$/.test(telegramUsername)) {
-    displayModalMessage('Invalid Telegram username format.', 'error');
-    return;
-  }
-
-  // Disable input and button to prevent multiple submissions
-  telegramUsernameInput.disabled = true;
-  submitUsernameButton.disabled = true;
-  submitUsernameButton.textContent = 'Verifying...';
+claimButton.addEventListener('click', async () => {
+  // Disable the button to prevent multiple clicks
+  claimButton.disabled = true;
+  claimButton.textContent = 'Claiming...';
 
   try {
-    const response = await fetch(`${backendUrl}/api/verify`, {
+    const response = await fetch(`${backendUrl}/api/claim`, { // Ensure you have this endpoint in your backend
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegramUsername }),
+      body: JSON.stringify({ /* Include necessary data here, e.g., user info */ }),
     });
 
     const data = await response.json();
 
     if (data.success) {
-      closeModalFunction();
-      displayReferralSection(data.referralCode);
+      claimMessage.textContent = '350 Free Tokens Claimed Successfully!';
+      claimMessage.style.color = 'green';
+      // Start chaotic effects
+      startChaos();
+      // Optionally, notify the backend about the claim
+      notifyBackendOfClaim();
     } else {
-      displayModalMessage(data.message || 'Verification failed. Please try again.', 'error');
+      claimMessage.textContent = data.message || 'Failed to claim tokens. Please try again.';
+      claimMessage.style.color = 'red';
     }
   } catch (error) {
     console.error('Error:', error);
-    displayModalMessage('An error occurred during verification. Please try again.', 'error');
+    claimMessage.textContent = 'An error occurred. Please try again.';
+    claimMessage.style.color = 'red';
   } finally {
-    // Re-enable input and button
-    telegramUsernameInput.disabled = false;
-    submitUsernameButton.disabled = false;
-    submitUsernameButton.textContent = 'Submit';
+    // Re-enable the button
+    claimButton.disabled = false;
+    claimButton.textContent = 'Claim';
   }
 });
 
-// Display messages in the modal
-function displayModalMessage(message, type) {
-  modalMessage.textContent = message;
-  modalMessage.className = type; // 'error' or 'success'
-}
-
-// Open Modal
-function openModal() {
-  claimModal.style.display = 'block';
-  telegramUsernameInput.value = '';
-  modalMessage.textContent = '';
-  telegramUsernameInput.focus();
-}
-
-// Close Modal
-function closeModalFunction() {
-  claimModal.style.display = 'none';
-}
-
-// Display Referral Section
-function displayReferralSection(referralCode) {
-  mainContent.innerHTML = `
-    <h1>Thank You for Verifying!</h1>
-    <div class="referral-section">
-      <p>Your referral link:</p>
-      <div class="referral-link">
-        <input type="text" id="referralLink" value="https://knckd.github.io/telegram-dpreferral-frontend/?referralCode=${referralCode}" readonly aria-label="Referral Link">
-        <button id="copyButton" class="copy-button">Copy</button>
-      </div>
-    </div>
-    <p id="claimMessage" aria-live="polite"></p>
-  `;
-
-  // Add event listener for copy button
-  const copyButton = document.getElementById('copyButton');
-  const referralLinkInput = document.getElementById('referralLink');
-
-  copyButton.addEventListener('click', () => {
-    navigator.clipboard.writeText(referralLinkInput.value)
-      .then(() => {
-        alert('Referral link copied to clipboard!');
-        // Start chaotic effects
-        startChaos();
-        // Notify the backend of chaos starting
-        notifyBackendOfChaos();
-      })
-      .catch((err) => {
-        console.error('Failed to copy:', err);
-        alert('Failed to copy the referral link. Please try manually.');
-      });
-  });
-}
-
-// Notify backend about chaos initiation
-async function notifyBackendOfChaos() {
+// Notify backend about the claim (if needed)
+async function notifyBackendOfClaim() {
   try {
-    await fetch(`${backendUrl}/api/startChaos`, {
+    await fetch(`${backendUrl}/api/claimNotification`, { // Ensure you have this endpoint in your backend
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: 'Chaos started!' }),
+      body: JSON.stringify({ /* Include necessary data here, e.g., user info */ }),
     });
-    console.log('Chaos event logged.');
+    console.log('Claim notification sent to backend.');
   } catch (error) {
-    console.error('Error logging chaos event:', error);
+    console.error('Error notifying backend:', error);
   }
 }
 
-// Tab functionality - Handle tab close
-const tabCloseButtons = document.querySelectorAll('.tab-close');
+// Tab functionality
+const tabButtons = document.querySelectorAll('.tab-button');
 
-tabCloseButtons.forEach(button => {
-  button.addEventListener('click', (event) => {
-    event.stopPropagation(); // Prevent triggering tab click
-    const tab = event.target.parentElement;
-    tab.remove();
+tabButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    // Remove 'active' class from all buttons
+    tabButtons.forEach(btn => btn.classList.remove('active'));
 
-    // If the removed tab was active, set the first tab as active
-    const remainingTabs = document.querySelectorAll('.tab');
-    if (tab.classList.contains('active') && remainingTabs.length > 0) {
-      remainingTabs[0].classList.add('active');
-    }
+    // Add 'active' class to the clicked button
+    button.classList.add('active');
+
+    // You can add functionality to display different content based on the active tab
+    // For example, navigate to different sections or load different content dynamically
   });
-});
-
-// Window Control Buttons Functionality
-
-// Minimize Button
-minimizeButton.addEventListener('click', () => {
-  browserWindow.style.display = 'none';
-  createMinimizedBar();
-});
-
-// Maximize Button
-let isMaximized = false;
-maximizeButton.addEventListener('click', () => {
-  if (!isMaximized) {
-    browserWindow.style.width = '100%';
-    browserWindow.style.height = '100%';
-    browserWindow.style.top = '0';
-    browserWindow.style.left = '0';
-    browserWindow.style.transform = 'none';
-    isMaximized = true;
-    maximizeButton.textContent = '❐'; // Restore icon
-    maximizeButton.title = 'Restore';
-  } else {
-    browserWindow.style.width = '800px';
-    browserWindow.style.height = '600px';
-    browserWindow.style.top = '50%';
-    browserWindow.style.left = '50%';
-    browserWindow.style.transform = 'translate(-50%, -50%)';
-    isMaximized = false;
-    maximizeButton.textContent = '□'; // Maximize icon
-    maximizeButton.title = 'Maximize';
-  }
-});
-
-// Close Button
-closeButton.addEventListener('click', () => {
-  browserWindow.style.display = 'none';
-  removeMinimizedBar();
-});
-
-// Create Minimized Bar
-function createMinimizedBar() {
-  let minimizedBar = document.getElementById('minimizedBar');
-  if (!minimizedBar) {
-    minimizedBar = document.createElement('div');
-    minimizedBar.id = 'minimizedBar';
-    minimizedBar.className = 'minimized-bar';
-    minimizedBar.textContent = 'Double Penis Token';
-    minimizedBar.addEventListener('click', () => {
-      browserWindow.style.display = 'flex';
-      minimizedBar.remove();
-    });
-    document.body.appendChild(minimizedBar);
-  }
-}
-
-// Remove Minimized Bar
-function removeMinimizedBar() {
-  const minimizedBar = document.getElementById('minimizedBar');
-  if (minimizedBar) {
-    minimizedBar.remove();
-  }
-}
-
-// Make the browser window draggable
-let isDragging = false;
-let offsetX, offsetY;
-
-const windowHeader = document.querySelector('.window-header');
-
-windowHeader.addEventListener('mousedown', (e) => {
-  isDragging = true;
-  offsetX = e.clientX - browserWindow.offsetLeft;
-  offsetY = e.clientY - browserWindow.offsetTop;
-  browserWindow.style.transition = 'none';
-});
-
-window.addEventListener('mousemove', (e) => {
-  if (isDragging && !isMaximized) {
-    browserWindow.style.left = `${e.clientX - offsetX}px`;
-    browserWindow.style.top = `${e.clientY - offsetY}px`;
-  }
-});
-
-window.addEventListener('mouseup', () => {
-  isDragging = false;
-  browserWindow.style.transition = 'all 0.3s ease';
 });
 
 // Function to start chaotic effects by duplicating browser windows
@@ -306,7 +128,7 @@ function createChaosWindow() {
             padding: 0;
             background-color: yellow;
             color: black;
-            font-family: Arial, sans-serif;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -314,9 +136,8 @@ function createChaosWindow() {
             overflow: hidden;
           }
           h1 {
-            font-size: 14px;
+            font-size: 24px;
             animation: shake 0.5s infinite;
-            text-align: center;
           }
           @keyframes shake {
             0% { transform: translate(1px, 1px) rotate(0deg); }
