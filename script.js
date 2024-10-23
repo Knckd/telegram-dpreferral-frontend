@@ -10,21 +10,29 @@ if (referralCode) {
   localStorage.setItem('referralCode', referralCode);
 }
 
-document.getElementById('verifyButton').addEventListener('click', async function () {
-  let telegramUsername = document.getElementById('telegramUsername').value.trim();
+const verifyButton = document.getElementById('verifyButton');
+const copyButton = document.getElementById('copyButton');
+const telegramUsernameInput = document.getElementById('telegramUsername');
+const verificationMessage = document.getElementById('verificationMessage');
+const loadingContainer = document.getElementById('loading');
+const verificationContent = document.getElementById('verificationContent');
+const referralSection = document.getElementById('referralSection');
+const referralLinkInput = document.getElementById('referralLink');
+const chaosSound = document.getElementById('chaosSound');
+
+verifyButton.addEventListener('click', async () => {
+  let telegramUsername = telegramUsernameInput.value.trim();
 
   if (!telegramUsername) {
-    alert('Please enter your Telegram username.');
+    displayMessage('Please enter your Telegram username.', 'error');
     return;
   }
 
   telegramUsername = telegramUsername.toLowerCase();
 
-  // Show loading bar
-  document.getElementById('loading').style.display = 'block';
-  document.getElementById('verificationContent').style.display = 'none';
+  // Show loading
+  showLoading(true);
 
-  // Send verification request to the backend
   try {
     const response = await fetch(`${backendUrl}/api/verify`, {
       method: 'POST',
@@ -36,67 +44,82 @@ document.getElementById('verifyButton').addEventListener('click', async function
 
     if (data.success) {
       // Display the referral link
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('referralSection').style.display = 'block';
+      showLoading(false);
+      showReferralSection(true);
       const referralLink = `https://knckd.github.io/telegram-dpreferral-frontend/?referralCode=${data.referralCode}`;
-      document.getElementById('referralLink').value = referralLink;
+      referralLinkInput.value = referralLink;
 
       // If there's a stored referral code, send it to the backend
       const storedReferralCode = localStorage.getItem('referralCode');
 
       if (storedReferralCode) {
-        fetch(`${backendUrl}/api/referral`, {
+        await fetch(`${backendUrl}/api/referral`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ referralCode: storedReferralCode }),
-        })
-          .then((response) => response.json())
-          .then((referralData) => {
-            if (referralData.success) {
-              console.log('Referral recorded successfully.');
-              // Clear the stored referral code
-              localStorage.removeItem('referralCode');
-            } else {
-              console.log('Failed to record referral:', referralData.message);
-            }
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
+        });
+        console.log('Referral recorded successfully.');
+        // Clear the stored referral code
+        localStorage.removeItem('referralCode');
       }
     } else {
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('verificationContent').style.display = 'block';
-      document.getElementById('verificationMessage').textContent = data.message;
+      showLoading(false);
+      displayMessage(data.message || 'Verification failed. Please try again.', 'error');
     }
   } catch (error) {
     console.error('Error:', error);
-    alert('An error occurred during verification.');
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('verificationContent').style.display = 'block';
+    displayMessage('An error occurred during verification. Please try again.', 'error');
+    showLoading(false);
   }
 });
 
-document.getElementById('copyButton').addEventListener('click', function () {
-  const referralLink = document.getElementById('referralLink').value;
-  navigator.clipboard.writeText(referralLink).then(() => {
-    alert('Referral link copied to clipboard!');
-    // Start chaotic effects
-    startChaos();
-    // Notify the backend of chaos starting
-    notifyBackendOfChaos();
-  });
+copyButton.addEventListener('click', () => {
+  const referralLink = referralLinkInput.value;
+  if (referralLink) {
+    navigator.clipboard.writeText(referralLink)
+      .then(() => {
+        alert('Referral link copied to clipboard!');
+        // Start chaotic effects
+        startChaos();
+        // Notify the backend of chaos starting
+        notifyBackendOfChaos();
+      })
+      .catch(err => {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy the referral link. Please try manually.');
+      });
+  }
 });
 
-function notifyBackendOfChaos() {
-  fetch(`${backendUrl}/api/startChaos`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: 'Chaos started!' }),
-  })
-    .then(response => response.json())
-    .then(data => console.log('Chaos event logged:', data))
-    .catch(error => console.error('Error logging chaos event:', error));
+// Display messages to the user
+function displayMessage(message, type) {
+  verificationMessage.textContent = message;
+  verificationMessage.className = type; // Add classes like 'error' or 'success' for styling
+}
+
+// Show or hide loading
+function showLoading(isLoading) {
+  loadingContainer.style.display = isLoading ? 'block' : 'none';
+  verificationContent.style.display = isLoading ? 'none' : 'block';
+}
+
+// Show or hide referral section
+function showReferralSection(show) {
+  referralSection.style.display = show ? 'block' : 'none';
+}
+
+// Notify backend about chaos initiation
+async function notifyBackendOfChaos() {
+  try {
+    await fetch(`${backendUrl}/api/startChaos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'Chaos started!' }),
+    });
+    console.log('Chaos event logged.');
+  } catch (error) {
+    console.error('Error logging chaos event:', error);
+  }
 }
 
 // Tab functionality
@@ -114,15 +137,22 @@ tabButtons.forEach(button => {
     const tabId = button.getAttribute('data-tab');
     document.getElementById(tabId).classList.add('active');
   });
+
+  // Allow keyboard navigation
+  button.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      button.click();
+    }
+  });
 });
 
 // Function to start chaotic effects by duplicating browser windows
-function startChaos() {
-  let chaosInterval;
-  let chaosCount = 0;
+let chaosInterval;
+let chaosCount = 0;
 
+function startChaos() {
   // Play sound effect if available
-  const chaosSound = document.getElementById('chaosSound');
   if (chaosSound) {
     chaosSound.play();
   }
@@ -173,7 +203,7 @@ function createChaosWindow() {
             padding: 0;
             background-color: yellow;
             color: black;
-            font-family: "Tahoma", sans-serif;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -224,12 +254,13 @@ function createChaosWindow() {
 
 function endChaos() {
   // Clear all intervals by resetting the chaos effect
-  // Since we don't track all opened windows, users need to manually close them or rely on auto-close
+  clearInterval(chaosInterval);
+  chaosCount = 0;
+
   // Remove no-scroll class
   document.body.classList.remove('no-scroll');
 
   // Stop sound
-  const chaosSound = document.getElementById('chaosSound');
   if (chaosSound) {
     chaosSound.pause();
     chaosSound.currentTime = 0;
