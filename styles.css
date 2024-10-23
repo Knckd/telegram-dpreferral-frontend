@@ -46,11 +46,12 @@ body {
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.2);
-  border-radius: 5px 5px 0 0;
+  border-radius: 12px 12px 0 0;
   margin-right: 5px;
   padding: 5px 10px;
   cursor: pointer;
   transition: background 0.3s;
+  position: relative;
 }
 
 .tab:hover {
@@ -72,19 +73,22 @@ body {
   font-size: 16px;
 }
 
+.tab-content-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
 .tab-close {
   margin-left: 8px;
-  font-size: 16px;
+  font-size: 14px;
   color: #ff4d4d;
   display: none;
+  cursor: pointer;
 }
 
 .tab:hover .tab-close {
   display: inline;
-}
-
-.tabs .tab:last-child {
-  margin-right: auto;
 }
 
 /* Main Content */
@@ -174,6 +178,17 @@ body {
   margin-top: 15px;
   margin-bottom: 15px;
   box-sizing: border-box;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.modal-content input[type="text"]::placeholder {
+  color: #ddd;
+}
+
+.modal-content input[type="text"]:focus {
+  outline: none;
+  border-color: #007BFF;
 }
 
 .submit-button {
@@ -193,6 +208,14 @@ body {
 #modalMessage {
   margin-top: 10px;
   font-size: 16px;
+}
+
+#modalMessage.error {
+  color: #ff4d4d;
+}
+
+#modalMessage.success {
+  color: #28a745;
 }
 
 /* Referral Section Styles */
@@ -227,8 +250,7 @@ body {
   border-color: #007BFF;
 }
 
-.copy-button,
-.chaos-button {
+.copy-button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
@@ -236,20 +258,10 @@ body {
   border: none;
   border-radius: 4px;
   transition: background-color 0.3s;
-  margin-right: 10px;
 }
 
-.copy-button:hover,
-.chaos-button:hover {
+.copy-button:hover {
   background-color: rgba(255, 193, 7, 1);
-}
-
-.chaos-button {
-  background-color: rgba(220, 53, 69, 0.8);
-}
-
-.chaos-button:hover {
-  background-color: rgba(220, 53, 69, 1);
 }
 
 /* Responsive Adjustments */
@@ -265,10 +277,20 @@ body {
 
   .tabs {
     flex-wrap: wrap;
+    padding: 5px;
   }
 
   .tab {
-    margin-bottom: 5px;
+    margin-right: 3px;
+    padding: 5px 8px;
+  }
+
+  .tab-title {
+    font-size: 14px;
+  }
+
+  .tab-icon {
+    font-size: 16px;
   }
 
   .modal-content {
@@ -276,15 +298,35 @@ body {
     margin: 30% auto;
   }
 
-  .referral-link input {
-    width: 100%;
-    margin-bottom: 10px;
+  .referral-link {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  .copy-button,
-  .chaos-button {
+  .referral-link input {
     width: 100%;
     margin-right: 0;
     margin-bottom: 10px;
   }
+
+  .copy-button {
+    width: 100%;
+  }
+}
+
+/* Optional Sound Effect */
+body.no-scroll {
+  overflow: hidden;
+}
+
+body.chaos-active {
+  animation: backgroundChaos 5s infinite;
+}
+
+@keyframes backgroundChaos {
+  0% { background-color: #ff0000; }
+  25% { background-color: #00ff00; }
+  50% { background-color: #0000ff; }
+  75% { background-color: #ffff00; }
+  100% { background-color: #ff00ff; }
 }
