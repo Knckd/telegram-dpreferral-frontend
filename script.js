@@ -237,3 +237,78 @@ function endChaos() {
 
   alert('The chaos has ended!');
 }
+
+// Function to make a window draggable
+function makeDraggable(windowElement) {
+  const titleBar = windowElement.querySelector('.window-title-bar');
+  let isDragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  titleBar.addEventListener('mousedown', function (e) {
+    isDragging = true;
+    offsetX = e.clientX - windowElement.offsetLeft;
+    offsetY = e.clientY - windowElement.offsetTop;
+    windowElement.style.transition = 'none'; // Remove transition for smooth dragging
+  });
+
+  document.addEventListener('mousemove', function (e) {
+    if (isDragging) {
+      let newX = e.clientX - offsetX;
+      let newY = e.clientY - offsetY;
+
+      // Prevent window from moving outside the viewport
+      newX = Math.max(0, Math.min(newX, window.innerWidth - windowElement.offsetWidth));
+      newY = Math.max(0, Math.min(newY, window.innerHeight - windowElement.offsetHeight - document.getElementById('taskbar').offsetHeight));
+
+      windowElement.style.left = newX + 'px';
+      windowElement.style.top = newY + 'px';
+    }
+  });
+
+  document.addEventListener('mouseup', function () {
+    if (isDragging) {
+      isDragging = false;
+      windowElement.style.transition = ''; // Restore transition
+    }
+  });
+}
+
+// Initialize window controls functionality
+function handleWindowControls() {
+  // Main Window Controls
+  const mainWindow = document.getElementById('window');
+  const minimizeButton = mainWindow.querySelector('.window-control.minimize');
+  const maximizeButton = mainWindow.querySelector('.window-control.maximize');
+  const closeButton = mainWindow.querySelector('.window-control.close');
+
+  minimizeButton.addEventListener('click', () => {
+    mainWindow.style.display = 'none';
+  });
+
+  maximizeButton.addEventListener('click', () => {
+    if (mainWindow.classList.contains('maximized')) {
+      // Restore to original size
+      mainWindow.style.width = '800px';
+      mainWindow.style.height = '600px';
+      mainWindow.style.left = '50%';
+      mainWindow.style.top = '50%';
+      mainWindow.style.transform = 'translate(-50%, -50%)';
+      mainWindow.classList.remove('maximized');
+    } else {
+      // Maximize window
+      mainWindow.style.width = '100vw';
+      mainWindow.style.height = 'calc(100vh - 40px)'; // Adjust for taskbar height
+      mainWindow.style.left = '0';
+      mainWindow.style.top = '0';
+      mainWindow.style.transform = 'none';
+      mainWindow.classList.add('maximized');
+    }
+  });
+
+  closeButton.addEventListener('click', () => {
+    mainWindow.style.display = 'none';
+  });
+}
+
+handleWindowControls();
