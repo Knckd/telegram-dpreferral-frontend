@@ -1,17 +1,17 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 /* General Styles */
 body, html {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Press Start 2P', cursive;
   color: #fff;
   overflow: hidden;
   position: relative;
-}
-
-body {
-  background-color: #1e1e1e;
+  background-color: #000;
 }
 
 /* Background Video */
@@ -23,73 +23,73 @@ body {
   height: 100%;
   object-fit: cover;
   z-index: -1;
+  opacity: 0.7; /* Slight opacity for better text visibility */
 }
 
-/* Top Tabs resembling Windows XP Internet Explorer */
+/* Top Tabs resembling 90s Chrome-like Tabs */
 .tabs {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(to bottom, #e0e0e0, #c0c0c0);
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: center;
-  padding: 5px 10px;
+  padding: 10px;
   box-sizing: border-box;
   z-index: 10;
-  border-bottom: 2px solid #fff;
+  border-bottom: 3px solid #ff00ff;
 }
 
+/* Individual Tab Styles */
 .tab {
-  display: flex;
-  align-items: center;
-  background: linear-gradient(to bottom, #f0f0f0, #c0c0c0);
-  border: 1px solid #fff;
-  border-bottom: none;
-  border-radius: 8px 8px 0 0;
-  margin-right: 5px;
-  padding: 5px 15px;
-  cursor: pointer;
   position: relative;
-  transition: background 0.3s, box-shadow 0.3s;
+  background: linear-gradient(145deg, #ff00ff, #8000ff);
+  border: 2px solid #ffffff;
+  border-radius: 8px 8px 0 0;
+  margin-right: 15px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  z-index: 1;
 }
 
 .tab:hover {
-  background: linear-gradient(to bottom, #d0d0d0, #a0a0a0);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(255, 0, 255, 0.5);
 }
 
 .tab.active {
-  background: linear-gradient(to bottom, #ffffff, #d0d0d0);
-  font-weight: bold;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  background: linear-gradient(145deg, #ffffff, #cccccc);
+  color: #000;
+  z-index: 2;
 }
 
+/* Tab Title */
 .tab-title {
   text-decoration: none;
-  color: #000;
-  font-size: 18px;
+  color: inherit;
+  font-size: 12px;
 }
 
-.tab-content-link {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
+/* Close Button */
 .tab-close {
-  margin-left: 10px;
-  font-size: 16px;
-  color: #ff4d4d;
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background: #ff4d4d;
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 12px;
+  color: #fff;
+  cursor: pointer;
   display: none;
 }
 
 .tab:hover .tab-close {
-  display: inline;
-}
-
-.tabs .tab:last-child {
-  margin-right: auto;
+  display: block;
 }
 
 /* Main Content */
@@ -99,36 +99,41 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  background: rgba(0, 0, 0, 0.6); /* Adds background for text readability */
-  padding: 40px;
-  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 50px;
+  border: 5px solid #ff00ff;
+  border-radius: 20px;
+  box-shadow: 0 0 20px #ff00ff;
 }
 
 .main-content h1 {
-  font-size: 64px;
+  font-size: 24px;
   margin-bottom: 30px;
-  text-shadow: 3px 3px 6px #000;
+  text-shadow: 2px 2px 4px #000;
 }
 
 .claim-button {
-  padding: 20px 60px;
-  font-size: 28px;
+  padding: 15px 40px;
+  font-size: 14px;
   cursor: pointer;
-  background-color: #28a745;
-  border: none;
-  border-radius: 12px;
+  background-color: #00ff00;
+  border: 3px solid #ffffff;
+  border-radius: 10px;
   transition: background-color 0.3s, transform 0.2s;
-  box-shadow: 3px 3px 10px rgba(0,0,0,0.4);
+  color: #000;
+  box-shadow: 0 5px 10px rgba(0,255,0,0.5);
 }
 
 .claim-button:hover {
-  background-color: #218838;
+  background-color: #00cc00;
   transform: scale(1.05);
 }
 
 #claimMessage {
-  margin-top: 25px;
-  font-size: 22px;
+  margin-top: 20px;
+  font-size: 12px;
+  color: #ff00ff;
+  text-shadow: 1px 1px 2px #000;
 }
 
 /* Modal Styles */
@@ -141,47 +146,48 @@ body {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.7); /* Darker overlay */
+  background-color: rgba(255,255,255,0.1); /* Light overlay */
 }
 
 .modal-content {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(0, 0, 0, 0.8);
   margin: 15% auto;
   padding: 30px;
-  border: 2px solid #fff;
+  border: 3px solid #ff00ff;
   width: 80%;
-  max-width: 450px;
-  border-radius: 12px;
-  backdrop-filter: blur(10px);
+  max-width: 500px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #ff00ff;
   color: #fff;
   text-align: center;
 }
 
 .close-button {
-  color: #aaa;
+  color: #ff4d4d;
   float: right;
-  font-size: 28px;
+  font-size: 20px;
   font-weight: bold;
   cursor: pointer;
 }
 
 .close-button:hover,
 .close-button:focus {
-  color: #fff;
+  color: #ffffff;
 }
 
 .modal-content h2 {
   margin-top: 0;
-  font-size: 26px;
+  font-size: 16px;
+  text-shadow: 1px 1px 2px #000;
 }
 
 .modal-content input[type="text"] {
-  padding: 14px;
+  padding: 10px;
   width: 80%;
-  font-size: 18px;
-  border: 2px solid #ccc;
-  border-radius: 6px;
-  margin-top: 20px;
+  font-size: 12px;
+  border: 2px solid #ff00ff;
+  border-radius: 5px;
+  margin-top: 15px;
   margin-bottom: 20px;
   box-sizing: border-box;
   background-color: rgba(255, 255, 255, 0.2);
@@ -189,32 +195,33 @@ body {
 }
 
 .modal-content input[type="text"]::placeholder {
-  color: #ddd;
+  color: #dddddd;
 }
 
 .modal-content input[type="text"]:focus {
   outline: none;
-  border-color: #007BFF;
+  border-color: #ffffff;
 }
 
 .submit-button {
-  padding: 12px 40px;
-  font-size: 20px;
+  padding: 10px 30px;
+  font-size: 12px;
   cursor: pointer;
-  background-color: #007BFF;
-  border: none;
+  background-color: #ff00ff;
+  border: 2px solid #ffffff;
   border-radius: 8px;
   transition: background-color 0.3s, transform 0.2s;
+  color: #fff;
 }
 
 .submit-button:hover {
-  background-color: #0056b3;
+  background-color: #cc00cc;
   transform: scale(1.05);
 }
 
 #modalMessage {
-  margin-top: 15px;
-  font-size: 18px;
+  margin-top: 10px;
+  font-size: 12px;
 }
 
 #modalMessage.error {
@@ -222,7 +229,7 @@ body {
 }
 
 #modalMessage.success {
-  color: #28a745;
+  color: #00ff00;
 }
 
 /* Referral Section Styles */
@@ -231,7 +238,9 @@ body {
 }
 
 .referral-section p {
-  font-size: 24px;
+  font-size: 12px;
+  color: #00ff00;
+  text-shadow: 1px 1px 2px #000;
 }
 
 .referral-link {
@@ -243,10 +252,10 @@ body {
 
 .referral-link input {
   width: 60%;
-  padding: 14px;
-  font-size: 18px;
-  border: 2px solid #ccc;
-  border-radius: 6px;
+  padding: 10px;
+  font-size: 12px;
+  border: 2px solid #ff00ff;
+  border-radius: 5px;
   margin-right: 15px;
   background-color: rgba(255, 255, 255, 0.2);
   color: #fff;
@@ -254,51 +263,56 @@ body {
 
 .referral-link input:focus {
   outline: none;
-  border-color: #007BFF;
+  border-color: #ffffff;
 }
 
 .copy-button {
-  padding: 14px 40px;
-  font-size: 20px;
+  padding: 10px 30px;
+  font-size: 12px;
   cursor: pointer;
-  background-color: #ffc107;
-  border: none;
+  background-color: #00ffff;
+  border: 2px solid #ffffff;
   border-radius: 8px;
   transition: background-color 0.3s, transform 0.2s;
+  color: #000;
 }
 
 .copy-button:hover {
-  background-color: #e0a800;
+  background-color: #00cccc;
   transform: scale(1.05);
 }
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .main-content h1 {
-    font-size: 48px;
+    font-size: 16px;
   }
 
   .claim-button {
-    padding: 18px 50px;
-    font-size: 24px;
+    padding: 10px 30px;
+    font-size: 10px;
   }
 
   .tabs {
     flex-wrap: wrap;
     padding: 5px;
+    border-bottom: 2px solid #ff00ff;
   }
 
   .tab {
-    margin-right: 3px;
+    margin-right: 5px;
     padding: 5px 10px;
+    font-size: 10px;
   }
 
   .tab-title {
-    font-size: 16px;
+    font-size: 10px;
   }
 
   .tab-close {
-    font-size: 14px;
+    font-size: 10px;
+    width: 14px;
+    height: 14px;
   }
 
   .modal-content {
