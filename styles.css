@@ -126,8 +126,15 @@ body {
   width: 34px;
   height: 28px;
   text-align: center;
+  line-height: 28px; /* Vertically center the text */
   cursor: pointer;
   user-select: none;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.window-control:hover {
+  background-color: #C0C0C0;
 }
 
 .window-control img {
