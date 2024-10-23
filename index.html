@@ -6,6 +6,12 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Background Video -->
+  <video id="backgroundVideo" autoplay muted loop playsinline>
+    <source src="0000-0322.mov" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
   <div id="desktop">
     <!-- Taskbar -->
     <div id="taskbar">
@@ -13,14 +19,12 @@
         <img src="start-button-xp.png" alt="Start">
       </div>
       <div id="taskbar-items">
-        <!-- Taskbar items can be added here -->
         <div class="taskbar-item">
           <img src="ie-icon.png" alt="IE Icon" class="taskbar-icon">
           Verify Telegram Membership
         </div>
       </div>
       <div id="system-tray">
-        <!-- System tray icons can be added here -->
         <img src="volume-icon.png" alt="Volume" class="system-tray-icon">
         <img src="network-icon.png" alt="Network" class="system-tray-icon">
         <img src="clock-icon.png" alt="Clock" class="system-tray-icon">
@@ -35,73 +39,75 @@
           Verify Telegram Membership
         </div>
         <div class="window-controls">
-          <div class="window-control minimize">
-            <img src="minimize-button.png" alt="_">
-          </div>
-          <div class="window-control maximize">
-            <img src="maximize-button.png" alt="☐">
-          </div>
-          <div class="window-control close">
-            <img src="close-button.png" alt="X">
-          </div>
+          <div class="window-control minimize">_</div>
+          <div class="window-control maximize">▢</div>
+          <div class="window-control close">✕</div>
         </div>
       </div>
 
       <!-- Content Area -->
       <div class="window-content">
-        <h1>Welcome to the Windows XP Verification Portal</h1>
-        <div id="verification">
-          <p>Please verify that you've joined our Telegram channel to proceed.</p>
-          <p>
-            Before verifying, please join our Telegram channel 
-            <a href="https://t.me/+DOUilvfhtS9lODIx" target="_blank">@DubPTEST</a>, 
-            then 
-            <a href="https://t.me/DoublePenisVerifyBot" target="_blank">start a chat with our bot</a> 
-            and send <code>/verify</code>.
-          </p>
+        <!-- Tabs -->
+        <div class="tabs">
+          <button class="tab-button active" data-tab="verification">Verification</button>
+          <button class="tab-button" data-tab="dexscreener">Dexscreener</button>
+          <button class="tab-button" data-tab="x">X</button>
+          <button class="tab-button" data-tab="telegram">Telegram</button>
+          <button class="tab-button" data-tab="video">Video</button>
+        </div>
 
-          <input type="text" id="telegramUsername" placeholder="Enter your Telegram username">
-          <button id="verifyButton">Verify</button>
-          <p id="verificationMessage"></p>
-        </div>
-        <div id="loading" style="display: none;">
-          <p>Verifying, please wait...</p>
-          <div class="loading-bar">
-            <div class="progress"></div>
-          </div>
-        </div>
-        <div id="referralSection" style="display: none;">
-          <p>Your referral link:</p>
-          <div class="referral-link">
-            <input type="text" id="referralLink" readonly>
-            <button id="copyButton">Copy</button>
-          </div>
-          <!-- Countdown Timer -->
-          <div id="countdown" style="display: none;">
-            <p>Chaos ends in <span id="countdownTimer">100h 0m 0s</span>...</p>
-          </div>
-        </div>
-      </div>
-    </div>
+        <!-- Tab Contents -->
+        <div id="verification" class="tab-content active">
+          <h1>Welcome to the Windows XP Verification Portal</h1>
+          <div id="verificationContent">
+            <p>Please verify that you've joined our Telegram channel to proceed.</p>
+            <p>
+              Before verifying, please join our Telegram channel
+              <a href="https://t.me/+DOUilvfhtS9lODIx" target="_blank">@DubPTEST</a>,
+              then
+              <a href="https://t.me/DoublePenisVerifyBot" target="_blank">start a chat with our bot</a>
+              and send <code>/verify</code>.
+            </p>
 
-    <!-- Leaderboard Window (Hidden by Default) -->
-    <div id="leaderboardWindow" class="window" style="display: none;">
-      <div class="window-title-bar">
-        <div class="window-title">
-          <img src="ie-icon.png" alt="IE Icon" class="window-icon">
-          Leaderboard
-        </div>
-        <div class="window-controls">
-          <div class="window-control close">
-            <img src="close-button.png" alt="X">
+            <input type="text" id="telegramUsername" placeholder="Enter your Telegram username">
+            <button id="verifyButton">Verify</button>
+            <p id="verificationMessage"></p>
+          </div>
+          <div id="loading" style="display: none;">
+            <p>Verifying, please wait...</p>
+            <div class="loading-bar">
+              <div class="progress"></div>
+            </div>
+          </div>
+          <div id="referralSection" style="display: none;">
+            <p>Your referral link:</p>
+            <div class="referral-link">
+              <input type="text" id="referralLink" readonly>
+              <button id="copyButton">Copy</button>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="window-content">
-        <h2>Top 5 Referrers</h2>
-        <ol id="leaderboardList">
-          <!-- Leaderboard entries will be populated here -->
-        </ol>
+
+        <div id="dexscreener" class="tab-content">
+          <!-- Dexscreener iframe or content -->
+          <iframe src="https://dexscreener.com/" width="100%" height="400px"></iframe>
+        </div>
+        <div id="x" class="tab-content">
+          <!-- X (Twitter) embed or content -->
+          <a class="twitter-timeline" href="https://twitter.com/yourprofile">Tweets by YourProfile</a>
+          <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
+        <div id="telegram" class="tab-content">
+          <!-- Telegram content -->
+          <p>Join our Telegram channel: <a href="https://t.me/yourchannel" target="_blank">@YourChannel</a></p>
+        </div>
+        <div id="video" class="tab-content">
+          <!-- Video content -->
+          <video controls width="100%">
+            <source src="0000-0322.mov" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
       </div>
     </div>
   </div>
