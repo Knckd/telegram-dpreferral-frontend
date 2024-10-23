@@ -94,9 +94,9 @@ function notifyBackendOfChaos() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ message: 'Chaos started!' }),
   })
-  .then(response => response.json())
-  .then(data => console.log('Chaos event logged:', data))
-  .catch(error => console.error('Error logging chaos event:', error));
+    .then(response => response.json())
+    .then(data => console.log('Chaos event logged:', data))
+    .catch(error => console.error('Error logging chaos event:', error));
 }
 
 // Tab functionality
@@ -121,6 +121,7 @@ function startChaos() {
   let chaosWindows = [];
   let chaosCount = 0;
   let chaosInterval;
+  let chaosTimeout;
 
   // Play sound effect if available
   const chaosSound = document.getElementById('chaosSound');
@@ -147,7 +148,7 @@ function startChaos() {
   }, 500);
 
   // Stop the chaos after a certain time or based on user interaction
-  setTimeout(() => {
+  chaosTimeout = setTimeout(() => {
     endChaos();
   }, 60000); // Chaos lasts for 60 seconds
 
@@ -159,58 +160,81 @@ function startChaos() {
   });
 
   function createChaosWindow() {
-    const chaosWindow = document.createElement('div');
-    chaosWindow.classList.add('window', 'chaos-window');
-    chaosWindow.innerHTML = `
-      <div class="window-title-bar">
-        <div class="window-title">You Are an Idiot!</div>
-        <div class="window-controls">
-          <div class="window-control close">✕</div>
-        </div>
-      </div>
-      <div class="window-content">
-        <p>You are an idiot!</p>
-      </div>
-    `;
+    const chaosWindow = window.open('', '_blank', 'width=300,height=200');
 
-    // Randomize position
-    chaosWindow.style.left = Math.random() * (window.innerWidth - 200) + 'px';
-    chaosWindow.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+    if (chaosWindow) {
+      chaosWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <title>Chaos Window</title>
+          <style>
+            body {
+              margin: 0;
+              padding: 0;
+              background-color: yellow;
+              color: black;
+              font-family: "Tahoma", sans-serif;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+              overflow: hidden;
+            }
+            h1 {
+              font-size: 24px;
+              animation: shake 0.5s infinite;
+            }
+            @keyframes shake {
+              0% { transform: translate(1px, 1px) rotate(0deg); }
+              10% { transform: translate(-1px, -2px) rotate(-1deg); }
+              20% { transform: translate(-3px, 0px) rotate(1deg); }
+              30% { transform: translate(3px, 2px) rotate(0deg); }
+              40% { transform: translate(1px, -1px) rotate(1deg); }
+              50% { transform: translate(-1px, 2px) rotate(-1deg); }
+              60% { transform: translate(-3px, 1px) rotate(0deg); }
+              70% { transform: translate(3px, 1px) rotate(-1deg); }
+              80% { transform: translate(-1px, -1px) rotate(1deg); }
+              90% { transform: translate(1px, 2px) rotate(0deg); }
+              100% { transform: translate(1px, -2px) rotate(-1deg); }
+            }
+          </style>
+        </head>
+        <body>
+          <h1>You are an idiot!</h1>
+        </body>
+        </html>
+      `);
 
-    // Randomize background color
-    chaosWindow.style.backgroundColor = getRandomColor();
+      // Move the window to a random position after a short delay
+      setTimeout(() => {
+        const x = Math.floor(Math.random() * (screen.width - 300));
+        const y = Math.floor(Math.random() * (screen.height - 200));
+        chaosWindow.moveTo(x, y);
+      }, 1000);
 
-    document.body.appendChild(chaosWindow);
-    chaosWindows.push(chaosWindow);
-
-    // Make window draggable and moving
-    makeDraggable(chaosWindow);
-    moveWindow(chaosWindow);
-
-    // Close button functionality
-    const closeButton = chaosWindow.querySelector('.window-control.close');
-    closeButton.addEventListener('click', () => {
-      chaosWindow.remove();
-    });
-  }
-
-  function moveWindow(windowElement) {
-    const speed = Math.random() * 3000 + 2000; // Random speed between 2000ms and 5000ms
-    windowElement.movementInterval = setInterval(() => {
-      windowElement.style.left = Math.random() * (window.innerWidth - 200) + 'px';
-      windowElement.style.top = Math.random() * (window.innerHeight - 100) + 'px';
-    }, speed);
+      // Close the window after a random time between 5-15 seconds
+      setTimeout(() => {
+        chaosWindow.close();
+      }, Math.random() * 10000 + 5000);
+    } else {
+      console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
+      endChaos(); // End chaos if pop-ups are blocked
+    }
   }
 
   function endChaos() {
-    chaosWindows.forEach(window => {
-      clearInterval(window.movementInterval);
-      window.remove();
-    });
-    chaosWindows = [];
+    clearInterval(chaosInterval);
+    clearTimeout(chaosTimeout);
 
+    // Close all opened chaos windows
+    // Note: Modern browsers restrict access to windows opened from different origins or after certain time
+    // Hence, it's challenging to track and close all chaos windows effectively
+
+    // Remove no-scroll class
     document.body.classList.remove('no-scroll');
 
+    // Stop sound
     if (chaosSound) {
       chaosSound.pause();
       chaosSound.currentTime = 0;
@@ -218,88 +242,4 @@ function startChaos() {
 
     alert('The chaos has ended!');
   }
-
-  function getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
 }
-
-// Function to make a window draggable
-function makeDraggable(windowElement) {
-  const titleBar = windowElement.querySelector('.window-title-bar');
-  let isDragging = false;
-  let offsetX = 0;
-  let offsetY = 0;
-
-  titleBar.addEventListener('mousedown', function (e) {
-    isDragging = true;
-    offsetX = e.clientX - windowElement.offsetLeft;
-    offsetY = e.clientY - windowElement.offsetTop;
-    windowElement.style.transition = 'none'; // Remove transition for smooth dragging
-  });
-
-  document.addEventListener('mousemove', function (e) {
-    if (isDragging) {
-      let newX = e.clientX - offsetX;
-      let newY = e.clientY - offsetY;
-
-      // Prevent window from moving outside the viewport
-      newX = Math.max(0, Math.min(newX, window.innerWidth - windowElement.offsetWidth));
-      newY = Math.max(0, Math.min(newY, window.innerHeight - windowElement.offsetHeight - document.getElementById('taskbar').offsetHeight));
-
-      windowElement.style.left = newX + 'px';
-      windowElement.style.top = newY + 'px';
-    }
-  });
-
-  document.addEventListener('mouseup', function () {
-    if (isDragging) {
-      isDragging = false;
-      windowElement.style.transition = ''; // Restore transition
-    }
-  });
-}
-
-// Initialize window controls functionality
-function handleWindowControls() {
-  // Main Window Controls
-  const mainWindow = document.getElementById('window');
-  const minimizeButton = mainWindow.querySelector('.window-control minimize');
-  const maximizeButton = mainWindow.querySelector('.window-control maximize');
-  const closeButton = mainWindow.querySelector('.window-control close');
-
-  minimizeButton.addEventListener('click', () => {
-    mainWindow.style.display = 'none';
-  });
-
-  maximizeButton.addEventListener('click', () => {
-    if (mainWindow.classList.contains('maximized')) {
-      // Restore to original size
-      mainWindow.style.width = '800px';
-      mainWindow.style.height = '600px';
-      mainWindow.style.left = '50%';
-      mainWindow.style.top = '50%';
-      mainWindow.style.transform = 'translate(-50%, -50%)';
-      mainWindow.classList.remove('maximized');
-    } else {
-      // Maximize window
-      mainWindow.style.width = '100vw';
-      mainWindow.style.height = 'calc(100vh - 40px)'; // Adjust for taskbar height
-      mainWindow.style.left = '0';
-      mainWindow.style.top = '0';
-      mainWindow.style.transform = 'none';
-      mainWindow.classList.add('maximized');
-    }
-  });
-
-  closeButton.addEventListener('click', () => {
-    mainWindow.style.display = 'none';
-  });
-}
-
-handleWindowControls();
