@@ -10,26 +10,33 @@ const referralCode = urlParams.get('referralCode');
 if (referralCode) {
   // Store referral code in local storage
   localStorage.setItem('referralCode', referralCode);
+  console.log(`🔗 Referral code "${referralCode}" found in URL and stored.`);
 }
 
 document.getElementById('verifyButton').addEventListener('click', async function () {
   let telegramUsername = document.getElementById('telegramUsername').value.trim();
 
+  console.log(`🖱️ Verify button clicked with Telegram Username: "${telegramUsername}"`);
+
   if (!telegramUsername) {
     alert('❌ Please enter your Telegram username.');
+    console.warn('❌ Verify button clicked without entering Telegram username.');
     return;
   }
 
   // Remove '@' symbol if present
   if (telegramUsername.startsWith('@')) {
     telegramUsername = telegramUsername.substring(1);
+    console.log('🛑 Removed "@" symbol from Telegram username.');
   }
 
   telegramUsername = telegramUsername.toLowerCase();
+  console.log(`🔄 Normalized Telegram Username: "${telegramUsername}"`);
 
   // Show loading bar
   document.getElementById('loading').style.display = 'block';
   document.getElementById('verificationContent').style.display = 'none';
+  console.log('⏳ Loading spinner displayed.');
 
   // Send verification request to the backend
   try {
@@ -39,21 +46,27 @@ document.getElementById('verifyButton').addEventListener('click', async function
       body: JSON.stringify({ telegramUsername }),
     });
 
+    console.log('📤 Verification request sent to backend.');
+
     const data = await response.json();
 
     if (data.success) {
       // Display the referral link
+      console.log('✅ Verification successful. Referral link received.');
       document.getElementById('loading').style.display = 'none';
       document.getElementById('referralSection').style.display = 'block';
       const referralLink = data.referralLink;
       document.getElementById('referralLink').value = referralLink;
+      console.log(`🔗 Referral Link: ${referralLink}`);
     } else {
+      // Display error message
+      console.error('❌ Verification failed:', data.message);
       document.getElementById('loading').style.display = 'none';
       document.getElementById('verificationContent').style.display = 'block';
       document.getElementById('verificationMessage').textContent = data.message;
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error('❌ Error during verification request:', error);
     alert('❌ An error occurred during verification.');
     document.getElementById('loading').style.display = 'none';
     document.getElementById('verificationContent').style.display = 'block';
@@ -64,26 +77,43 @@ document.getElementById('copyButton').addEventListener('click', function () {
   const referralLink = document.getElementById('referralLink').value;
   const referralCode = new URL(referralLink).searchParams.get('referralCode');
 
+  console.log(`🖱️ Copy button clicked. Referral Code: "${referralCode}"`);
+
   navigator.clipboard.writeText(referralLink).then(() => {
     alert('✅ Referral link copied to clipboard!');
+    console.log('✅ Referral link copied to clipboard.');
+
     // Start chaotic effects
     startChaos();
+    console.log('🌀 Chaos effect initiated.');
+
     // Notify the backend of chaos starting
     notifyBackendOfChaos(referralCode);
   }).catch(() => {
     alert('❌ Failed to copy referral link.');
+    console.error('❌ Failed to copy referral link to clipboard.');
   });
 });
 
 function notifyBackendOfChaos(referralCode) {
+  console.log(`📤 Notifying backend about chaos initiation for Referral Code: "${referralCode}"`);
+
   fetch(`${backendUrl}/api/startChaos`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ referralCode }),
   })
     .then(response => response.json())
-    .then(data => console.log('Chaos event logged:', data))
-    .catch(error => console.error('Error logging chaos event:', error));
+    .then(data => {
+      if (data.success) {
+        console.log('✅ Backend notified about chaos initiation successfully.');
+      } else {
+        console.error('❌ Failed to notify backend about chaos initiation:', data.message);
+      }
+    })
+    .catch(error => {
+      console.error('❌ Error notifying backend about chaos initiation:', error);
+    });
 }
 
 // Tab functionality
@@ -100,6 +130,8 @@ tabButtons.forEach(button => {
     button.classList.add('active');
     const tabId = button.getAttribute('data-tab');
     document.getElementById(tabId).classList.add('active');
+
+    console.log(`📄 Tab "${tabId}" activated.`);
   });
 });
 
@@ -108,14 +140,21 @@ function startChaos() {
   let chaosInterval;
   let chaosCount = 0;
 
+  console.log('🌀 Starting chaos effect.');
+
   // Play sound effect if available
   const chaosSound = document.getElementById('chaosSound');
   if (chaosSound) {
-    chaosSound.play();
+    chaosSound.play().then(() => {
+      console.log('🔊 Chaos sound played.');
+    }).catch(err => {
+      console.error('🔊 Failed to play chaos sound:', err);
+    });
   }
 
   // Disable scrolling
   document.body.classList.add('no-scroll');
+  console.log('🚫 Scrolling disabled.');
 
   // Start the chaos by spawning windows rapidly
   chaosInterval = setInterval(() => {
@@ -126,26 +165,32 @@ function startChaos() {
     if (chaosCount === 20) {
       clearInterval(chaosInterval);
       chaosInterval = setInterval(createChaosWindow, 200);
+      console.log('📈 Chaos spawn rate increased to every 200ms.');
     } else if (chaosCount === 50) {
       clearInterval(chaosInterval);
       chaosInterval = setInterval(createChaosWindow, 100);
+      console.log('📈 Chaos spawn rate increased to every 100ms.');
     }
   }, 500);
+  console.log('⏳ Chaos window spawning started.');
 
   // Stop the chaos after a certain time or based on user interaction
   setTimeout(() => {
     endChaos();
   }, 60000); // Chaos lasts for 60 seconds
+  console.log('⏰ Chaos effect will end in 60 seconds.');
 
   // Allow user to end the chaos with a key combination
   document.addEventListener('keydown', function (event) {
     if (event.ctrlKey && event.shiftKey && event.key === 'X') {
+      console.log('🔑 Chaos effect terminated by user.');
       endChaos();
     }
   });
 }
 
 function createChaosWindow() {
+  console.log('🖥️ Creating chaos window.');
   const chaosWindow = window.open('', '_blank', 'width=300,height=200');
 
   if (chaosWindow) {
@@ -191,17 +236,20 @@ function createChaosWindow() {
       </body>
       </html>
     `);
+    console.log('🖥️ Chaos window content injected.');
 
     // Move the window to a random position after a short delay
     setTimeout(() => {
       const x = Math.floor(Math.random() * (screen.width - 300));
       const y = Math.floor(Math.random() * (screen.height - 200));
       chaosWindow.moveTo(x, y);
+      console.log(`🖥️ Chaos window moved to (${x}, ${y}).`);
     }, 1000);
 
     // Close the window after a random time between 5-15 seconds
     setTimeout(() => {
       chaosWindow.close();
+      console.log('🖥️ Chaos window closed.');
     }, Math.random() * 10000 + 5000);
   } else {
     console.warn('❗ Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
@@ -210,55 +258,24 @@ function createChaosWindow() {
 }
 
 function endChaos() {
+  console.log('🌀 Ending chaos effect.');
   // Clear all intervals by resetting the chaos effect
   // Since we don't track all opened windows, users need to manually close them or rely on auto-close
+
   // Remove no-scroll class
   document.body.classList.remove('no-scroll');
+  console.log('🚫 Scrolling enabled.');
 
   // Stop sound
   const chaosSound = document.getElementById('chaosSound');
   if (chaosSound) {
     chaosSound.pause();
     chaosSound.currentTime = 0;
+    console.log('🔊 Chaos sound stopped.');
   }
 
   alert('✅ The chaos has ended!');
-}
-
-// Function to make a window draggable (optional, can be implemented if desired)
-function makeDraggable(windowElement) {
-  const titleBar = windowElement.querySelector('.window-title-bar');
-  let isDragging = false;
-  let offsetX = 0;
-  let offsetY = 0;
-
-  titleBar.addEventListener('mousedown', function (e) {
-    isDragging = true;
-    offsetX = e.clientX - windowElement.offsetLeft;
-    offsetY = e.clientY - windowElement.offsetTop;
-    windowElement.style.transition = 'none'; // Remove transition for smooth dragging
-  });
-
-  document.addEventListener('mousemove', function (e) {
-    if (isDragging) {
-      let newX = e.clientX - offsetX;
-      let newY = e.clientY - offsetY;
-
-      // Prevent window from moving outside the viewport
-      newX = Math.max(0, Math.min(newX, window.innerWidth - windowElement.offsetWidth));
-      newY = Math.max(0, Math.min(newY, window.innerHeight - windowElement.offsetHeight - document.getElementById('taskbar').offsetHeight));
-
-      windowElement.style.left = newX + 'px';
-      windowElement.style.top = newY + 'px';
-    }
-  });
-
-  document.addEventListener('mouseup', function () {
-    if (isDragging) {
-      isDragging = false;
-      windowElement.style.transition = ''; // Restore transition
-    }
-  });
+  console.log('✅ Chaos effect ended.');
 }
 
 // Initialize window controls functionality
@@ -277,6 +294,7 @@ function handleWindowControls() {
   if (minimizeButton && maximizeButton && closeButton) {
     minimizeButton.addEventListener('click', () => {
       mainWindow.style.display = 'none';
+      console.log('🔽 Main window minimized.');
     });
 
     maximizeButton.addEventListener('click', () => {
@@ -288,6 +306,7 @@ function handleWindowControls() {
         mainWindow.style.top = '50%';
         mainWindow.style.transform = 'translate(-50%, -50%)';
         mainWindow.classList.remove('maximized');
+        console.log('🔼 Main window restored to original size.');
       } else {
         // Maximize window
         mainWindow.style.width = '100vw';
@@ -296,11 +315,13 @@ function handleWindowControls() {
         mainWindow.style.top = '0';
         mainWindow.style.transform = 'none';
         mainWindow.classList.add('maximized');
+        console.log('🔼 Main window maximized.');
       }
     });
 
     closeButton.addEventListener('click', () => {
       mainWindow.style.display = 'none';
+      console.log('❌ Main window closed.');
     });
   } else {
     console.warn('❗ One or more window control buttons not found.');
