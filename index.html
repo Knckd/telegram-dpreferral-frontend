@@ -2,109 +2,135 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Double Penis Verification Portal</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Telegram DP Referral</title>
+  <style>
+    /* Basic styling for simplicity */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    .tab-button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      cursor: pointer;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    .tab-button.active {
+      background-color: #0056b3;
+    }
+    .tab-content {
+      display: none;
+      margin-top: 20px;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    #loading {
+      display: none;
+      color: green;
+    }
+    #referralSection {
+      display: none;
+      margin-top: 20px;
+    }
+    #referralLink {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+    }
+    #copyButton {
+      padding: 10px 20px;
+      margin-top: 10px;
+      cursor: pointer;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    /* Optional: Styling for window controls */
+    #window {
+      position: fixed;
+      width: 300px;
+      height: 200px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #f8f9fa;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .window-control {
+      position: absolute;
+      top: 10px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 20px;
+      cursor: pointer;
+    }
+    .window-control.minimize {
+      right: 50px;
+      background-color: #ffc107;
+    }
+    .window-control.maximize {
+      right: 30px;
+      background-color: #17a2b8;
+    }
+    .window-control.close {
+      right: 10px;
+      background-color: #dc3545;
+    }
+    .no-scroll {
+      overflow: hidden;
+    }
+  </style>
 </head>
 <body>
-  <!-- Background Video -->
-  <video id="backgroundVideo" autoplay muted loop playsinline>
-    <source src="0000-0322.mov" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
 
-  <div id="desktop">
-    <!-- Taskbar -->
-    <div id="taskbar">
-      <div id="start-button">
-        <img src="start-button-xp.png" alt="Start">
-      </div>
-      <div id="taskbar-items">
-        <div class="taskbar-item">
-          <img src="ie-icon.png" alt="IE Icon" class="taskbar-icon">
-          Verify Membership
-        </div>
-      </div>
-      <div id="system-tray">
-        <img src="volume-icon.png" alt="Volume" class="system-tray-icon">
-        <img src="network-icon.png" alt="Network" class="system-tray-icon">
-        <img src="clock-icon.png" alt="Clock" class="system-tray-icon">
-      </div>
+  <h1>Welcome to Telegram DP Referral</h1>
+
+  <button class="tab-button active" data-tab="verifyTab">Verify</button>
+  <button class="tab-button" data-tab="infoTab">Info</button>
+
+  <div id="verifyTab" class="tab-content active">
+    <h2>Verify Your Telegram Account</h2>
+    <input type="text" id="telegramUsername" placeholder="Enter your Telegram username" />
+    <button id="verifyButton">Verify</button>
+    <div id="loading">🔄 Verifying...</div>
+    <div id="verificationContent" style="display: none;">
+      <p id="verificationMessage"></p>
     </div>
-
-    <!-- Main Window -->
-    <div id="window" class="window">
-      <div class="window-title-bar">
-        <div class="window-title">
-          <img src="ie-icon.png" alt="Icon" class="window-icon">
-          Double Penis Verification
-        </div>
-        <div class="window-controls">
-          <div class="window-control minimize">_</div>
-          <div class="window-control maximize">▢</div>
-          <div class="window-control close">✕</div>
-        </div>
-      </div>
-
-      <!-- Content Area -->
-      <div class="window-content">
-        <!-- Tabs -->
-        <div class="tabs">
-          <button class="tab-button active" data-tab="verification">Verification</button>
-          <button class="tab-button" data-tab="dexscreener">Dexscreener</button>
-          <button class="tab-button" data-tab="x">X</button>
-          <button class="tab-button" data-tab="telegram">Telegram</button>
-        </div>
-
-        <!-- Tab Contents -->
-        <div id="verification" class="tab-content active">
-          <h1>Welcome to the Double Penis Verification Portal</h1>
-          <div id="verificationContent">
-            <p>Please verify that you've joined our Telegram channel to proceed.</p>
-            <p>
-              Before verifying, please join our Telegram channel
-              <a href="https://t.me/+DOUilvfhtS9lODIx" target="_blank">@DubPTEST</a>,
-              then
-              <a href="https://t.me/DoublePenisVerifyBot" target="_blank">start a chat with our bot</a>
-              and send <code>/verify</code>.
-            </p>
-
-            <input type="text" id="telegramUsername" placeholder="Enter your Telegram username">
-            <button id="verifyButton">Verify</button>
-            <p id="verificationMessage"></p>
-          </div>
-          <div id="loading" style="display: none;">
-            <p>🔄 Verifying, please wait...</p>
-            <div class="loading-bar">
-              <div class="progress"></div>
-            </div>
-          </div>
-          <div id="referralSection" style="display: none;">
-            <p>Your referral link:</p>
-            <div class="referral-link">
-              <input type="text" id="referralLink" readonly>
-              <button id="copyButton">Copy</button>
-            </div>
-          </div>
-        </div>
-
-        <div id="dexscreener" class="tab-content">
-          <!-- Dexscreener iframe or content -->
-          <iframe src="https://dexscreener.com/" width="100%" height="400px"></iframe>
-        </div>
-        <div id="x" class="tab-content">
-          <!-- X (Twitter) embed or content -->
-          <a class="twitter-timeline" href="https://twitter.com/soldoublepenis">Tweets by @soldoublepenis</a>
-          <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-        </div>
-        <div id="telegram" class="tab-content">
-          <!-- Telegram content -->
-          <p>Join our Telegram channel: <a href="https://t.me/+DOUilvfhtS9lODIx" target="_blank">@DubPTEST</a></p>
-        </div>
-      </div>
+    <div id="referralSection">
+      <h3>Your Referral Link:</h3>
+      <input type="text" id="referralLink" readonly />
+      <button id="copyButton">Copy</button>
     </div>
   </div>
 
-  <!-- Optional Sound Effect -->
+  <div id="infoTab" class="tab-content">
+    <h2>Information</h2>
+    <p>Welcome! Use this platform to verify your Telegram account and receive your unique referral link.</p>
+    <p>Refer others to earn rewards!</p>
+  </div>
+
+  <!-- Optional: Hidden Window for Controls -->
+  <div id="window">
+    <div class="window-control minimize">_</div>
+    <div class="window-control maximize">⬜</div>
+    <div class="window-control close">×</div>
+    <p>This is a movable window.</p>
+  </div>
+
+  <!-- Optional: Chaos Sound Effect -->
   <audio id="chaosSound" src="chaos.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
