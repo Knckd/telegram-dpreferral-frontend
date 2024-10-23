@@ -9,11 +9,12 @@
 <body>
   <!-- Background Video -->
   <video id="backgroundVideo" autoplay muted loop playsinline>
-    <source src="0000-0322.mov" type="video/mp4">
+    <source src="0000-0322.mp4" type="video/mp4">
+    <source src="0000-0322.mov" type="video/quicktime"> <!-- Fallback for .mov -->
     Your browser does not support the video tag.
   </video>
 
-  <!-- Top Tabs resembling Google Chrome -->
+  <!-- Top Tabs resembling Windows 2000 Browser -->
   <div class="tabs">
     <div class="tab active">
       <span class="tab-icon">🗔</span>
@@ -43,11 +44,29 @@
     <!-- Add more tabs as needed -->
   </div>
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <h1>Claim 350 Free Tokens</h1>
-    <button id="claimButton" class="claim-button">Claim</button>
-    <p id="claimMessage" aria-live="polite"></p>
+  <!-- Browser-Like Window -->
+  <div id="browserWindow" class="browser-window">
+    <!-- Window Header -->
+    <div class="window-header">
+      <!-- Window Title -->
+      <span class="window-title">Telegram DP Referral Portal</span>
+      <!-- Window Control Buttons -->
+      <div class="window-controls">
+        <button class="control-button minimize" title="Minimize">–</button>
+        <button class="control-button maximize" title="Maximize">□</button>
+        <button class="control-button close" title="Close">✕</button>
+      </div>
+    </div>
+
+    <!-- Window Content -->
+    <div class="window-content">
+      <!-- Main Content -->
+      <div class="main-content">
+        <h1>Claim 350 Free Tokens</h1>
+        <button id="claimButton" class="claim-button">Claim</button>
+        <p id="claimMessage" aria-live="polite"></p>
+      </div>
+    </div>
   </div>
 
   <!-- Claim Modal -->
