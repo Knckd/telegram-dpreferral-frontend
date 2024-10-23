@@ -6,8 +6,8 @@ const claimButton = document.getElementById('claimButton');
 const claimMessage = document.getElementById('claimMessage');
 const chaosSound = document.getElementById('chaosSound');
 const claimModal = document.getElementById('claimModal');
-const closeModal = document.getElementById('closeModal');
-const submitUsername = document.getElementById('submitUsername');
+const closeModalButton = document.getElementById('closeModal');
+const submitUsernameButton = document.getElementById('submitUsername');
 const telegramUsernameInput = document.getElementById('telegramUsername');
 const modalMessage = document.getElementById('modalMessage');
 const mainContent = document.querySelector('.main-content');
@@ -18,19 +18,19 @@ claimButton.addEventListener('click', () => {
 });
 
 // Close Modal when 'x' is clicked
-closeModal.addEventListener('click', () => {
-  closeModalFunc();
+closeModalButton.addEventListener('click', () => {
+  closeModalFunction();
 });
 
 // Close Modal when clicking outside the modal content
 window.addEventListener('click', (event) => {
   if (event.target == claimModal) {
-    closeModalFunc();
+    closeModalFunction();
   }
 });
 
 // Handle Submit Username
-submitUsername.addEventListener('click', async () => {
+submitUsernameButton.addEventListener('click', async () => {
   const telegramUsername = telegramUsernameInput.value.trim();
 
   if (!telegramUsername) {
@@ -46,8 +46,8 @@ submitUsername.addEventListener('click', async () => {
 
   // Disable input and button to prevent multiple submissions
   telegramUsernameInput.disabled = true;
-  submitUsername.disabled = true;
-  submitUsername.textContent = 'Verifying...';
+  submitUsernameButton.disabled = true;
+  submitUsernameButton.textContent = 'Verifying...';
 
   try {
     const response = await fetch(`${backendUrl}/api/verify`, {
@@ -59,7 +59,7 @@ submitUsername.addEventListener('click', async () => {
     const data = await response.json();
 
     if (data.success) {
-      closeModalFunc();
+      closeModalFunction();
       displayReferralSection(data.referralCode);
     } else {
       displayModalMessage(data.message || 'Verification failed. Please try again.', 'error');
@@ -70,8 +70,8 @@ submitUsername.addEventListener('click', async () => {
   } finally {
     // Re-enable input and button
     telegramUsernameInput.disabled = false;
-    submitUsername.disabled = false;
-    submitUsername.textContent = 'Submit';
+    submitUsernameButton.disabled = false;
+    submitUsernameButton.textContent = 'Submit';
   }
 });
 
@@ -86,10 +86,11 @@ function openModal() {
   claimModal.style.display = 'block';
   telegramUsernameInput.value = '';
   modalMessage.textContent = '';
+  telegramUsernameInput.focus();
 }
 
 // Close Modal
-function closeModalFunc() {
+function closeModalFunction() {
   claimModal.style.display = 'none';
 }
 
@@ -98,18 +99,17 @@ function displayReferralSection(referralCode) {
   mainContent.innerHTML = `
     <h1>Thank You for Verifying!</h1>
     <div class="referral-section">
-      <p>Your referral code:</p>
+      <p>Your referral link:</p>
       <div class="referral-link">
         <input type="text" id="referralLink" value="https://knckd.github.io/telegram-dpreferral-frontend/?referralCode=${referralCode}" readonly aria-label="Referral Link">
         <button id="copyButton" class="copy-button">Copy</button>
-        <button id="chaosButton" class="chaos-button">Chaos</button>
       </div>
     </div>
+    <p id="claimMessage" aria-live="polite"></p>
   `;
 
-  // Add event listeners for copy and chaos buttons
+  // Add event listener for copy button
   const copyButton = document.getElementById('copyButton');
-  const chaosButton = document.getElementById('chaosButton');
   const referralLinkInput = document.getElementById('referralLink');
 
   copyButton.addEventListener('click', () => {
@@ -125,13 +125,6 @@ function displayReferralSection(referralCode) {
         console.error('Failed to copy:', err);
         alert('Failed to copy the referral link. Please try manually.');
       });
-  });
-
-  chaosButton.addEventListener('click', () => {
-    // Directly start chaos without copying
-    startChaos();
-    // Notify the backend of chaos starting
-    notifyBackendOfChaos();
   });
 }
 
@@ -150,11 +143,11 @@ async function notifyBackendOfChaos() {
 }
 
 // Tab functionality - Fully functional links
-const tabButtons = document.querySelectorAll('.tab .tab-title');
+const tabContentLinks = document.querySelectorAll('.tab-content-link');
 
-tabButtons.forEach(button => {
-  button.addEventListener('click', (event) => {
-    // If the tab is an anchor link, it will navigate accordingly
+tabContentLinks.forEach(link => {
+  link.addEventListener('click', (event) => {
+    // Allow default link behavior
     // You can add additional functionality here if needed
   });
 });
