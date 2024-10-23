@@ -179,6 +179,7 @@ maximizeButton.addEventListener('click', () => {
     browserWindow.style.height = '100%';
     browserWindow.style.top = '0';
     browserWindow.style.left = '0';
+    browserWindow.style.transform = 'none';
     isMaximized = true;
     maximizeButton.textContent = '❐'; // Restore icon
     maximizeButton.title = 'Restore';
@@ -238,7 +239,7 @@ windowHeader.addEventListener('mousedown', (e) => {
 });
 
 window.addEventListener('mousemove', (e) => {
-  if (isDragging) {
+  if (isDragging && !isMaximized) {
     browserWindow.style.left = `${e.clientX - offsetX}px`;
     browserWindow.style.top = `${e.clientY - offsetY}px`;
   }
