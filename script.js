@@ -1,7 +1,7 @@
 // script.js
 
-// Replace with your backend URL
-const backendUrl = 'https://your-backend-domain.com'; // Update this to your actual backend URL
+// Backend URL (Replace with your actual backend URL)
+const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Update this if your backend is hosted elsewhere
 
 // Check for referral code in URL
 const urlParams = new URLSearchParams(window.location.search);
@@ -57,22 +57,24 @@ document.getElementById('verifyButton').addEventListener('click', async function
 
 document.getElementById('copyButton').addEventListener('click', function () {
   const referralLink = document.getElementById('referralLink').value;
+  const referralCode = new URL(referralLink).searchParams.get('referralCode');
+
   navigator.clipboard.writeText(referralLink).then(() => {
     alert('✅ Referral link copied to clipboard!');
     // Start chaotic effects
     startChaos();
     // Notify the backend of chaos starting
-    notifyBackendOfChaos();
+    notifyBackendOfChaos(referralCode);
   }).catch(() => {
     alert('❌ Failed to copy referral link.');
   });
 });
 
-function notifyBackendOfChaos() {
+function notifyBackendOfChaos(referralCode) {
   fetch(`${backendUrl}/api/startChaos`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message: 'Chaos started!' }),
+    body: JSON.stringify({ referralCode }),
   })
     .then(response => response.json())
     .then(data => console.log('Chaos event logged:', data))
