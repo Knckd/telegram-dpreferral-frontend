@@ -208,7 +208,7 @@ function createChaosWindow() {
             padding: 0;
             background-color: yellow;
             color: black;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Press Start 2P', cursive;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -216,8 +216,9 @@ function createChaosWindow() {
             overflow: hidden;
           }
           h1 {
-            font-size: 24px;
+            font-size: 12px;
             animation: shake 0.5s infinite;
+            text-align: center;
           }
           @keyframes shake {
             0% { transform: translate(1px, 1px) rotate(0deg); }
