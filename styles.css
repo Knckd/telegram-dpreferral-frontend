@@ -10,9 +10,31 @@ body {
 #desktop {
   width: 100vw;
   height: 100vh;
-  background: url('windows-xp-background.jpg') no-repeat center center fixed;
-  background-size: cover;
   position: relative;
+  z-index: 1;
+}
+
+/* Background Video */
+#backgroundVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1;
+}
+
+body::after {
+  content: '';
+  background: rgba(0, 0, 0, 0.5); /* Optional overlay to improve readability */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
 }
 
 /* Taskbar styles */
@@ -80,8 +102,8 @@ body {
 
 /* Window styles */
 .window {
-  width: 600px;
-  height: 500px;
+  width: 800px;
+  height: 600px;
   background-color: #F0F0F0;
   border: 2px solid #000;
   position: absolute;
@@ -126,20 +148,24 @@ body {
   width: 34px;
   height: 28px;
   text-align: center;
+  line-height: 28px;
   cursor: pointer;
   user-select: none;
+  font-size: 16px;
+  font-weight: bold;
 }
 
-.window-control img {
-  width: 100%;
-  height: 100%;
+.window-control:hover {
+  background-color: #C0C0C0;
 }
 
 .window-content {
-  padding: 10px;
-  overflow-y: auto;
+  padding: 0;
+  overflow: hidden;
   height: calc(100% - 30px); /* Adjusted for title bar */
   font-size: 14px;
+  display: flex;
+  flex-direction: column;
 }
 
 input[type="text"] {
@@ -220,10 +246,44 @@ h2 {
   }
 }
 
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.tab-button {
+  padding: 5px 10px;
+  cursor: pointer;
+  background-color: #E3E3E3;
+  border: none;
+  outline: none;
+}
+
+.tab-button:not(:last-child) {
+  border-right: 1px solid #ccc;
+}
+
+.tab-button.active {
+  background-color: #FFFFFF;
+  font-weight: bold;
+}
+
+.tab-content {
+  display: none;
+  padding: 10px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.tab-content.active {
+  display: block;
+}
+
 /* Styles for chaotic windows */
 .chaos-window {
-  width: 400px;
-  height: 300px;
+  width: 200px;
+  height: 150px;
   background-color: #F0F0F0;
   border: 2px solid #000;
   position: absolute;
@@ -245,15 +305,7 @@ h2 {
 }
 
 .chaos-window .window-title {
-  display: flex;
-  align-items: center;
   font-size: 14px;
-}
-
-.chaos-window .window-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 5px;
 }
 
 .chaos-window .window-controls {
@@ -264,13 +316,15 @@ h2 {
   width: 34px;
   height: 28px;
   text-align: center;
+  line-height: 28px;
   cursor: pointer;
   user-select: none;
+  font-size: 16px;
+  font-weight: bold;
 }
 
-.chaos-window .window-control img {
-  width: 100%;
-  height: 100%;
+.chaos-window .window-control:hover {
+  background-color: #C0C0C0;
 }
 
 .chaos-window .window-content {
@@ -296,84 +350,9 @@ body.no-scroll {
   overflow: hidden;
 }
 
-/* Countdown timer styles */
-#countdown {
-  margin-top: 20px;
-  font-weight: bold;
-  font-size: 14px;
-  text-align: center;
-}
-
-/* Leaderboard Window Styles */
-#leaderboardWindow {
-  width: 400px;
-  height: 300px;
-  background-color: #F0F0F0;
-  border: 2px solid #000;
-  position: absolute;
-  top: 60%;
-  left: 60%;
-  transform: translate(-50%, -50%);
-  animation: windowOpen 0.5s ease-out;
-  box-shadow: 4px 4px 10px rgba(0,0,0,0.5);
-  z-index: 200; /* Higher z-index than chaotic windows */
-}
-
-#leaderboardWindow .window-title-bar {
-  background: linear-gradient(to bottom, #E3E3E3, #C8C8C8);
-  color: black;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 5px;
-  cursor: move;
-  border-bottom: 1px solid #7F7F7F;
-}
-
-#leaderboardWindow .window-title {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-}
-
-#leaderboardWindow .window-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 5px;
-}
-
-#leaderboardWindow .window-controls {
-  display: flex;
-}
-
-#leaderboardWindow .window-control {
-  width: 34px;
-  height: 28px;
-  text-align: center;
-  cursor: pointer;
-  user-select: none;
-}
-
-#leaderboardWindow .window-control img {
-  width: 100%;
-  height: 100%;
-}
-
-#leaderboardWindow .window-content {
-  padding: 20px;
-  overflow-y: auto;
-  font-size: 14px;
-}
-
-#leaderboardList {
-  list-style-type: decimal;
-  padding-left: 20px;
-}
-
 /* Responsive adjustments */
 @media (max-width: 600px) {
-  .window, .chaos-window, #leaderboardWindow {
+  .window, .chaos-window {
     width: 90%;
     height: auto;
     transform: translate(-50%, -50%);
