@@ -9,28 +9,60 @@
 <body>
   <!-- Background Video -->
   <video id="backgroundVideo" autoplay muted loop playsinline>
-    <source src="0000-0322.mov" type="video/mp4">
+    <source src="assets/videos/0000-0322.mov" type="video/mp4">
     Your browser does not support the video tag.
   </video>
 
-  <!-- Top Tabs -->
-  <div id="tabs" class="tabs">
-    <button class="tab-button active" data-tab="home">Home</button>
-    <button class="tab-button" data-tab="verification">Verification</button>
-    <button class="tab-button" data-tab="referral">Referral</button>
-    <button class="tab-button" data-tab="dexscreener">Dexscreener</button>
-    <button class="tab-button" data-tab="telegram">Telegram</button>
+  <!-- Top Tabs resembling Google Chrome -->
+  <div class="tabs">
+    <div class="tab active">
+      <span class="tab-icon">🗔</span>
+      <span class="tab-title">Home</span>
+      <span class="tab-close" title="Close Tab">✕</span>
+    </div>
+    <div class="tab">
+      <span class="tab-icon">🔍</span>
+      <a href="#verification" class="tab-title">Verification</a>
+      <span class="tab-close" title="Close Tab">✕</span>
+    </div>
+    <div class="tab">
+      <span class="tab-icon">📄</span>
+      <a href="#referral" class="tab-title">Referral</a>
+      <span class="tab-close" title="Close Tab">✕</span>
+    </div>
+    <div class="tab">
+      <span class="tab-icon">📈</span>
+      <a href="#dexscreener" class="tab-title">Dexscreener</a>
+      <span class="tab-close" title="Close Tab">✕</span>
+    </div>
+    <div class="tab">
+      <span class="tab-icon">💬</span>
+      <a href="#telegram" class="tab-title">Telegram</a>
+      <span class="tab-close" title="Close Tab">✕</span>
+    </div>
+    <!-- Add more tabs as needed -->
   </div>
 
   <!-- Main Content -->
-  <div id="mainContent" class="main-content">
+  <div class="main-content">
     <h1>Claim 350 Free Tokens</h1>
     <button id="claimButton" class="claim-button">Claim</button>
     <p id="claimMessage" aria-live="polite"></p>
   </div>
 
+  <!-- Claim Modal -->
+  <div id="claimModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" id="closeModal">&times;</span>
+      <h2>Enter Your Telegram Username</h2>
+      <input type="text" id="telegramUsername" placeholder="@yourusername" aria-label="Telegram Username">
+      <button id="submitUsername" class="submit-button">Submit</button>
+      <p id="modalMessage" aria-live="polite"></p>
+    </div>
+  </div>
+
   <!-- Optional Sound Effect -->
-  <audio id="chaosSound" src="chaos.mp3" preload="auto"></audio>
+  <audio id="chaosSound" src="assets/audio/chaos.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
 </body>
