@@ -1,74 +1,161 @@
 // Replace with your backend URL
 const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Update this to your actual backend URL
 
+// Elements
 const claimButton = document.getElementById('claimButton');
 const claimMessage = document.getElementById('claimMessage');
 const chaosSound = document.getElementById('chaosSound');
+const claimModal = document.getElementById('claimModal');
+const closeModal = document.getElementById('closeModal');
+const submitUsername = document.getElementById('submitUsername');
+const telegramUsernameInput = document.getElementById('telegramUsername');
+const modalMessage = document.getElementById('modalMessage');
+const mainContent = document.querySelector('.main-content');
 
 // Handle Claim Button Click
-claimButton.addEventListener('click', async () => {
-  // Disable the button to prevent multiple clicks
-  claimButton.disabled = true;
-  claimButton.textContent = 'Claiming...';
+claimButton.addEventListener('click', () => {
+  openModal();
+});
+
+// Close Modal when 'x' is clicked
+closeModal.addEventListener('click', () => {
+  closeModalFunc();
+});
+
+// Close Modal when clicking outside the modal content
+window.addEventListener('click', (event) => {
+  if (event.target == claimModal) {
+    closeModalFunc();
+  }
+});
+
+// Handle Submit Username
+submitUsername.addEventListener('click', async () => {
+  const telegramUsername = telegramUsernameInput.value.trim();
+
+  if (!telegramUsername) {
+    displayModalMessage('Please enter your Telegram username.', 'error');
+    return;
+  }
+
+  // Basic validation for Telegram username
+  if (!/^@?[a-zA-Z0-9_]{5,32}$/.test(telegramUsername)) {
+    displayModalMessage('Invalid Telegram username format.', 'error');
+    return;
+  }
+
+  // Disable input and button to prevent multiple submissions
+  telegramUsernameInput.disabled = true;
+  submitUsername.disabled = true;
+  submitUsername.textContent = 'Verifying...';
 
   try {
-    const response = await fetch(`${backendUrl}/api/claim`, { // Ensure you have this endpoint in your backend
+    const response = await fetch(`${backendUrl}/api/verify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ /* Include necessary data here, e.g., user info */ }),
+      body: JSON.stringify({ telegramUsername }),
     });
 
     const data = await response.json();
 
     if (data.success) {
-      claimMessage.textContent = '350 Free Tokens Claimed Successfully!';
-      claimMessage.style.color = 'green';
-      // Start chaotic effects
-      startChaos();
-      // Optionally, notify the backend about the claim
-      notifyBackendOfClaim();
+      closeModalFunc();
+      displayReferralSection(data.referralCode);
     } else {
-      claimMessage.textContent = data.message || 'Failed to claim tokens. Please try again.';
-      claimMessage.style.color = 'red';
+      displayModalMessage(data.message || 'Verification failed. Please try again.', 'error');
     }
   } catch (error) {
     console.error('Error:', error);
-    claimMessage.textContent = 'An error occurred. Please try again.';
-    claimMessage.style.color = 'red';
+    displayModalMessage('An error occurred during verification. Please try again.', 'error');
   } finally {
-    // Re-enable the button
-    claimButton.disabled = false;
-    claimButton.textContent = 'Claim';
+    // Re-enable input and button
+    telegramUsernameInput.disabled = false;
+    submitUsername.disabled = false;
+    submitUsername.textContent = 'Submit';
   }
 });
 
-// Notify backend about the claim (if needed)
-async function notifyBackendOfClaim() {
+// Display messages in the modal
+function displayModalMessage(message, type) {
+  modalMessage.textContent = message;
+  modalMessage.className = type; // 'error' or 'success'
+}
+
+// Open Modal
+function openModal() {
+  claimModal.style.display = 'block';
+  telegramUsernameInput.value = '';
+  modalMessage.textContent = '';
+}
+
+// Close Modal
+function closeModalFunc() {
+  claimModal.style.display = 'none';
+}
+
+// Display Referral Section
+function displayReferralSection(referralCode) {
+  mainContent.innerHTML = `
+    <h1>Thank You for Verifying!</h1>
+    <div class="referral-section">
+      <p>Your referral code:</p>
+      <div class="referral-link">
+        <input type="text" id="referralLink" value="https://knckd.github.io/telegram-dpreferral-frontend/?referralCode=${referralCode}" readonly aria-label="Referral Link">
+        <button id="copyButton" class="copy-button">Copy</button>
+        <button id="chaosButton" class="chaos-button">Chaos</button>
+      </div>
+    </div>
+  `;
+
+  // Add event listeners for copy and chaos buttons
+  const copyButton = document.getElementById('copyButton');
+  const chaosButton = document.getElementById('chaosButton');
+  const referralLinkInput = document.getElementById('referralLink');
+
+  copyButton.addEventListener('click', () => {
+    navigator.clipboard.writeText(referralLinkInput.value)
+      .then(() => {
+        alert('Referral link copied to clipboard!');
+        // Start chaotic effects
+        startChaos();
+        // Notify the backend of chaos starting
+        notifyBackendOfChaos();
+      })
+      .catch((err) => {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy the referral link. Please try manually.');
+      });
+  });
+
+  chaosButton.addEventListener('click', () => {
+    // Directly start chaos without copying
+    startChaos();
+    // Notify the backend of chaos starting
+    notifyBackendOfChaos();
+  });
+}
+
+// Notify backend about chaos initiation
+async function notifyBackendOfChaos() {
   try {
-    await fetch(`${backendUrl}/api/claimNotification`, { // Ensure you have this endpoint in your backend
+    await fetch(`${backendUrl}/api/startChaos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ /* Include necessary data here, e.g., user info */ }),
+      body: JSON.stringify({ message: 'Chaos started!' }),
     });
-    console.log('Claim notification sent to backend.');
+    console.log('Chaos event logged.');
   } catch (error) {
-    console.error('Error notifying backend:', error);
+    console.error('Error logging chaos event:', error);
   }
 }
 
-// Tab functionality
-const tabButtons = document.querySelectorAll('.tab-button');
+// Tab functionality - Fully functional links
+const tabButtons = document.querySelectorAll('.tab .tab-title');
 
 tabButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    // Remove 'active' class from all buttons
-    tabButtons.forEach(btn => btn.classList.remove('active'));
-
-    // Add 'active' class to the clicked button
-    button.classList.add('active');
-
-    // You can add functionality to display different content based on the active tab
-    // For example, navigate to different sections or load different content dynamically
+  button.addEventListener('click', (event) => {
+    // If the tab is an anchor link, it will navigate accordingly
+    // You can add additional functionality here if needed
   });
 });
 
