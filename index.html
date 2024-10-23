@@ -6,78 +6,109 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-  <!-- Desktop Background -->
-  <div class="desktop-background"></div>
-
-  <!-- Main Window -->
-  <div class="window" id="mainWindow">
-    <div class="title-bar">
-      <div class="title-bar-text">
-        <img src="ie-icon.png" alt="Icon" class="window-icon"> Verification Portal
+  <div id="desktop">
+    <!-- Taskbar -->
+    <div id="taskbar">
+      <div id="start-button">
+        <img src="start-button-xp.png" alt="Start">
       </div>
-      <div class="title-bar-controls">
-        <button aria-label="Minimize" class="minimize-button"></button>
-        <button aria-label="Maximize" class="maximize-button"></button>
-        <button aria-label="Close" class="close-button"></button>
+      <div id="taskbar-items">
+        <!-- Taskbar items can be added here -->
+        <div class="taskbar-item">
+          <img src="ie-icon.png" alt="IE Icon" class="taskbar-icon">
+          Verify Telegram Membership
+        </div>
+      </div>
+      <div id="system-tray">
+        <!-- System tray icons can be added here -->
+        <img src="volume-icon.png" alt="Volume" class="system-tray-icon">
+        <img src="network-icon.png" alt="Network" class="system-tray-icon">
+        <img src="clock-icon.png" alt="Clock" class="system-tray-icon">
       </div>
     </div>
-    <div class="window-body">
-      <h1>Welcome to the Verification Portal</h1>
-      <p>Please enter your Telegram username to verify your membership:</p>
-      <input type="text" id="telegramUsername" placeholder="Telegram Username">
-      <button id="verifyButton">Verify</button>
-      <div id="loading" style="display: none;">🔄 Verifying...</div>
-      <div id="verificationMessage"></div>
-      <div id="referralSection" style="display: none;">
-        <h2>Your Referral Link:</h2>
-        <input type="text" id="referralLink" readonly>
-        <button id="copyButton">Copy Referral Link</button>
+
+    <!-- Main Window -->
+    <div id="window" class="window">
+      <div class="window-title-bar">
+        <div class="window-title">
+          <img src="ie-icon.png" alt="IE Icon" class="window-icon">
+          Verify Telegram Membership
+        </div>
+        <div class="window-controls">
+          <div class="window-control minimize">
+            <img src="minimize-button.png" alt="_">
+          </div>
+          <div class="window-control maximize">
+            <img src="maximize-button.png" alt="☐">
+          </div>
+          <div class="window-control close">
+            <img src="close-button.png" alt="X">
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <div class="window-content">
+        <h1>Welcome to the Windows XP Verification Portal</h1>
+        <div id="verification">
+          <p>Please verify that you've joined our Telegram channel to proceed.</p>
+          <p>
+            Before verifying, please join our Telegram channel 
+            <a href="https://t.me/+DOUilvfhtS9lODIx" target="_blank">@DubPTEST</a>, 
+            then 
+            <a href="https://t.me/DoublePenisVerifyBot" target="_blank">start a chat with our bot</a> 
+            and send <code>/verify</code>.
+          </p>
+
+          <input type="text" id="telegramUsername" placeholder="Enter your Telegram username">
+          <button id="verifyButton">Verify</button>
+          <p id="verificationMessage"></p>
+        </div>
+        <div id="loading" style="display: none;">
+          <p>Verifying, please wait...</p>
+          <div class="loading-bar">
+            <div class="progress"></div>
+          </div>
+        </div>
+        <div id="referralSection" style="display: none;">
+          <p>Your referral link:</p>
+          <div class="referral-link">
+            <input type="text" id="referralLink" readonly>
+            <button id="copyButton">Copy</button>
+          </div>
+          <!-- Countdown Timer -->
+          <div id="countdown" style="display: none;">
+            <p>Chaos ends in <span id="countdownTimer">100h 0m 0s</span>...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaderboard Window (Hidden by Default) -->
+    <div id="leaderboardWindow" class="window" style="display: none;">
+      <div class="window-title-bar">
+        <div class="window-title">
+          <img src="ie-icon.png" alt="IE Icon" class="window-icon">
+          Leaderboard
+        </div>
+        <div class="window-controls">
+          <div class="window-control close">
+            <img src="close-button.png" alt="X">
+          </div>
+        </div>
+      </div>
+      <div class="window-content">
+        <h2>Top 5 Referrers</h2>
+        <ol id="leaderboardList">
+          <!-- Leaderboard entries will be populated here -->
+        </ol>
       </div>
     </div>
   </div>
 
-  <!-- Leaderboard Window -->
-  <div class="window" id="leaderboardWindow" style="display: none;">
-    <div class="title-bar">
-      <div class="title-bar-text">
-        <img src="ie-icon.png" alt="Icon" class="window-icon"> Leaderboard
-      </div>
-      <div class="title-bar-controls">
-        <button aria-label="Minimize" class="minimize-button"></button>
-        <button aria-label="Maximize" class="maximize-button"></button>
-        <button aria-label="Close" class="close-button"></button>
-      </div>
-    </div>
-    <div class="window-body">
-      <h1>Top Referrers</h1>
-      <ol id="leaderboardList"></ol>
-    </div>
-  </div>
+  <!-- Optional Sound Effect -->
+  <audio id="chaosSound" src="chaos.mp3" preload="auto"></audio>
 
-  <!-- Taskbar -->
-  <div class="taskbar">
-    <div class="start-button">
-      <img src="start-button-xp.png" alt="Start">
-    </div>
-    <div class="taskbar-items">
-      <div class="taskbar-item active" data-window="mainWindow">
-        <img src="ie-icon.png" alt="Icon"> Verification Portal
-      </div>
-    </div>
-    <div class="system-tray">
-      <img src="volume-icon.png" alt="Volume">
-      <img src="network-icon.png" alt="Network">
-      <span class="clock">12:00 PM</span>
-    </div>
-  </div>
-
-  <!-- Background Video -->
-  <video autoplay muted loop id="backgroundVideo">
-    <source src="background-video.mp4" type="video/mp4">
-  </video>
-
-  <!-- Scripts -->
   <script src="script.js"></script>
 </body>
 </html>
