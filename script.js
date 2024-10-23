@@ -208,7 +208,7 @@ function createChaosWindow() {
             padding: 0;
             background-color: yellow;
             color: black;
-            font-family: 'Press Start 2P', cursive;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -216,7 +216,7 @@ function createChaosWindow() {
             overflow: hidden;
           }
           h1 {
-            font-size: 12px;
+            font-size: 14px;
             animation: shake 0.5s infinite;
             text-align: center;
           }
