@@ -1,5 +1,7 @@
+// script.js
+
 // Replace with your backend URL
-const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Update this to your actual backend URL
+const backendUrl = 'https://your-backend-domain.com'; // Update this to your actual backend URL
 
 // Check for referral code in URL
 const urlParams = new URLSearchParams(window.location.search);
@@ -14,7 +16,7 @@ document.getElementById('verifyButton').addEventListener('click', async function
   let telegramUsername = document.getElementById('telegramUsername').value.trim();
 
   if (!telegramUsername) {
-    alert('Please enter your Telegram username.');
+    alert('❌ Please enter your Telegram username.');
     return;
   }
 
@@ -38,32 +40,8 @@ document.getElementById('verifyButton').addEventListener('click', async function
       // Display the referral link
       document.getElementById('loading').style.display = 'none';
       document.getElementById('referralSection').style.display = 'block';
-      const referralLink = `https://knckd.github.io/telegram-dpreferral-frontend/?referralCode=${data.referralCode}`;
+      const referralLink = data.referralLink;
       document.getElementById('referralLink').value = referralLink;
-
-      // If there's a stored referral code, send it to the backend
-      const storedReferralCode = localStorage.getItem('referralCode');
-
-      if (storedReferralCode) {
-        fetch(`${backendUrl}/api/referral`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ referralCode: storedReferralCode }),
-        })
-          .then((response) => response.json())
-          .then((referralData) => {
-            if (referralData.success) {
-              console.log('Referral recorded successfully.');
-              // Clear the stored referral code
-              localStorage.removeItem('referralCode');
-            } else {
-              console.log('Failed to record referral:', referralData.message);
-            }
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
-      }
     } else {
       document.getElementById('loading').style.display = 'none';
       document.getElementById('verificationContent').style.display = 'block';
@@ -71,7 +49,7 @@ document.getElementById('verifyButton').addEventListener('click', async function
     }
   } catch (error) {
     console.error('Error:', error);
-    alert('An error occurred during verification.');
+    alert('❌ An error occurred during verification.');
     document.getElementById('loading').style.display = 'none';
     document.getElementById('verificationContent').style.display = 'block';
   }
@@ -80,11 +58,13 @@ document.getElementById('verifyButton').addEventListener('click', async function
 document.getElementById('copyButton').addEventListener('click', function () {
   const referralLink = document.getElementById('referralLink').value;
   navigator.clipboard.writeText(referralLink).then(() => {
-    alert('Referral link copied to clipboard!');
+    alert('✅ Referral link copied to clipboard!');
     // Start chaotic effects
     startChaos();
     // Notify the backend of chaos starting
     notifyBackendOfChaos();
+  }).catch(() => {
+    alert('❌ Failed to copy referral link.');
   });
 });
 
@@ -200,7 +180,7 @@ function createChaosWindow() {
         </style>
       </head>
       <body>
-        <h1>You are an idiot!</h1>
+        <h1>Double Penis</h1>
       </body>
       </html>
     `);
@@ -217,7 +197,7 @@ function createChaosWindow() {
       chaosWindow.close();
     }, Math.random() * 10000 + 5000);
   } else {
-    console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
+    console.warn('❗ Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
     endChaos(); // End chaos if pop-ups are blocked
   }
 }
@@ -235,10 +215,10 @@ function endChaos() {
     chaosSound.currentTime = 0;
   }
 
-  alert('The chaos has ended!');
+  alert('✅ The chaos has ended!');
 }
 
-// Function to make a window draggable
+// Function to make a window draggable (optional, can be implemented if desired)
 function makeDraggable(windowElement) {
   const titleBar = windowElement.querySelector('.window-title-bar');
   let isDragging = false;
