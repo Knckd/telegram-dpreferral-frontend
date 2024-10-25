@@ -1,67 +1,62 @@
+<!-- index.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Telegram DP Referral Portal</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="favicon.ico"> <!-- Add a favicon if available -->
+    <meta charset="UTF-8">
+    <title>Telegram DP Referral Portal</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Background Video -->
-  <video id="backgroundVideo" autoplay muted loop playsinline>
-    <source src="0000-0322.mp4" type="video/mp4">
-    <source src="0000-0322.webm" type="video/webm">
-    <source src="0000-0322.mov" type="video/quicktime">
-    Your browser does not support the video tag.
-  </video>
-
-  <!-- Social Media Tabs -->
-  <div class="social-tabs">
-    <a href="https://dexscreener.com/" target="_blank">Dexscreener</a>
-    <a href="https://twitter.com/" target="_blank">X</a>
-    <a href="https://t.me/" target="_blank">Telegram</a>
-    <a href="https://github.com/" target="_blank">GitHub</a>
-  </div>
-
-  <!-- Central Browser-Like Window -->
-  <div id="browserWindow" class="browser-window">
-    <!-- Window Header -->
-    <div class="window-header">
-      <!-- Window Title -->
-      <span class="window-title">Telegram DP Referral Portal</span>
-      <!-- Window Control Buttons -->
-      <div class="window-controls">
-        <button class="control-button minimize" title="Minimize">–</button>
-        <button class="control-button maximize" title="Maximize">□</button>
-        <button class="control-button close" title="Close">✕</button>
-      </div>
+    <div class="video-background">
+        <video autoplay loop muted>
+            <source src="background-video.mp4" type="video/mp4">
+        </video>
     </div>
 
-    <!-- Window Content -->
-    <div class="window-content">
-      <!-- Main Content -->
-      <div class="main-content">
-        <h1>Claim 350 Free Tokens</h1>
-        <button id="claimButton" class="claim-button">Retrieve Referral Link</button>
-        <p id="claimMessage" aria-live="polite"></p>
-      </div>
+    <div class="main-content">
+        <h1>Claim 3500 Free Tokens</h1>
+        <button id="claimButton">CLAIM</button>
+        <p id="claimMessage"></p>
     </div>
-  </div>
 
-  <!-- Claim Modal -->
-  <div id="claimModal" class="modal">
-    <div class="modal-content">
-      <span class="close-button" id="closeModal">&times;</span>
-      <h2>Enter Your Telegram Username</h2>
-      <input type="text" id="telegramUsername" placeholder="@yourusername" aria-label="Telegram Username">
-      <button id="submitUsername" class="submit-button">Submit</button>
-      <p id="modalMessage" aria-live="polite"></p>
+    <!-- Modal for username input -->
+    <div id="claimModal" class="modal">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <h2>Enter Your Telegram Username</h2>
+            <input type="text" id="telegramUsername" placeholder="Telegram Username">
+            <button id="submitUsername">Verify</button>
+            <p id="modalMessage"></p>
+        </div>
     </div>
-  </div>
 
-  <!-- Optional Sound Effect -->
-  <audio id="chaosSound" src="assets/audio/chaos.mp3" preload="auto"></audio>
+    <!-- Second Claim Button after Verification -->
+    <div id="secondClaimButtonContainer" style="display: none;">
+        <button id="secondClaimButton">CLAIM</button>
+    </div>
 
-  <script src="script.js"></script>
+    <!-- Browser Window for Chaos Effect -->
+    <div id="browserWindow" class="browser-window">
+        <div class="window-header">
+            <div class="control-buttons">
+                <span class="control-button close" title="Close">×</span>
+                <span class="control-button minimize" title="Minimize">—</span>
+                <span class="control-button maximize" title="Maximize">□</span>
+            </div>
+            <div class="address-bar">
+                <input type="text" value="https://telegram-dpreferral.com" readonly>
+            </div>
+        </div>
+        <div class="window-content">
+            <!-- Content of the window -->
+        </div>
+    </div>
+
+    <!-- Chaos Sound -->
+    <audio id="chaosSound" src="chaos-sound.mp3"></audio>
+
+    <!-- Include your JavaScript file -->
+    <script src="script.js"></script>
 </body>
 </html>
