@@ -37,15 +37,20 @@ window.addEventListener('click', (event) => {
 
 // Handle Submit Username
 submitUsername.addEventListener('click', async () => {
-  const telegramUsername = telegramUsernameInput.value.trim();
+  let telegramUsername = telegramUsernameInput.value.trim();
 
   if (!telegramUsername) {
     displayModalMessage('Please enter your Telegram username.', 'error');
     return;
   }
 
+  // Remove '@' if present
+  if (telegramUsername.startsWith('@')) {
+    telegramUsername = telegramUsername.substring(1);
+  }
+
   // Basic validation for Telegram username
-  if (!/^@?[a-zA-Z0-9_]{5,32}$/.test(telegramUsername)) {
+  if (!/^[a-zA-Z0-9_]{5,32}$/.test(telegramUsername)) {
     displayModalMessage('Invalid Telegram username format.', 'error');
     return;
   }
