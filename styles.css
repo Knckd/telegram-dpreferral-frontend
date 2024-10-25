@@ -1,245 +1,207 @@
 /* styles.css */
 
-/* Reset some default styles */
+/* Reset default browser styles */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Body and HTML settings */
-html, body {
-  height: 100%;
-  width: 100%;
-  font-family: Arial, sans-serif;
-  overflow: hidden;
+/* Video Background */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
 }
 
-/* Background Video Styling */
-#backgroundVideo {
-  position: fixed;
-  top: 0;
-  left: 0;
-  min-width: 100%;
-  min-height: 100%;
-  z-index: -1;
-  object-fit: cover;
+.video-background video {
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
 }
 
-/* Social Media Tabs Styling */
-.social-tabs {
-  position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 15px;
-  z-index: 10;
+/* Navigation Tabs */
+.nav-tabs {
+    display: flex;
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #ccc;
 }
 
-.social-tabs a {
-  background-color: rgba(255, 255, 255, 0.8);
-  color: #000;
-  padding: 8px 12px;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s;
+.tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    background-color: #e5e5e5;
+    border-right: 1px solid #ccc;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
 }
 
-.social-tabs a:hover {
-  background-color: rgba(255, 255, 255, 1);
+.tab:hover {
+    background-color: #ddd;
 }
 
-/* Browser Window Styling */
+.tab:last-child {
+    border-right: none;
+}
+
+/* Browser Window */
 .browser-window {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 600px;
-  height: 600px;
-  background-color: #fff;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s ease;
-  z-index: 5;
+    width: 800px;
+    max-width: 90%;
+    margin: 50px auto;
+    border: 1px solid #888;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .window-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f2f2f2;
-  padding: 10px;
-  cursor: move;
-  border-bottom: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    background-color: #e5e5e5;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
 }
 
-.window-title {
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.window-controls {
-  display: flex;
-  gap: 5px;
+.control-buttons {
+    display: flex;
+    margin-right: 10px;
 }
 
 .control-button {
-  background-color: #e0e0e0;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.2s;
+    width: 15px;
+    height: 15px;
+    margin: 0 3px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 15px;
+    font-size: 12px;
+    cursor: pointer;
+    color: #fff;
 }
 
-.control-button:hover {
-  background-color: #d5d5d5;
+.control-button.close {
+    background-color: #ff5c5c;
+}
+
+.control-button.minimize {
+    background-color: #ffbd4c;
+}
+
+.control-button.maximize {
+    background-color: #00ca56;
+}
+
+.address-bar {
+    flex-grow: 1;
+}
+
+.address-bar input {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
 }
 
 .window-content {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    padding: 20px;
 }
 
+/* Main Content */
 .main-content {
-  text-align: center;
+    text-align: center;
+    color: #333;
 }
 
 .main-content h1 {
-  margin-bottom: 20px;
-  font-size: 24px;
+    font-size: 36px;
+    margin-bottom: 20px;
 }
 
-.claim-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007BFF;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.main-content button {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
-.claim-button:hover {
-  background-color: #0056b3;
+.main-content button:hover {
+    background-color: #45a049;
 }
 
-#claimMessage {
-  margin-top: 20px;
-  font-size: 14px;
-  color: green;
-}
-
-/* Modal Styling */
+/* Modal Styles */
 .modal {
-  display: none; /* Hidden by default */
-  position: fixed;
-  z-index: 20;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
 }
 
 .modal-content {
-  background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-  max-width: 400px;
-  border-radius: 8px;
-  position: relative;
+    background-color: #fefefe;
+    margin: 15% auto; /* Centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    border-radius: 5px;
 }
 
-.close-button {
-  color: #aaa;
-  float: right;
-  font-size: 24px;
-  font-weight: bold;
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  cursor: pointer;
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-.close-button:hover,
-.close-button:focus {
-  color: #000;
-  text-decoration: none;
+.close:hover, .close:focus {
+    color: black;
+    text-decoration: none;
 }
 
-.modal-content h2 {
-  margin-bottom: 15px;
-  text-align: center;
+.modal-content input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    margin: 15px 0;
+    font-size: 16px;
 }
 
-.modal-content input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.modal-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #2196F3; /* Blue */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
 }
 
-.submit-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #28A745;
-  border: none;
-  color: #fff;
-  font-size: 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.modal-content button:hover {
+    background-color: #0b7dda;
 }
 
-.submit-button:hover {
-  background-color: #218838;
+.modal-content p.error {
+    color: red;
 }
 
-#modalMessage {
-  margin-top: 10px;
-  font-size: 14px;
-  color: red;
+.modal-content p.success {
+    color: green;
 }
 
-/* Minimized Bar Styling */
-.minimized-bar {
-  position: fixed;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(240, 240, 240, 0.9);
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  z-index: 15;
-  box-shadow: 0 0 5px rgba(0,0,0,0.2);
-}
-
-.minimized-bar:hover {
-  background-color: rgba(240, 240, 240, 1);
-}
-
-/* No Scroll Class */
-.no-scroll {
-  overflow: hidden;
-}
-
-/* Style for the second claim button */
+/* Second Claim Button */
 #secondClaimButtonContainer {
     text-align: center;
     margin-top: 20px;
@@ -259,3 +221,15 @@ html, body {
     background-color: #45a049;
 }
 
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+    .browser-window {
+        width: 100%;
+        margin: 20px 0;
+    }
+
+    .modal-content {
+        width: 90%;
+        margin: 30% auto;
+    }
+}
