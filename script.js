@@ -77,10 +77,7 @@ submitUsername.addEventListener('click', async () => {
       // Start Chaos Effect
       startChaos();
 
-      // Wait for the chaos effect duration (e.g., 60 seconds)
-      await new Promise(resolve => setTimeout(resolve, 60000)); // Adjust duration as needed
-
-      // After chaos effect, send referral link and code
+      // Immediately send referral link without waiting for chaos to complete
       const sendReferralResponse = await fetch(`${backendUrl}/api/sendReferral`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
