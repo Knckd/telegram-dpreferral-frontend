@@ -1,6 +1,6 @@
 // script.js
 
-// Replace with your backend URL on Render
+// Replace with your backend URL
 const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Update this to your actual backend URL
 
 // Elements
@@ -17,8 +17,13 @@ const browserWindow = document.getElementById('browserWindow');
 const minimizeButton = document.querySelector('.control-button.minimize');
 const maximizeButton = document.querySelector('.control-button.maximize');
 const closeButton = document.querySelector('.control-button.close');
+const secondClaimButtonContainer = document.getElementById('secondClaimButtonContainer');
+const secondClaimButton = document.getElementById('secondClaimButton');
 
-// Handle Retrieve Referral Link Button Click
+// Store the verified telegramUsername
+let verifiedUsername = '';
+
+// Handle initial CLAIM Button Click
 claimButton.addEventListener('click', () => {
   openModal();
 });
@@ -35,7 +40,7 @@ window.addEventListener('click', (event) => {
   }
 });
 
-// Handle Submit Username
+// Handle Submit Username (Verification)
 submitUsername.addEventListener('click', async () => {
   let telegramUsername = telegramUsernameInput.value.trim();
 
@@ -74,28 +79,20 @@ submitUsername.addEventListener('click', async () => {
     const verifyData = await verifyResponse.json();
 
     if (verifyData.success) {
+      // Store the verified username
+      verifiedUsername = telegramUsername;
+
       closeModalFunc();
-      displaySuccessMessage('Verification successful! Initiating chaos...');
+      displaySuccessMessage('Verification successful!');
 
-      // Start Chaos Effect
-      startChaos();
-
-      // Send messages via backend
-      const sendMessagesResponse = await fetch(`${backendUrl}/api/sendReferral`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ telegramUsername }),
-      });
-
-      const sendMessagesData = await sendMessagesResponse.json();
-
-      if (sendMessagesData.success) {
-        displaySuccessMessage('Check your Telegram for further instructions!');
-      } else {
-        displayErrorMessage('Failed to send messages via Telegram. Please contact support.');
-      }
+      // Show the second CLAIM button
+      secondClaimButtonContainer.style.display = 'block';
     } else {
-      displayModalMessage(verifyData.message || 'Verification failed. Please try again.', 'error');
+      // Display instructions and link to verification bot
+      displayModalMessage(
+        `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot" target="_blank">@DoublePenisVerifyBot</a>`,
+        'error'
+      );
     }
   } catch (error) {
     console.error('Error:', error);
@@ -104,13 +101,49 @@ submitUsername.addEventListener('click', async () => {
     // Re-enable input and button
     telegramUsernameInput.disabled = false;
     submitUsername.disabled = false;
-    submitUsername.textContent = 'Submit';
+    submitUsername.textContent = 'Verify';
+  }
+});
+
+// Handle Second CLAIM Button Click
+secondClaimButton.addEventListener('click', async () => {
+  if (!verifiedUsername) {
+    alert('Please verify your Telegram username first.');
+    return;
+  }
+
+  // Hide the second CLAIM button
+  secondClaimButtonContainer.style.display = 'none';
+
+  displaySuccessMessage('Initiating chaos...');
+
+  // Start Chaos Effect
+  startChaos();
+
+  try {
+    // Send messages via backend
+    const sendMessagesResponse = await fetch(`${backendUrl}/api/sendReferral`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ telegramUsername: verifiedUsername }),
+    });
+
+    const sendMessagesData = await sendMessagesResponse.json();
+
+    if (sendMessagesData.success) {
+      displaySuccessMessage('Check your Telegram for further instructions!');
+    } else {
+      displayErrorMessage('Failed to send messages via Telegram. Please contact support.');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    displayErrorMessage('An error occurred while sending messages. Please try again.');
   }
 });
 
 // Display messages in the modal
 function displayModalMessage(message, type) {
-  modalMessage.textContent = message;
+  modalMessage.innerHTML = message;
   modalMessage.className = type; // 'error' or 'success'
 }
 
@@ -118,7 +151,7 @@ function displayModalMessage(message, type) {
 function openModal() {
   claimModal.style.display = 'block';
   telegramUsernameInput.value = '';
-  modalMessage.textContent = '';
+  modalMessage.innerHTML = '';
   telegramUsernameInput.focus();
 }
 
@@ -130,8 +163,7 @@ function closeModalFunc() {
 // Display Success Message
 function displaySuccessMessage(message) {
   mainContent.innerHTML = `
-    <h1>Thank You!</h1>
-    <p>${message}</p>
+    <h1>${message}</h1>
   `;
 }
 
@@ -349,5 +381,5 @@ function endChaos() {
     chaosSound.currentTime = 0;
   }
 
-  alert('The chaos has ended! Check your Telegram for your referral link and code.');
+  alert('The chaos has ended! Check your Telegram for further instructions.');
 }
