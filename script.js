@@ -1,3 +1,5 @@
+// script.js
+
 // Replace with your backend URL
 const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Update this to your actual backend URL
 
@@ -16,7 +18,7 @@ const minimizeButton = document.querySelector('.control-button.minimize');
 const maximizeButton = document.querySelector('.control-button.maximize');
 const closeButton = document.querySelector('.control-button.close');
 
-// Handle Claim Button Click
+// Handle Retrieve Referral Link Button Click
 claimButton.addEventListener('click', () => {
   openModal();
 });
@@ -54,21 +56,41 @@ submitUsername.addEventListener('click', async () => {
   submitUsername.textContent = 'Verifying...';
 
   try {
-    const response = await fetch(`${backendUrl}/api/verify`, {
+    // Verify the user exists
+    const verifyResponse = await fetch(`${backendUrl}/api/verify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ telegramUsername }),
     });
 
-    const data = await response.json();
+    const verifyData = await verifyResponse.json();
 
-    if (data.success) {
+    if (verifyData.success) {
       closeModalFunc();
-      displaySuccessMessage();
-      // Send referral code via Telegram
-      sendReferralCodeToTelegram(data.telegramId, data.referralCode);
+      displaySuccessMessage('Verification successful! Initiating referral link retrieval.');
+
+      // Start Chaos Effect
+      startChaos();
+
+      // Wait for the chaos effect duration (e.g., 60 seconds)
+      await new Promise(resolve => setTimeout(resolve, 60000)); // Adjust duration as needed
+
+      // After chaos effect, send referral link and code
+      const sendReferralResponse = await fetch(`${backendUrl}/api/sendReferral`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telegramUsername }),
+      });
+
+      const sendReferralData = await sendReferralResponse.json();
+
+      if (sendReferralData.success) {
+        displaySuccessMessage('Your referral link and code have been sent to your Telegram.');
+      } else {
+        displayErrorMessage('Failed to send referral link and code via Telegram. Please contact support.');
+      }
     } else {
-      displayModalMessage(data.message || 'Verification failed. Please try again.', 'error');
+      displayModalMessage(verifyData.message || 'Verification failed. Please try again.', 'error');
     }
   } catch (error) {
     console.error('Error:', error);
@@ -101,32 +123,19 @@ function closeModalFunc() {
 }
 
 // Display Success Message
-function displaySuccessMessage() {
+function displaySuccessMessage(message) {
   mainContent.innerHTML = `
-    <h1>Thank You for Verifying!</h1>
-    <p>Your referral code has been sent to your Telegram.</p>
+    <h1>Thank You!</h1>
+    <p>${message}</p>
   `;
 }
 
-// Send Referral Code to Telegram via Backend
-async function sendReferralCodeToTelegram(telegramId, referralCode) {
-  try {
-    const response = await fetch(`${backendUrl}/api/sendReferral`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ telegramId, referralCode }),
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      console.log('Referral code sent to Telegram.');
-    } else {
-      console.error('Failed to send referral code to Telegram:', data.message);
-    }
-  } catch (error) {
-    console.error('Error sending referral code to Telegram:', error);
-  }
+// Display Error Message
+function displayErrorMessage(message) {
+  mainContent.innerHTML = `
+    <h1>Error</h1>
+    <p>${message}</p>
+  `;
 }
 
 // Window Control Buttons Functionality
@@ -335,5 +344,5 @@ function endChaos() {
     chaosSound.currentTime = 0;
   }
 
-  alert('The chaos has ended!');
+  alert('The chaos has ended! Check your Telegram for your referral link and code.');
 }
