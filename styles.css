@@ -238,3 +238,24 @@ html, body {
 .no-scroll {
   overflow: hidden;
 }
+
+/* Style for the second claim button */
+#secondClaimButtonContainer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#secondClaimButton {
+    padding: 15px 30px;
+    font-size: 18px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#secondClaimButton:hover {
+    background-color: #45a049;
+}
+
