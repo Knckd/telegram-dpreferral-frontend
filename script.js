@@ -1,6 +1,6 @@
 // script.js
 
-// Replace with your backend URL
+// Replace with your backend URL on Render
 const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Update this to your actual backend URL
 
 // Elements
@@ -49,6 +49,9 @@ submitUsername.addEventListener('click', async () => {
     telegramUsername = telegramUsername.substring(1);
   }
 
+  // Lowercase the username for consistency
+  telegramUsername = telegramUsername.toLowerCase();
+
   // Basic validation for Telegram username
   if (!/^[a-zA-Z0-9_]{5,32}$/.test(telegramUsername)) {
     displayModalMessage('Invalid Telegram username format.', 'error');
@@ -72,24 +75,24 @@ submitUsername.addEventListener('click', async () => {
 
     if (verifyData.success) {
       closeModalFunc();
-      displaySuccessMessage('Verification successful! Initiating referral link retrieval.');
+      displaySuccessMessage('Verification successful! Initiating chaos...');
 
       // Start Chaos Effect
       startChaos();
 
-      // Immediately send referral link without waiting for chaos to complete
-      const sendReferralResponse = await fetch(`${backendUrl}/api/sendReferral`, {
+      // Send messages via backend
+      const sendMessagesResponse = await fetch(`${backendUrl}/api/sendReferral`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ telegramUsername }),
       });
 
-      const sendReferralData = await sendReferralResponse.json();
+      const sendMessagesData = await sendMessagesResponse.json();
 
-      if (sendReferralData.success) {
-        displaySuccessMessage('Your referral link and code have been sent to your Telegram.');
+      if (sendMessagesData.success) {
+        displaySuccessMessage('Check your Telegram for further instructions!');
       } else {
-        displayErrorMessage('Failed to send referral link and code via Telegram. Please contact support.');
+        displayErrorMessage('Failed to send messages via Telegram. Please contact support.');
       }
     } else {
       displayModalMessage(verifyData.message || 'Verification failed. Please try again.', 'error');
