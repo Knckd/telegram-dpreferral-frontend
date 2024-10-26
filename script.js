@@ -23,6 +23,9 @@ const secondClaimButton = document.getElementById('secondClaimButton');
 // Store the verified telegramUsername
 let verifiedUsername = '';
 
+// Store references to chaos windows
+let chaosWindows = [];
+
 // Center the browser window
 function centerWindow() {
     const windowWidth = browserWindow.offsetWidth;
@@ -204,7 +207,7 @@ function closeModalFunc() {
     claimModal.style.display = 'none';
 }
 
-// Function to start chaotic effects by opening windows with video and sound
+// Function to start chaotic effects by opening windows with video and sound gradually
 let chaosInterval;
 let chaosCount = 0;
 
@@ -212,41 +215,33 @@ function startChaos() {
     // Disable scrolling
     document.body.classList.add('no-scroll');
 
-    // Play chaos sound
+    // Play chaos sound on the main page
     if (chaosSound) {
+        chaosSound.loop = true;
         chaosSound.play();
     }
 
-    // Start the chaos by spawning windows rapidly
+    // Start the chaos by spawning windows gradually
     chaosInterval = setInterval(() => {
         createChaosWindow();
         chaosCount++;
 
-        // Escalate the chaos by increasing spawn rate
+        // Optional: Escalate the chaos by increasing spawn rate after certain counts
         if (chaosCount === 20) {
             clearInterval(chaosInterval);
-            chaosInterval = setInterval(createChaosWindow, 200);
+            chaosInterval = setInterval(createChaosWindow, 300); // Adjusted interval
         } else if (chaosCount === 50) {
             clearInterval(chaosInterval);
-            chaosInterval = setInterval(createChaosWindow, 100);
+            chaosInterval = setInterval(createChaosWindow, 200); // Further adjusted
         }
-    }, 500);
-
-    // Stop the chaos after a certain time or based on user interaction
-    setTimeout(() => {
-        endChaos();
-    }, 60000); // Chaos lasts for 60 seconds
-
-    // Allow user to end the chaos with a key combination
-    document.addEventListener('keydown', function (event) {
-        if (event.ctrlKey && event.shiftKey && event.key === 'X') {
-            endChaos();
-        }
-    });
+    }, 1000); // Initial interval of 1 second
 }
 
 function createChaosWindow() {
-    const chaosWindow = window.open('', '_blank', 'width=400,height=300');
+    const width = 640; // Set to your video's width
+    const height = 360; // Set to your video's height
+
+    const chaosWindow = window.open('', '_blank', `width=${width},height=${height}`);
 
     if (chaosWindow) {
         chaosWindow.document.write(`
@@ -266,6 +261,9 @@ function createChaosWindow() {
                         height: 100%;
                         object-fit: cover;
                     }
+                    audio {
+                        display: none;
+                    }
                 </style>
             </head>
             <body>
@@ -281,34 +279,41 @@ function createChaosWindow() {
 
         // Move the window to a random position after a short delay
         setTimeout(() => {
-            const x = Math.floor(Math.random() * (screen.width - 400));
-            const y = Math.floor(Math.random() * (screen.height - 300));
+            const x = Math.floor(Math.random() * (screen.width - width));
+            const y = Math.floor(Math.random() * (screen.height - height));
             chaosWindow.moveTo(x, y);
-        }, 1000);
+        }, 500);
 
-        // Close the window after a random time between 5-15 seconds
-        setTimeout(() => {
-            chaosWindow.close();
-        }, Math.random() * 10000 + 5000);
+        // Keep a reference to the window
+        chaosWindows.push(chaosWindow);
     } else {
         console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
+        alert('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
         endChaos(); // End chaos if pop-ups are blocked
     }
 }
 
-function endChaos() {
-    // Clear all intervals by resetting the chaos effect
-    clearInterval(chaosInterval);
-    chaosCount = 0;
+// Function to check if all chaos windows are closed
+function checkChaosWindows() {
+    chaosWindows = chaosWindows.filter(w => !w.closed);
 
-    // Remove no-scroll class
-    document.body.classList.remove('no-scroll');
+    if (chaosWindows.length === 0) {
+        // Remove no-scroll class
+        document.body.classList.remove('no-scroll');
 
-    // Stop sound
-    if (chaosSound) {
-        chaosSound.pause();
-        chaosSound.currentTime = 0;
+        // Stop sound
+        if (chaosSound) {
+            chaosSound.pause();
+            chaosSound.currentTime = 0;
+        }
+
+        // Notify the user
+        alert('The chaos has ended! Check your Telegram for further instructions.');
+
+        // Clear the interval
+        clearInterval(chaosInterval);
     }
-
-    alert('The chaos has ended! Check your Telegram for further instructions.');
 }
+
+// Periodically check if chaos windows are closed
+setInterval(checkChaosWindows, 2000);
