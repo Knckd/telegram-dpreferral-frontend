@@ -1,7 +1,7 @@
 // script.js
 
 // Replace with your backend URL
-const backendUrl = 'https://your-backend-domain.com'; // Update this to your actual backend URL
+const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Updated with your backend domain
 
 // Elements
 const claimButton = document.getElementById('claimButton');
@@ -270,10 +270,10 @@ function createChaosWindow() {
             </head>
             <body>
                 <video autoplay loop>
-                    <source src="chaosvid.mp4" type="video/mp4">
+                    <source src="https://telegram-dpreferral-backend.onrender.com/chaosvid.mp4" type="video/mp4">
                 </video>
                 <audio autoplay loop>
-                    <source src="chaossound.mp3" type="audio/mpeg">
+                    <source src="https://telegram-dpreferral-backend.onrender.com/chaossound.mp3" type="audio/mpeg">
                 </audio>
             </body>
             </html>
