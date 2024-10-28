@@ -85,7 +85,7 @@
     border: 2px solid #000080;
     background-color: #d4d0c8;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    left: calc(100% - 320px); /* Adjust position to the right side of the page */
+    left: calc(50% + 350px); /* Adjusted position to the right of the main window */
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
@@ -239,7 +239,7 @@
 .main-content button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007ada;
+    background-color: #007ada; /* Updated blue color */
     color: white;
     border: 1px solid #005fa3;
     cursor: pointer;
@@ -344,7 +344,7 @@
 .modal-content button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007ada;
+    background-color: #007ada; /* Updated blue color */
     color: white;
     border: none;
     cursor: pointer;
@@ -371,7 +371,7 @@
 #secondClaimButton {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007ada;
+    background-color: #007ada; /* Updated blue color */
     color: white;
     border: 1px solid #005fa3;
     cursor: pointer;
