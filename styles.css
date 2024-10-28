@@ -70,10 +70,26 @@
     border: 2px solid #000080;
     background-color: #d4d0c8;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    /* Center the window */
+}
+
+/* Main Window Positioning */
+#mainWindow {
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-70%, -50%); /* Adjusted to make room for leaderboard */
+}
+
+/* Leaderboard Window Positioning */
+.leaderboard-window {
+    width: 300px;
+    max-width: 90%;
+    position: absolute;
+    border: 2px solid #000080;
+    background-color: #d4d0c8;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    right: 10%;
+    top: 20%;
+    transform: translate(0, -20%);
 }
 
 /* Window Header */
@@ -237,41 +253,14 @@
     background-color: #0088ff;
 }
 
-/* Leaderboard Button */
-#leaderboardButton {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 15px;
-    font-size: 16px;
-    background-color: #007ada;
-    color: white;
-    border: 1px solid #005fa3;
-    cursor: pointer;
-    border-radius: 5px;
+/* Leaderboard Content */
+.leaderboard-content {
+    color: #000000;
     font-family: Tahoma, sans-serif;
-    z-index: 2;
 }
 
-#leaderboardButton:hover {
-    background-color: #0088ff;
-}
-
-/* Leaderboard Container */
-#leaderboardContainer {
-    position: absolute;
-    top: 20px;
-    right: 0;
-    width: 250px;
-    background-color: #f0f0f0;
-    border-left: 1px solid #808080;
-    padding: 10px;
-    box-sizing: border-box;
-}
-
-#leaderboardContainer h2 {
-    font-family: Tahoma, sans-serif;
-    font-size: 16px;
+.leaderboard-content h2 {
+    font-size: 18px;
     margin-bottom: 10px;
 }
 
@@ -281,7 +270,6 @@
 }
 
 #leaderboardList li {
-    font-family: Tahoma, sans-serif;
     font-size: 14px;
     margin-bottom: 5px;
 }
@@ -389,11 +377,13 @@
 
 /* Responsive Design */
 @media screen and (max-width: 800px) {
-    #leaderboardContainer {
+    #mainWindow, .leaderboard-window {
         position: static;
-        width: 100%;
-        border-left: none;
-        border-top: 1px solid #808080;
-        margin-top: 20px;
+        transform: none;
+        margin: 20px auto;
+    }
+
+    .leaderboard-window {
+        margin-top: 0;
     }
 }
