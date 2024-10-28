@@ -13,9 +13,12 @@ const submitUsername = document.getElementById('submitUsername');
 const telegramUsernameInput = document.getElementById('telegramUsername');
 const modalMessage = document.getElementById('modalMessage');
 const mainContent = document.querySelector('.main-content');
-const browserWindow = document.querySelector('.browser-window');
+const browserWindow = document.getElementById('browserWindow');
 const secondClaimButtonContainer = document.getElementById('secondClaimButtonContainer');
 const secondClaimButton = document.getElementById('secondClaimButton');
+const leaderboardButton = document.getElementById('leaderboardButton');
+const leaderboardContainer = document.getElementById('leaderboardContainer');
+const leaderboardList = document.getElementById('leaderboardList');
 
 // Variables to manage chaos
 let chaosWindows = [];
@@ -26,8 +29,35 @@ let isChaosActive = false;
 // Store the verified telegramUsername
 let verifiedUsername = '';
 
-// Center the browser window (existing code remains the same)
-// ... [Existing code for centering and dragging the window] ...
+// Center the browser window
+function centerWindow() {
+    // The window is already centered via CSS, so this function is not needed.
+}
+
+// Make the browser window draggable
+let isDragging = false;
+let offsetX = 0;
+let offsetY = 0;
+
+const windowHeader = document.querySelector('.window-header');
+
+windowHeader.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - browserWindow.offsetLeft;
+    offsetY = e.clientY - browserWindow.offsetTop;
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+        browserWindow.style.left = `${e.clientX - offsetX}px`;
+        browserWindow.style.top = `${e.clientY - offsetY}px`;
+        browserWindow.style.transform = `translate(0, 0)`;
+    }
+});
+
+document.addEventListener('mouseup', () => {
+    isDragging = false;
+});
 
 // Handle initial CLAIM Button Click
 claimButton.addEventListener('click', () => {
@@ -47,7 +77,71 @@ window.addEventListener('click', (event) => {
 });
 
 // Handle Submit Username (Verification)
-// ... [Existing code remains the same] ...
+submitUsername.addEventListener('click', async () => {
+    let telegramUsername = telegramUsernameInput.value.trim();
+
+    if (!telegramUsername) {
+        displayModalMessage('Please enter your Telegram username.', 'error');
+        return;
+    }
+
+    // Remove '@' if present
+    if (telegramUsername.startsWith('@')) {
+        telegramUsername = telegramUsername.substring(1);
+    }
+
+    // Lowercase the username for consistency
+    telegramUsername = telegramUsername.toLowerCase();
+
+    // Basic validation for Telegram username
+    if (!/^[a-zA-Z0-9_]{5,32}$/.test(telegramUsername)) {
+        displayModalMessage('Invalid Telegram username format.', 'error');
+        return;
+    }
+
+    // Disable input and button to prevent multiple submissions
+    telegramUsernameInput.disabled = true;
+    submitUsername.disabled = true;
+    submitUsername.textContent = 'Verifying...';
+
+    try {
+        // Verify the user exists
+        const verifyResponse = await fetch(`${backendUrl}/api/verify`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ telegramUsername }),
+        });
+
+        const verifyData = await verifyResponse.json();
+
+        if (verifyData.success) {
+            // Store the verified username
+            verifiedUsername = telegramUsername;
+
+            closeModalFunc();
+            // Hide the initial CLAIM button
+            claimButton.style.display = 'none';
+            // Display the success message
+            claimMessage.textContent = 'Verification successful! You may now claim your free tokens!';
+            // Show the second CLAIM button
+            secondClaimButtonContainer.style.display = 'block';
+        } else {
+            // Display instructions and link to verification bot
+            displayModalMessage(
+                `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot" target="_blank">@DoublePenisVerifyBot</a>`,
+                'error'
+            );
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        displayModalMessage('An error occurred during verification. Please try again.', 'error');
+    } finally {
+        // Re-enable input and button
+        telegramUsernameInput.disabled = false;
+        submitUsername.disabled = false;
+        submitUsername.textContent = 'Verify';
+    }
+});
 
 // Handle Second CLAIM Button Click
 secondClaimButton.addEventListener('click', async () => {
@@ -84,6 +178,25 @@ secondClaimButton.addEventListener('click', async () => {
         claimMessage.textContent = 'An error occurred while sending messages. Please try again.';
     }
 });
+
+// Display messages in the modal
+function displayModalMessage(message, type) {
+    modalMessage.innerHTML = message;
+    modalMessage.className = type; // 'error' or 'success'
+}
+
+// Open Modal
+function openModal() {
+    claimModal.style.display = 'block';
+    telegramUsernameInput.value = '';
+    modalMessage.innerHTML = '';
+    telegramUsernameInput.focus();
+}
+
+// Close Modal
+function closeModalFunc() {
+    claimModal.style.display = 'none';
+}
 
 // Function to start chaotic effects by opening windows with video and sound
 function startChaos() {
@@ -131,12 +244,19 @@ function startChaos() {
                     <video autoplay loop muted>
                         <source src="https://telegram-dpreferral-backend.onrender.com/chaosvid.mp4" type="video/mp4">
                     </video>
-                    <audio autoplay loop>
+                    <audio>
                         <source src="https://telegram-dpreferral-backend.onrender.com/chaossound.mp3" type="audio/mpeg">
                     </audio>
                     <script>
                         // Prepare to show the window later
                         window.isRevealed = false;
+                        window.playMedia = function() {
+                            const video = document.querySelector('video');
+                            const audio = document.querySelector('audio');
+                            video.play();
+                            audio.loop = true;
+                            audio.play();
+                        };
                     </script>
                 </body>
                 </html>
@@ -155,25 +275,29 @@ function startChaos() {
     // Start revealing the chaos windows gradually
     let currentWindowIndex = 0;
     chaosInterval = setInterval(() => {
-        if (currentWindowIndex >= chaosWindows.length) {
-            clearInterval(chaosInterval);
-            return;
+        // Reveal two windows each interval
+        for (let j = 0; j < 2; j++) {
+            if (currentWindowIndex >= chaosWindows.length) {
+                clearInterval(chaosInterval);
+                return;
+            }
+
+            const chaosWindow = chaosWindows[currentWindowIndex];
+            if (chaosWindow && !chaosWindow.closed) {
+                chaosWindow.document.body.classList.remove('hidden');
+                chaosWindow.focus();
+                // Move the window to a random position
+                const width = 640;
+                const height = 360;
+                const x = Math.floor(Math.random() * (screen.width - width));
+                const y = Math.floor(Math.random() * (screen.height - height));
+                chaosWindow.moveTo(x, y);
+                // Play media when the window becomes visible
+                chaosWindow.playMedia();
+            }
+            currentWindowIndex++;
         }
-
-        const chaosWindow = chaosWindows[currentWindowIndex];
-        if (chaosWindow && !chaosWindow.closed) {
-            chaosWindow.document.body.classList.remove('hidden');
-
-            // Move the window to a random position
-            const width = 640;
-            const height = 360;
-            const x = Math.floor(Math.random() * (screen.width - width));
-            const y = Math.floor(Math.random() * (screen.height - height));
-            chaosWindow.moveTo(x, y);
-        }
-
-        currentWindowIndex++;
-    }, 1000); // Reveal a new window every 1 second
+    }, 1000); // Reveal two new windows every 1 second
 }
 
 // Add a single focus listener to detect when chaos windows are closed
@@ -211,4 +335,34 @@ function endChaos() {
 
     // Notify the user
     alert('The chaos has ended! Check your Telegram for further instructions.');
+}
+
+// Leaderboard Functionality
+leaderboardButton.addEventListener('click', () => {
+    if (leaderboardContainer.style.display === 'none' || leaderboardContainer.style.display === '') {
+        leaderboardContainer.style.display = 'block';
+        fetchLeaderboard();
+    } else {
+        leaderboardContainer.style.display = 'none';
+    }
+});
+
+async function fetchLeaderboard() {
+    try {
+        const response = await fetch(`${backendUrl}/api/leaderboard`);
+        const data = await response.json();
+        if (data.success) {
+            leaderboardList.innerHTML = '';
+            data.leaderboard.forEach((user, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${index + 1}. @${user.telegramUsername} - ${user.referrals} referrals`;
+                leaderboardList.appendChild(listItem);
+            });
+        } else {
+            leaderboardList.innerHTML = '<li>No data available.</li>';
+        }
+    } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+        leaderboardList.innerHTML = '<li>Error fetching leaderboard.</li>';
+    }
 }
