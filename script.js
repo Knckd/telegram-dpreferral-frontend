@@ -13,10 +13,12 @@ const submitUsername = document.getElementById('submitUsername');
 const telegramUsernameInput = document.getElementById('telegramUsername');
 const modalMessage = document.getElementById('modalMessage');
 const mainContent = document.querySelector('.main-content');
-const mainWindow = document.getElementById('mainWindow');
+const browserWindow = document.getElementById('browserWindow');
 const secondClaimButtonContainer = document.getElementById('secondClaimButtonContainer');
 const secondClaimButton = document.getElementById('secondClaimButton');
+const leaderboardButton = document.getElementById('leaderboardButton');
 const leaderboardWindow = document.getElementById('leaderboardWindow');
+const closeLeaderboardButton = document.getElementById('closeLeaderboardButton');
 const leaderboardList = document.getElementById('leaderboardList');
 
 // Variables to manage chaos
@@ -28,10 +30,8 @@ let isChaosActive = false;
 // Store the verified telegramUsername
 let verifiedUsername = '';
 
-// Make the main window draggable
-makeWindowDraggable(mainWindow);
-
-// Make the leaderboard window draggable
+// Make the browser window draggable
+makeWindowDraggable(browserWindow);
 makeWindowDraggable(leaderboardWindow);
 
 // Function to make a window draggable
@@ -40,9 +40,9 @@ function makeWindowDraggable(windowElement) {
     let offsetX = 0;
     let offsetY = 0;
 
-    const windowHeader = windowElement.querySelector('.window-header');
+    const header = windowElement.querySelector('.window-header');
 
-    windowHeader.addEventListener('mousedown', (e) => {
+    header.addEventListener('mousedown', (e) => {
         isDragging = true;
         offsetX = e.clientX - windowElement.offsetLeft;
         offsetY = e.clientY - windowElement.offsetTop;
@@ -200,7 +200,7 @@ function closeModalFunc() {
     claimModal.style.display = 'none';
 }
 
-// Function to start chaotic effects by using in-page elements instead of popups
+// Function to start chaotic effects by opening windows with video
 function startChaos() {
     if (isChaosActive) return; // Prevent multiple chaos starts
     isChaosActive = true;
@@ -214,67 +214,90 @@ function startChaos() {
         chaosSound.play();
     }
 
-    // Start the chaos by spawning div elements that look like windows
+    // Open all chaos windows during user interaction
+    const totalChaosWindows = 20; // Adjust the number as needed
+    for (let i = 0; i < totalChaosWindows; i++) {
+        const chaosWindow = window.open('', '_blank', 'width=640,height=360');
+        if (chaosWindow) {
+            // Keep the window hidden initially
+            chaosWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <title>Chaos Window ${i + 1}</title>
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 0;
+                            background-color: black;
+                            overflow: hidden;
+                        }
+                        body.hidden {
+                            display: none;
+                        }
+                        video {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                    </style>
+                </head>
+                <body class="hidden">
+                    <video autoplay loop muted>
+                        <source src="https://telegram-dpreferral-backend.onrender.com/chaosvid.mp4" type="video/mp4">
+                    </video>
+                    <script>
+                        // Prepare to show the window later
+                        window.isRevealed = false;
+                    </script>
+                </body>
+                </html>
+            `);
+
+            // Store the window reference
+            chaosWindows.push(chaosWindow);
+        } else {
+            console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
+            alert('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
+            endChaos();
+            return;
+        }
+    }
+
+    // Start revealing the chaos windows gradually
+    let currentWindowIndex = 0;
     chaosInterval = setInterval(() => {
-        // Create two chaos divs each interval
-        for (let i = 0; i < 2; i++) {
-            createChaosDiv();
-        }
+        // Reveal windows each interval
+        for (let j = 0; j < 1; j++) {
+            if (currentWindowIndex >= chaosWindows.length) {
+                clearInterval(chaosInterval);
+                return;
+            }
 
-        // Optional: Set a maximum number of chaos divs
-        chaosCount += 2;
-        if (chaosCount >= 20) { // Adjust the limit as needed
-            clearInterval(chaosInterval);
-            chaosInterval = null;
+            const chaosWindow = chaosWindows[currentWindowIndex];
+            if (chaosWindow && !chaosWindow.closed) {
+                chaosWindow.document.body.classList.remove('hidden');
+                chaosWindow.focus();
+                // Move the window to a random position
+                const width = 640;
+                const height = 360;
+                const x = Math.floor(Math.random() * (screen.width - width));
+                const y = Math.floor(Math.random() * (screen.height - height));
+                chaosWindow.moveTo(x, y);
+            }
+            currentWindowIndex++;
         }
-    }, 1000); // Spawn new chaos divs every 1 second
+    }, 1000); // Reveal one new window every 1 second
 }
 
-// Function to create a single chaos div
-function createChaosDiv() {
-    const chaosDiv = document.createElement('div');
-    chaosDiv.className = 'chaos-div';
-
-    // Position chaos div randomly on the screen
-    const width = 300;
-    const height = 200;
-    const x = Math.floor(Math.random() * (window.innerWidth - width));
-    const y = Math.floor(Math.random() * (window.innerHeight - height));
-
-    chaosDiv.style.left = `${x}px`;
-    chaosDiv.style.top = `${y}px`;
-
-    // Add content to chaos div
-    chaosDiv.innerHTML = `
-        <video autoplay loop muted>
-            <source src="https://telegram-dpreferral-backend.onrender.com/chaosvid.mp4" type="video/mp4">
-        </video>
-        <audio autoplay loop>
-            <source src="https://telegram-dpreferral-backend.onrender.com/chaossound.mp3" type="audio/mpeg">
-        </audio>
-    `;
-
-    // Append to body
-    document.body.appendChild(chaosDiv);
-
-    // Store reference
-    chaosWindows.push(chaosDiv);
-
-    // Play media when div is added
-    const video = chaosDiv.querySelector('video');
-    const audio = chaosDiv.querySelector('audio');
-    video.play();
-    audio.play();
-}
-
-// Event listener to check when chaos should end
-document.addEventListener('click', () => {
+// Add a single focus listener to detect when chaos windows are closed
+window.addEventListener('focus', () => {
     if (!isChaosActive) return;
 
-    // Remove closed chaos divs
-    chaosWindows = chaosWindows.filter(div => document.body.contains(div));
+    // Update the chaosWindows array by removing closed windows
+    chaosWindows = chaosWindows.filter(w => !w.closed);
 
-    // If no chaos divs are left, end chaos
+    // If no chaos windows are left, end chaos
     if (chaosWindows.length === 0) {
         endChaos();
     }
@@ -304,8 +327,20 @@ function endChaos() {
     alert('The chaos has ended! Check your Telegram for further instructions.');
 }
 
-// Fetch Leaderboard Data on Page Load
-fetchLeaderboard();
+// Leaderboard Functionality
+leaderboardButton.addEventListener('click', () => {
+    if (leaderboardWindow.style.display === 'none' || leaderboardWindow.style.display === '') {
+        leaderboardWindow.style.display = 'block';
+        fetchLeaderboard();
+    } else {
+        leaderboardWindow.style.display = 'none';
+    }
+});
+
+// Close Leaderboard Window
+closeLeaderboardButton.addEventListener('click', () => {
+    leaderboardWindow.style.display = 'none';
+});
 
 async function fetchLeaderboard() {
     try {
