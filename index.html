@@ -21,7 +21,7 @@
     </div>
 
     <!-- Main Content - Windows XP Style Browser Window -->
-    <div class="browser-window" id="mainWindow">
+    <div class="browser-window" id="browserWindow">
         <div class="window-header">
             <div class="window-title">
                 <img src="ie-icon.png" alt="IE Icon">
@@ -67,16 +67,14 @@
     </div>
 
     <!-- Leaderboard Window -->
-    <div class="browser-window leaderboard-window" id="leaderboardWindow">
+    <div class="leaderboard-window" id="leaderboardWindow" style="display: none;">
         <div class="window-header">
             <div class="window-title">
                 <img src="ie-icon.png" alt="IE Icon">
                 <span>Leaderboard - Microsoft Internet Explorer</span>
             </div>
             <div class="control-buttons">
-                <button class="control-button minimize" title="Minimize"></button>
-                <button class="control-button maximize" title="Maximize"></button>
-                <button class="control-button close" title="Close"></button>
+                <button class="control-button close" title="Close" id="closeLeaderboardButton"></button>
             </div>
         </div>
         <div class="window-toolbar">
@@ -88,11 +86,6 @@
                 <button>Tools</button>
                 <button>Help</button>
             </div>
-        </div>
-        <div class="address-bar">
-            <label for="address-input-leaderboard">Address:</label>
-            <input type="text" id="address-input-leaderboard" value="https://doublepenis.com/leaderboard" readonly>
-            <button>Go</button>
         </div>
         <div class="window-content">
             <div class="leaderboard-content">
@@ -106,6 +99,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Leaderboard Button -->
+    <button id="leaderboardButton">Leaderboard</button>
 
     <!-- Modal for username input -->
     <div id="claimModal" class="modal">
