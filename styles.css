@@ -70,6 +70,10 @@
     border: 2px solid #000080;
     background-color: #d4d0c8;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    /* Center the window */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /* Window Header */
@@ -202,6 +206,7 @@
     padding: 20px;
     background-color: #ffffff;
     min-height: 200px;
+    position: relative;
 }
 
 /* Main Content */
@@ -230,6 +235,55 @@
 
 .main-content button:hover {
     background-color: #0088ff;
+}
+
+/* Leaderboard Button */
+#leaderboardButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #007ada;
+    color: white;
+    border: 1px solid #005fa3;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: Tahoma, sans-serif;
+    z-index: 2;
+}
+
+#leaderboardButton:hover {
+    background-color: #0088ff;
+}
+
+/* Leaderboard Container */
+#leaderboardContainer {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    width: 250px;
+    background-color: #f0f0f0;
+    border-left: 1px solid #808080;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#leaderboardContainer h2 {
+    font-family: Tahoma, sans-serif;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+#leaderboardList {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#leaderboardList li {
+    font-family: Tahoma, sans-serif;
+    font-size: 14px;
+    margin-bottom: 5px;
 }
 
 /* Modal Styles */
@@ -334,13 +388,12 @@
 }
 
 /* Responsive Design */
-@media screen and (max-width: 600px) {
-    .browser-window {
+@media screen and (max-width: 800px) {
+    #leaderboardContainer {
+        position: static;
         width: 100%;
-    }
-
-    .modal-content {
-        width: 90%;
-        margin: 30% auto;
+        border-left: none;
+        border-top: 1px solid #808080;
+        margin-top: 20px;
     }
 }
