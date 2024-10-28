@@ -21,7 +21,7 @@
     </div>
 
     <!-- Main Content - Windows XP Style Browser Window -->
-    <div class="browser-window" id="browserWindow">
+    <div class="browser-window" id="mainWindow">
         <div class="window-header">
             <div class="window-title">
                 <img src="ie-icon.png" alt="IE Icon">
@@ -58,8 +58,44 @@
                     <button id="secondClaimButton">CLAIM</button>
                 </div>
             </div>
-            <!-- Leaderboard Section -->
-            <div id="leaderboardContainer" style="display: none;">
+        </div>
+        <div class="status-bar">
+            <div class="status-left">
+                <span>Done</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Window -->
+    <div class="browser-window leaderboard-window" id="leaderboardWindow">
+        <div class="window-header">
+            <div class="window-title">
+                <img src="ie-icon.png" alt="IE Icon">
+                <span>Leaderboard - Microsoft Internet Explorer</span>
+            </div>
+            <div class="control-buttons">
+                <button class="control-button minimize" title="Minimize"></button>
+                <button class="control-button maximize" title="Maximize"></button>
+                <button class="control-button close" title="Close"></button>
+            </div>
+        </div>
+        <div class="window-toolbar">
+            <div class="toolbar-left">
+                <button>File</button>
+                <button>Edit</button>
+                <button>View</button>
+                <button>Favorites</button>
+                <button>Tools</button>
+                <button>Help</button>
+            </div>
+        </div>
+        <div class="address-bar">
+            <label for="address-input-leaderboard">Address:</label>
+            <input type="text" id="address-input-leaderboard" value="https://doublepenis.com/leaderboard" readonly>
+            <button>Go</button>
+        </div>
+        <div class="window-content">
+            <div class="leaderboard-content">
                 <h2>Leaderboard</h2>
                 <ul id="leaderboardList"></ul>
             </div>
@@ -70,9 +106,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Leaderboard Button -->
-    <button id="leaderboardButton">Leaderboard</button>
 
     <!-- Modal for username input -->
     <div id="claimModal" class="modal">
