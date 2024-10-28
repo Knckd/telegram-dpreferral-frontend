@@ -70,16 +70,14 @@
     border: 2px solid #000080;
     background-color: #d4d0c8;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-/* Main Window Positioning */
-#mainWindow {
+    /* Center the window */
     left: 50%;
     top: 50%;
-    transform: translate(-70%, -50%); /* Adjusted to make room for leaderboard */
+    transform: translate(-50%, -50%);
+    z-index: 2;
 }
 
-/* Leaderboard Window Positioning */
+/* Leaderboard Window */
 .leaderboard-window {
     width: 300px;
     max-width: 90%;
@@ -87,9 +85,10 @@
     border: 2px solid #000080;
     background-color: #d4d0c8;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    right: 10%;
-    top: 20%;
-    transform: translate(0, -20%);
+    left: calc(50% + 320px); /* Adjust position to the right of the main window */
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
 }
 
 /* Window Header */
@@ -253,13 +252,34 @@
     background-color: #0088ff;
 }
 
+/* Leaderboard Button */
+#leaderboardButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    background-color: #007ada;
+    color: white;
+    border: 1px solid #005fa3;
+    cursor: pointer;
+    border-radius: 5px;
+    font-family: Tahoma, sans-serif;
+    z-index: 3;
+}
+
+#leaderboardButton:hover {
+    background-color: #0088ff;
+}
+
 /* Leaderboard Content */
 .leaderboard-content {
+    text-align: left;
     color: #000000;
-    font-family: Tahoma, sans-serif;
 }
 
 .leaderboard-content h2 {
+    font-family: Tahoma, sans-serif;
     font-size: 18px;
     margin-bottom: 10px;
 }
@@ -267,9 +287,12 @@
 #leaderboardList {
     list-style-type: none;
     padding-left: 0;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 #leaderboardList li {
+    font-family: Tahoma, sans-serif;
     font-size: 14px;
     margin-bottom: 5px;
 }
@@ -376,14 +399,18 @@
 }
 
 /* Responsive Design */
+@media screen and (max-width: 1200px) {
+    .leaderboard-window {
+        left: 75%;
+    }
+}
+
 @media screen and (max-width: 800px) {
-    #mainWindow, .leaderboard-window {
+    .browser-window,
+    .leaderboard-window {
         position: static;
         transform: none;
-        margin: 20px auto;
-    }
-
-    .leaderboard-window {
-        margin-top: 0;
+        width: 90%;
+        margin: 10px auto;
     }
 }
