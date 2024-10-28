@@ -21,7 +21,7 @@
     </div>
 
     <!-- Main Content - Windows XP Style Browser Window -->
-    <div class="browser-window">
+    <div class="browser-window" id="browserWindow">
         <div class="window-header">
             <div class="window-title">
                 <img src="ie-icon.png" alt="IE Icon">
@@ -58,6 +58,11 @@
                     <button id="secondClaimButton">CLAIM</button>
                 </div>
             </div>
+            <!-- Leaderboard Section -->
+            <div id="leaderboardContainer" style="display: none;">
+                <h2>Leaderboard</h2>
+                <ul id="leaderboardList"></ul>
+            </div>
         </div>
         <div class="status-bar">
             <div class="status-left">
@@ -65,6 +70,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Leaderboard Button -->
+    <button id="leaderboardButton">Leaderboard</button>
 
     <!-- Modal for username input -->
     <div id="claimModal" class="modal">
