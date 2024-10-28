@@ -79,15 +79,15 @@
 
 /* Leaderboard Window */
 .leaderboard-window {
-    width: 300px;
+    width: 350px;
     max-width: 90%;
     position: absolute;
     border: 2px solid #000080;
     background-color: #d4d0c8;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    left: calc(50% + 350px); /* Adjusted position to the right of the main window */
+    right: 0; /* Position to the right edge */
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
     z-index: 2;
 }
 
@@ -276,12 +276,14 @@
 .leaderboard-content {
     text-align: left;
     color: #000000;
+    padding: 10px;
 }
 
 .leaderboard-content h2 {
     font-family: Tahoma, sans-serif;
     font-size: 18px;
     margin-bottom: 10px;
+    text-align: center;
 }
 
 #leaderboardList {
@@ -289,12 +291,22 @@
     padding-left: 0;
     max-height: 400px;
     overflow-y: auto;
+    background-color: #f0f0f0;
+    border: 1px solid #a0a0a0;
+    padding: 5px;
 }
 
 #leaderboardList li {
     font-family: Tahoma, sans-serif;
     font-size: 14px;
     margin-bottom: 5px;
+    padding: 5px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #c0c0c0;
+}
+
+#leaderboardList li:nth-child(even) {
+    background-color: #e0e0e0;
 }
 
 /* Modal Styles */
@@ -401,7 +413,7 @@
 /* Responsive Design */
 @media screen and (max-width: 1200px) {
     .leaderboard-window {
-        left: 75%;
+        right: 10px;
     }
 }
 
