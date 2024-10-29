@@ -420,21 +420,3 @@
         margin: 10px auto;
     }
 }
-/* Background Flashing Effect */
-.flash-background {
-    background-color: black !important;
-}
-
-body.flash-background .browser-window {
-    border-color: red;
-}
-
-body.flash-background {
-    animation: flash 0.1s infinite alternate;
-}
-
-@keyframes flash {
-    from { background-color: white; }
-    to { background-color: black; }
-}
-
