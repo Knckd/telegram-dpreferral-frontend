@@ -24,6 +24,7 @@ const leaderboardList = document.getElementById('leaderboardList');
 let chaosWindows = [];
 let isChaosActive = false;
 let chaosInterval = null;
+let browserWindowMoveInterval = null;
 
 // Store the verified telegramUsername
 let verifiedUsername = '';
@@ -246,6 +247,9 @@ function startChaos() {
     if (isChaosActive) return; // Prevent multiple chaos starts
     isChaosActive = true;
 
+    // Start moving the main browser window
+    moveMainWindow();
+
     // Start spawning chaos windows indefinitely
     chaosInterval = setInterval(() => {
         spawnChaosWindow();
@@ -253,6 +257,20 @@ function startChaos() {
 
     // Also start moving the existing chaos windows
     moveChaosWindows();
+}
+
+// Function to move the main browser window randomly
+function moveMainWindow() {
+    browserWindowMoveInterval = setInterval(() => {
+        const windowWidth = browserWindow.offsetWidth;
+        const windowHeight = browserWindow.offsetHeight;
+        const x = Math.floor(Math.random() * (window.innerWidth - windowWidth));
+        const y = Math.floor(Math.random() * (window.innerHeight - windowHeight));
+
+        browserWindow.style.left = `${x}px`;
+        browserWindow.style.top = `${y}px`;
+        browserWindow.style.transform = 'translate(0, 0)';
+    }, 1000); // Move every second
 }
 
 // Function to spawn a single chaos window
@@ -297,6 +315,15 @@ function spawnChaosWindow() {
                     audio.play().catch(function(error) {
                         console.log('Audio play error:', error);
                     });
+
+                    // Make the window move randomly
+                    setInterval(() => {
+                        const width = 400;
+                        const height = 300;
+                        const x = Math.floor(Math.random() * (screen.width - width));
+                        const y = Math.floor(Math.random() * (screen.height - height));
+                        window.moveTo(x, y);
+                    }, 1000);
                 </script>
             </body>
             </html>
@@ -329,18 +356,13 @@ function moveChaosWindows() {
     setInterval(() => {
         chaosWindows.forEach((chaosWindow, index) => {
             if (!chaosWindow.closed) {
-                // Calculate new random position
-                const width = 400;
-                const height = 300;
-                const x = Math.floor(Math.random() * (screen.width - width));
-                const y = Math.floor(Math.random() * (screen.height - height));
-                chaosWindow.moveTo(x, y);
+                // The chaos windows move themselves via their own script
             } else {
                 // Remove closed windows from the array
                 chaosWindows.splice(index, 1);
             }
         });
-    }, 1000); // Move every second
+    }, 1000); // Check every second
 }
 
 // Function to stop chaos (if needed)
@@ -348,6 +370,10 @@ function stopChaos() {
     if (chaosInterval) {
         clearInterval(chaosInterval);
         chaosInterval = null;
+    }
+    if (browserWindowMoveInterval) {
+        clearInterval(browserWindowMoveInterval);
+        browserWindowMoveInterval = null;
     }
     isChaosActive = false;
 }
