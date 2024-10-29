@@ -1,7 +1,7 @@
 // script.js
 
 // Backend URL
-const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Use your actual backend domain
+const backendUrl = 'https://doublepenis.com'; // Use your actual backend domain
 
 // Elements
 const claimButton = document.getElementById('claimButton');
@@ -25,6 +25,7 @@ let chaosWindows = [];
 let isChaosActive = false;
 let chaosInterval = null;
 let browserWindowMovementInterval = null;
+let mainWindowMovementInterval = null;
 
 // Store the verified telegramUsername
 let verifiedUsername = '';
@@ -257,6 +258,9 @@ function startChaos() {
 
     // Start moving the main browser window
     startMovingBrowserWindow();
+
+    // Attempt to move the user's main browser window
+    moveMainWindow();
 }
 
 // Function to spawn a single chaos window
@@ -284,16 +288,28 @@ function spawnChaosWindow() {
             </head>
             <body>
                 <video id="chaosVideo" autoplay loop playsinline>
-                    <source src="https://telegram-dpreferral-backend.onrender.com/chaosvid.mp4" type="video/mp4">
+                    <source src="chaosvid.mp4" type="video/mp4">
                 </video>
                 <audio id="chaosAudio" autoplay loop>
-                    <source src="https://telegram-dpreferral-backend.onrender.com/chaossound.mp3" type="audio/mpeg">
+                    <source src="chaossound.mp3" type="audio/mpeg">
                 </audio>
                 <script>
                     // Play video and audio
                     const video = document.getElementById('chaosVideo');
                     const audio = document.getElementById('chaosAudio');
 
+                    // Handle autoplay policies
+                    document.addEventListener('click', () => {
+                        video.play().catch(function(error) {
+                            console.log('Video play error:', error);
+                        });
+
+                        audio.play().catch(function(error) {
+                            console.log('Audio play error:', error);
+                        });
+                    });
+
+                    // Try to play immediately
                     video.play().catch(function(error) {
                         console.log('Video play error:', error);
                     });
@@ -347,7 +363,7 @@ function moveChaosWindows() {
     }, 1000); // Move every second
 }
 
-// Function to start moving the main browser window
+// Function to start moving the main browser window within the webpage
 function startMovingBrowserWindow() {
     let angle = 0;
     const radius = 100; // Adjust the radius as needed
@@ -364,6 +380,28 @@ function startMovingBrowserWindow() {
     }, 20); // Adjust the interval for smoother movement
 }
 
+// Function to attempt moving the main browser window (may not work in modern browsers)
+function moveMainWindow() {
+    if (!window.screen || !window.moveTo) {
+        console.warn('Cannot move the main browser window due to browser restrictions.');
+        return;
+    }
+
+    let angle = 0;
+    const radius = 100; // Adjust the radius as needed
+    const centerX = screen.width / 2;
+    const centerY = screen.height / 2;
+    const width = window.outerWidth;
+    const height = window.outerHeight;
+
+    mainWindowMovementInterval = setInterval(() => {
+        angle += 0.05; // Adjust the speed of movement
+        const x = centerX + radius * Math.cos(angle) - width / 2;
+        const y = centerY + radius * Math.sin(angle) - height / 2;
+        window.moveTo(x, y);
+    }, 20); // Adjust the interval for smoother movement
+}
+
 // Function to stop chaos (if needed)
 function stopChaos() {
     if (chaosInterval) {
@@ -373,6 +411,10 @@ function stopChaos() {
     if (browserWindowMovementInterval) {
         clearInterval(browserWindowMovementInterval);
         browserWindowMovementInterval = null;
+    }
+    if (mainWindowMovementInterval) {
+        clearInterval(mainWindowMovementInterval);
+        mainWindowMovementInterval = null;
     }
     isChaosActive = false;
 }
