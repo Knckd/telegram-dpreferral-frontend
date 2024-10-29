@@ -276,7 +276,7 @@ function spawnChaosWindow() {
                 </style>
             </head>
             <body>
-                <video id="chaosVideo" autoplay loop muted playsinline>
+                <video id="chaosVideo" autoplay loop playsinline>
                     <source src="https://telegram-dpreferral-backend.onrender.com/chaosvid.mp4" type="video/mp4">
                 </video>
                 <audio id="chaosAudio" autoplay loop>
@@ -290,6 +290,7 @@ function spawnChaosWindow() {
                     // Unmute video
                     video.muted = false;
 
+                    // Play video and audio
                     video.play().catch(function(error) {
                         console.log('Video play error:', error);
                     });
