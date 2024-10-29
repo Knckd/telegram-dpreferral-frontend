@@ -1,7 +1,7 @@
 // script.js
 
 // Backend URL
-const backendUrl = 'https://doublepenis.com'; // Use your actual backend domain
+const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Use your actual backend domain
 
 // Elements
 const claimButton = document.getElementById('claimButton');
