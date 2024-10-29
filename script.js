@@ -24,7 +24,7 @@ const leaderboardList = document.getElementById('leaderboardList');
 let chaosWindows = [];
 let isChaosActive = false;
 let chaosInterval = null;
-let browserWindowMoveInterval = null;
+let browserWindowMovementInterval = null;
 
 // Store the verified telegramUsername
 let verifiedUsername = '';
@@ -247,30 +247,16 @@ function startChaos() {
     if (isChaosActive) return; // Prevent multiple chaos starts
     isChaosActive = true;
 
-    // Start moving the main browser window
-    moveMainWindow();
-
     // Start spawning chaos windows indefinitely
     chaosInterval = setInterval(() => {
         spawnChaosWindow();
     }, 500); // Adjust the interval as needed
 
-    // Also start moving the existing chaos windows
+    // Start moving the existing chaos windows
     moveChaosWindows();
-}
 
-// Function to move the main browser window randomly
-function moveMainWindow() {
-    browserWindowMoveInterval = setInterval(() => {
-        const windowWidth = browserWindow.offsetWidth;
-        const windowHeight = browserWindow.offsetHeight;
-        const x = Math.floor(Math.random() * (window.innerWidth - windowWidth));
-        const y = Math.floor(Math.random() * (window.innerHeight - windowHeight));
-
-        browserWindow.style.left = `${x}px`;
-        browserWindow.style.top = `${y}px`;
-        browserWindow.style.transform = 'translate(0, 0)';
-    }, 1000); // Move every second
+    // Start moving the main browser window
+    startMovingBrowserWindow();
 }
 
 // Function to spawn a single chaos window
@@ -315,15 +301,6 @@ function spawnChaosWindow() {
                     audio.play().catch(function(error) {
                         console.log('Audio play error:', error);
                     });
-
-                    // Make the window move randomly
-                    setInterval(() => {
-                        const width = 400;
-                        const height = 300;
-                        const x = Math.floor(Math.random() * (screen.width - width));
-                        const y = Math.floor(Math.random() * (screen.height - height));
-                        window.moveTo(x, y);
-                    }, 1000);
                 </script>
             </body>
             </html>
@@ -356,13 +333,35 @@ function moveChaosWindows() {
     setInterval(() => {
         chaosWindows.forEach((chaosWindow, index) => {
             if (!chaosWindow.closed) {
-                // The chaos windows move themselves via their own script
+                // Calculate new random position
+                const width = 400;
+                const height = 300;
+                const x = Math.floor(Math.random() * (screen.width - width));
+                const y = Math.floor(Math.random() * (screen.height - height));
+                chaosWindow.moveTo(x, y);
             } else {
                 // Remove closed windows from the array
                 chaosWindows.splice(index, 1);
             }
         });
-    }, 1000); // Check every second
+    }, 1000); // Move every second
+}
+
+// Function to start moving the main browser window
+function startMovingBrowserWindow() {
+    let angle = 0;
+    const radius = 100; // Adjust the radius as needed
+    const centerX = window.innerWidth / 2 - browserWindow.offsetWidth / 2;
+    const centerY = window.innerHeight / 2 - browserWindow.offsetHeight / 2;
+
+    browserWindowMovementInterval = setInterval(() => {
+        angle += 0.05; // Adjust the speed of movement
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        browserWindow.style.left = `${x}px`;
+        browserWindow.style.top = `${y}px`;
+        browserWindow.style.transform = 'translate(0, 0)';
+    }, 20); // Adjust the interval for smoother movement
 }
 
 // Function to stop chaos (if needed)
@@ -371,9 +370,9 @@ function stopChaos() {
         clearInterval(chaosInterval);
         chaosInterval = null;
     }
-    if (browserWindowMoveInterval) {
-        clearInterval(browserWindowMoveInterval);
-        browserWindowMoveInterval = null;
+    if (browserWindowMovementInterval) {
+        clearInterval(browserWindowMovementInterval);
+        browserWindowMovementInterval = null;
     }
     isChaosActive = false;
 }
