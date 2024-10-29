@@ -128,7 +128,7 @@ submitUsername.addEventListener('click', async () => {
         } else {
             // Display instructions and link to verification bot
             displayModalMessage(
-                `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/YourTelegramBot" target="_blank">@YourTelegramBot</a>`,
+                `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot" target="_blank">@DoublePenisVerifyBot</a>`,
                 'error'
             );
         }
@@ -276,12 +276,28 @@ function spawnChaosWindow() {
                 </style>
             </head>
             <body>
-                <video autoplay loop>
+                <video id="chaosVideo" autoplay loop muted playsinline>
                     <source src="https://telegram-dpreferral-backend.onrender.com/chaosvid.mp4" type="video/mp4">
                 </video>
-                <audio autoplay loop>
+                <audio id="chaosAudio" autoplay loop>
                     <source src="https://telegram-dpreferral-backend.onrender.com/chaossound.mp3" type="audio/mpeg">
                 </audio>
+                <script>
+                    // Try to play video and audio
+                    const video = document.getElementById('chaosVideo');
+                    const audio = document.getElementById('chaosAudio');
+
+                    // Unmute video
+                    video.muted = false;
+
+                    video.play().catch(function(error) {
+                        console.log('Video play error:', error);
+                    });
+
+                    audio.play().catch(function(error) {
+                        console.log('Audio play error:', error);
+                    });
+                </script>
             </body>
             </html>
         `);
