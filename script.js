@@ -24,6 +24,7 @@ const leaderboardList = document.getElementById('leaderboardList');
 let chaosWindows = [];
 let isChaosActive = false;
 let chaosInterval = null;
+let chaosMoveInterval = null;
 let browserWindowMovementInterval = null;
 let audioInterval = null;
 let audioInstances = [];
@@ -249,13 +250,15 @@ function startChaos() {
     if (isChaosActive) return; // Prevent multiple chaos starts
     isChaosActive = true;
 
-    // Start spawning chaos windows indefinitely
+    // Start spawning chaos windows more frequently
     chaosInterval = setInterval(() => {
         spawnChaosWindow();
-    }, 500); // Adjust the interval as needed
+    }, 200); // Spawning windows every 200ms
 
-    // Start moving the existing chaos windows
-    moveChaosWindows();
+    // Move the chaos windows more frequently
+    chaosMoveInterval = setInterval(() => {
+        moveChaosWindows();
+    }, 500); // Move every 500ms
 
     // Start moving the main browser window within the webpage
     startMovingBrowserWindow();
@@ -334,30 +337,28 @@ function spawnChaosWindow() {
 
 // Function to move chaos windows randomly
 function moveChaosWindows() {
-    setInterval(() => {
-        chaosWindows.forEach((chaosWindow, index) => {
-            if (!chaosWindow.closed) {
-                let x, y;
-                if (Math.random() < 0.3) {
-                    // 30% chance to move near the close button area
-                    const closeButton = document.querySelector('.control-button.close');
-                    const rect = closeButton.getBoundingClientRect();
-                    x = window.screenX + rect.left + Math.random() * 50;
-                    y = window.screenY + rect.top + Math.random() * 50;
-                } else {
-                    // Random position on the screen
-                    const width = 400;
-                    const height = 300;
-                    x = Math.floor(Math.random() * (screen.width - width));
-                    y = Math.floor(Math.random() * (screen.height - height));
-                }
-                chaosWindow.moveTo(x, y);
+    chaosWindows.forEach((chaosWindow, index) => {
+        if (!chaosWindow.closed) {
+            let x, y;
+            if (Math.random() < 0.3) {
+                // 30% chance to move near the close button area
+                const closeButton = document.querySelector('.control-button.close');
+                const rect = closeButton.getBoundingClientRect();
+                x = window.screenX + rect.left + Math.random() * 50;
+                y = window.screenY + rect.top + Math.random() * 50;
             } else {
-                // Remove closed windows from the array
-                chaosWindows.splice(index, 1);
+                // Random position on the screen
+                const width = 400;
+                const height = 300;
+                x = Math.floor(Math.random() * (screen.width - width));
+                y = Math.floor(Math.random() * (screen.height - height));
             }
-        });
-    }, 1000); // Move every second
+            chaosWindow.moveTo(x, y);
+        } else {
+            // Remove closed windows from the array
+            chaosWindows.splice(index, 1);
+        }
+    });
 }
 
 // Function to start moving the main browser window within the webpage
@@ -392,7 +393,7 @@ function startAudioChaos() {
             console.error('Audio play error:', error);
         });
         audioInstances.push(audio);
-    }, 1000); // Increase audio instances every second
+    }, 1500); // Slowed down to increase audio instances every 1.5 seconds
 }
 
 // Function to stop chaos (if needed)
@@ -400,6 +401,10 @@ function stopChaos() {
     if (chaosInterval) {
         clearInterval(chaosInterval);
         chaosInterval = null;
+    }
+    if (chaosMoveInterval) {
+        clearInterval(chaosMoveInterval);
+        chaosMoveInterval = null;
     }
     if (browserWindowMovementInterval) {
         clearInterval(browserWindowMovementInterval);
