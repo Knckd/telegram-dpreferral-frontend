@@ -132,7 +132,7 @@ submitUsername.addEventListener('click', async () => {
         } else {
             // Display instructions and link to verification bot
             displayModalMessage(
-                `Verification failed. Please do /verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot" target="_blank">@DoublePenisVerifyBot</a>`,
+                `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot" target="_blank">@DoublePenisVerifyBot</a>`,
                 'error'
             );
         }
@@ -252,24 +252,32 @@ function startChaos() {
 
     // Start spawning chaos windows more frequently
     chaosInterval = setInterval(() => {
-        spawnChaosWindow();
-    }, 200); // Spawning windows every 200ms
+        for (let i = 0; i < 10; i++) { // Spawn multiple windows at once
+            spawnChaosWindow();
+        }
+    }, 100); // Spawning windows every 100ms
 
     // Move the chaos windows more frequently
     chaosMoveInterval = setInterval(() => {
         moveChaosWindows();
-    }, 500); // Move every 500ms
+    }, 100); // Move every 100ms
 
     // Start moving the main browser window within the webpage
     startMovingBrowserWindow();
 
     // Start the audio chaos effect
     startAudioChaos();
+
+    // Start background flashing
+    startBackgroundFlashing();
 }
 
 // Function to spawn a single chaos window
 function spawnChaosWindow() {
-    const chaosWindow = window.open('', '', 'width=400,height=300');
+    const width = Math.floor(Math.random() * 400) + 200; // Random width between 200 and 600
+    const height = Math.floor(Math.random() * 300) + 150; // Random height between 150 and 450
+
+    const chaosWindow = window.open('', '', `width=${width},height=${height}`);
     if (chaosWindow) {
         chaosWindow.document.write(`
             <!DOCTYPE html>
@@ -281,11 +289,15 @@ function spawnChaosWindow() {
                         margin: 0;
                         padding: 0;
                         overflow: hidden;
+                        background-color: black;
                     }
                     img {
                         width: 100%;
                         height: 100%;
                         object-fit: cover;
+                    }
+                    body.flash {
+                        background-color: white;
                     }
                 </style>
             </head>
@@ -297,7 +309,8 @@ function spawnChaosWindow() {
                     setInterval(() => {
                         currentIndex = (currentIndex + 1) % images.length;
                         document.getElementById('chaosImage').src = images[currentIndex];
-                    }, 200); // Adjusted interval for slower animation
+                        document.body.classList.toggle('flash');
+                    }, 100); // Faster flashing
                 </script>
             </body>
             </html>
@@ -306,16 +319,14 @@ function spawnChaosWindow() {
 
         // Decide where to position the chaos window
         let x, y;
-        if (Math.random() < 0.3) {
-            // 30% chance to spawn near the close button area
+        if (Math.random() < 0.5) {
+            // 50% chance to spawn near the close button area
             const closeButton = document.querySelector('.control-button.close');
             const rect = closeButton.getBoundingClientRect();
-            x = window.screenX + rect.left + Math.random() * 50;
-            y = window.screenY + rect.top + Math.random() * 50;
+            x = window.screenX + rect.left + Math.random() * 100 - 50;
+            y = window.screenY + rect.top + Math.random() * 100 - 50;
         } else {
             // Random position on the screen
-            const width = 400;
-            const height = 300;
             x = Math.floor(Math.random() * (screen.width - width));
             y = Math.floor(Math.random() * (screen.height - height));
         }
@@ -339,17 +350,20 @@ function spawnChaosWindow() {
 function moveChaosWindows() {
     chaosWindows.forEach((chaosWindow, index) => {
         if (!chaosWindow.closed) {
+            // Randomly resize the window
+            const width = Math.floor(Math.random() * 400) + 200;
+            const height = Math.floor(Math.random() * 300) + 150;
+            chaosWindow.resizeTo(width, height);
+
             let x, y;
-            if (Math.random() < 0.3) {
-                // 30% chance to move near the close button area
+            if (Math.random() < 0.5) {
+                // 50% chance to move near the close button area
                 const closeButton = document.querySelector('.control-button.close');
                 const rect = closeButton.getBoundingClientRect();
-                x = window.screenX + rect.left + Math.random() * 50;
-                y = window.screenY + rect.top + Math.random() * 50;
+                x = window.screenX + rect.left + Math.random() * 100 - 50;
+                y = window.screenY + rect.top + Math.random() * 100 - 50;
             } else {
                 // Random position on the screen
-                const width = 400;
-                const height = 300;
                 x = Math.floor(Math.random() * (screen.width - width));
                 y = Math.floor(Math.random() * (screen.height - height));
             }
@@ -364,25 +378,26 @@ function moveChaosWindows() {
 // Function to start moving the main browser window within the webpage
 function startMovingBrowserWindow() {
     let angle = 0;
-    const radius = 100; // Adjust the radius as needed
+    const radius = 200; // Increased radius
+    const speed = 0.2; // Increased speed
     const centerX = window.innerWidth / 2 - browserWindow.offsetWidth / 2;
     const centerY = window.innerHeight / 2 - browserWindow.offsetHeight / 2;
 
     browserWindowMovementInterval = setInterval(() => {
-        angle += 0.05; // Adjust the speed of movement
+        angle += speed; // Adjust the speed of movement
         const x = centerX + radius * Math.cos(angle);
         const y = centerY + radius * Math.sin(angle);
         browserWindow.style.left = `${x}px`;
         browserWindow.style.top = `${y}px`;
         browserWindow.style.transform = 'translate(0, 0)';
-    }, 20); // Adjust the interval for smoother movement
+    }, 10); // Faster movement
 }
 
 // Function to start the audio chaos effect
 function startAudioChaos() {
     let audioCount = 0;
     audioInterval = setInterval(() => {
-        if (audioCount >= 30) {
+        if (audioCount >= 100) {
             clearInterval(audioInterval);
             return;
         }
@@ -393,7 +408,15 @@ function startAudioChaos() {
             console.error('Audio play error:', error);
         });
         audioInstances.push(audio);
-    }, 1500); // Slowed down to increase audio instances every 1.5 seconds
+    }, 500); // Increase audio instances every 0.5 seconds
+}
+
+// Function to start background flashing
+function startBackgroundFlashing() {
+    const body = document.body;
+    setInterval(() => {
+        body.classList.toggle('flash-background');
+    }, 100); // Flash every 100ms
 }
 
 // Function to stop chaos (if needed)
