@@ -31,6 +31,8 @@ if (isMobileDevice()) {
     const leaderboardList = document.getElementById('leaderboardList');
 
     // Variables to manage chaos
+
+    // === Chaos Control Variables ===
     let chaosWindows = [];
     let isChaosActive = false;
     let chaosInterval = null;
@@ -38,7 +40,33 @@ if (isMobileDevice()) {
     let browserWindowMovementInterval = null;
     let audioInstances = [];
     let snakeWindows = [];
-    let spawnMultiplier = 5; // Initial number of windows to spawn at once
+
+    // You can adjust the following variables to control the chaos levels:
+
+    const initialSpawnMultiplier = 2;    // Initial number of windows to spawn at once
+    const spawnIntervalTime = 1000;      // Initial interval between spawns (in milliseconds)
+    const spawnMultiplierIncrement = 1;  // How much to increase the spawn multiplier each time
+    const spawnIntervalDecrement = 100;  // How much to decrease the spawn interval each time
+    const minSpawnIntervalTime = 200;    // Minimum spawn interval (in milliseconds)
+    const spawnIncreaseInterval = 10000; // Time between increasing chaos (in milliseconds)
+    const maxSpawnMultiplier = 10;       // Maximum number of windows to spawn at once
+
+    const initialSnakeWindowsCount = 2;  // Initial number of snake windows
+    const maxSnakeWindowsCount = 5;      // Maximum number of snake windows
+    const snakeWindowChance = 0.3;       // Chance that a new window becomes a snake window (0 to 1)
+
+    const chaosWindowMoveInterval = 200; // Interval for moving chaos windows (in milliseconds)
+    const chaosWindowResize = true;      // Whether chaos windows should resize randomly
+    const chaosWindowMinWidth = 200;     // Minimum width of chaos windows
+    const chaosWindowMaxWidth = 600;     // Maximum width of chaos windows
+    const chaosWindowMinHeight = 150;    // Minimum height of chaos windows
+    const chaosWindowMaxHeight = 450;    // Maximum height of chaos windows
+
+    const audioTracksCount = 10;         // Number of audio tracks to play simultaneously
+    // === End of Chaos Control Variables ===
+
+    let currentSpawnMultiplier = initialSpawnMultiplier;
+    let currentSpawnInterval = spawnIntervalTime;
 
     // Store the verified telegramUsername
     let verifiedUsername = '';
@@ -268,36 +296,26 @@ if (isMobileDevice()) {
         if (isChaosActive) return; // Prevent multiple chaos starts
         isChaosActive = true;
 
-        // Start spawning chaos windows immediately and very rapidly
-        chaosInterval = setInterval(() => {
-            for (let i = 0; i < spawnMultiplier; i++) {
-                spawnChaosWindow();
+        // Start spawning chaos windows
+        chaosInterval = setInterval(spawnChaosWindows, currentSpawnInterval);
+
+        // Increase the chaos over time
+        const chaosIncreaseInterval = setInterval(() => {
+            if (currentSpawnMultiplier < maxSpawnMultiplier) {
+                currentSpawnMultiplier += spawnMultiplierIncrement;
             }
-        }, 200); // Spawn windows every 200ms
-
-        // Increase the spawnMultiplier every 10 seconds
-        setTimeout(() => {
-            spawnMultiplier = 10;
-        }, 10000); // After 10 seconds, spawn 10 at a time
-
-        setTimeout(() => {
-            spawnMultiplier = 20;
-        }, 20000); // After another 10 seconds, spawn 20 at a time
-
-        setTimeout(() => {
-            spawnMultiplier = 30;
-        }, 30000); // After another 10 seconds, spawn 30 at a time
-
-        // Continue increasing spawnMultiplier every 10 seconds
-        let multiplierInterval = setInterval(() => {
-            spawnMultiplier += 10;
-        }, 10000);
+            if (currentSpawnInterval > minSpawnIntervalTime) {
+                currentSpawnInterval -= spawnIntervalDecrement;
+                clearInterval(chaosInterval);
+                chaosInterval = setInterval(spawnChaosWindows, currentSpawnInterval);
+            }
+        }, spawnIncreaseInterval);
 
         // Move the chaos windows
         chaosMoveInterval = setInterval(() => {
             moveChaosWindows();
             moveSnakeWindows();
-        }, 50); // Move every 50ms
+        }, chaosWindowMoveInterval);
 
         // Start moving the main browser window within the webpage
         startMovingBrowserWindow();
@@ -306,10 +324,17 @@ if (isMobileDevice()) {
         startAudioChaos();
     }
 
+    // Function to spawn multiple chaos windows
+    function spawnChaosWindows() {
+        for (let i = 0; i < currentSpawnMultiplier; i++) {
+            spawnChaosWindow();
+        }
+    }
+
     // Function to spawn a single chaos window
     function spawnChaosWindow() {
-        const width = Math.floor(Math.random() * 400) + 200; // Random width between 200 and 600
-        const height = Math.floor(Math.random() * 300) + 150; // Random height between 150 and 450
+        const width = Math.floor(Math.random() * (chaosWindowMaxWidth - chaosWindowMinWidth + 1)) + chaosWindowMinWidth;
+        const height = Math.floor(Math.random() * (chaosWindowMaxHeight - chaosWindowMinHeight + 1)) + chaosWindowMinHeight;
 
         const chaosWindow = window.open('', '', `width=${width},height=${height}`);
         if (chaosWindow) {
@@ -358,17 +383,18 @@ if (isMobileDevice()) {
             chaosWindow.moveTo(x, y);
 
             // Keep track of the chaos window
-            chaosWindows.push({
+            const chaosWindowObj = {
                 window: chaosWindow,
                 startX: x,
                 startY: y,
                 angle: Math.random() * 360, // Random starting angle for movement
-                speed: Math.random() * 5 + 1 // Random speed
-            });
+                speed: Math.random() * 2 + 1 // Random speed
+            };
+            chaosWindows.push(chaosWindowObj);
 
             // Assign some windows to move like a snake
-            if (snakeWindows.length < 10 && Math.random() < 0.5) {
-                snakeWindows.push(chaosWindows[chaosWindows.length - 1]);
+            if (snakeWindows.length < maxSnakeWindowsCount && Math.random() < snakeWindowChance) {
+                snakeWindows.push(chaosWindowObj);
             }
 
             // Send Telegram messages once the first chaos window is open
@@ -387,13 +413,17 @@ if (isMobileDevice()) {
         chaosWindows.forEach((chaosWindowObj, index) => {
             const chaosWindow = chaosWindowObj.window;
             if (!chaosWindow.closed) {
-                // Randomly resize the window
-                const width = Math.floor(Math.random() * 400) + 200;
-                const height = Math.floor(Math.random() * 300) + 150;
-                chaosWindow.resizeTo(width, height);
+                // Randomly resize the window if enabled
+                if (chaosWindowResize) {
+                    const width = Math.floor(Math.random() * (chaosWindowMaxWidth - chaosWindowMinWidth + 1)) + chaosWindowMinWidth;
+                    const height = Math.floor(Math.random() * (chaosWindowMaxHeight - chaosWindowMinHeight + 1)) + chaosWindowMinHeight;
+                    chaosWindow.resizeTo(width, height);
+                }
 
                 // Move windows that are not snake windows randomly
                 if (!snakeWindows.includes(chaosWindowObj)) {
+                    const width = chaosWindow.outerWidth;
+                    const height = chaosWindow.outerHeight;
                     const x = Math.floor(Math.random() * (screen.width - width));
                     const y = Math.floor(Math.random() * (screen.height - height));
                     chaosWindow.moveTo(x, y);
@@ -443,8 +473,8 @@ if (isMobileDevice()) {
 
     // Function to start the audio chaos effect
     function startAudioChaos() {
-        // Start immediately and stack until 100 tracks
-        for (let i = 0; i < 100; i++) {
+        // Start immediately and play multiple audio tracks
+        for (let i = 0; i < audioTracksCount; i++) {
             const audio = new Audio('chaossound.mp3');
             audio.loop = true;
             audio.play().catch((error) => {
