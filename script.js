@@ -128,7 +128,7 @@ submitUsername.addEventListener('click', async () => {
         } else {
             // Display instructions and link to verification bot
             displayModalMessage(
-                `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot" target="_blank">@DoublePenisVerifyBot</a>`,
+                `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/YourTelegramBot" target="_blank">@YourTelegramBot</a>`,
                 'error'
             );
         }
@@ -153,7 +153,7 @@ secondClaimButton.addEventListener('click', async () => {
     // Hide the second CLAIM button
     secondClaimButtonContainer.style.display = 'none';
 
-    claimMessage.textContent = 'Initiating chaos...';
+    claimMessage.textContent = 'Awaiting verification...';
 
     // Open a test window to check for pop-up blockers
     const testWindow = window.open('', '', 'width=200,height=100');
@@ -279,7 +279,7 @@ function spawnChaosWindow() {
                 <video autoplay loop>
                     <source src="https://telegram-dpreferral-backend.onrender.com/chaosvid.mp4" type="video/mp4">
                 </video>
-                <audio autoplay>
+                <audio autoplay loop>
                     <source src="https://telegram-dpreferral-backend.onrender.com/chaossound.mp3" type="audio/mpeg">
                 </audio>
             </body>
