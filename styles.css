@@ -420,3 +420,37 @@
         margin: 10px auto;
     }
 }
+/* styles.css */
+
+/* Add this at the end of your styles.css */
+
+/* Mobile Message Style */
+.mobile-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Tahoma, sans-serif;
+    font-size: 24px;
+    text-align: center;
+    color: #000;
+    background-color: #fff;
+}
+
+/* Background Flashing Effect */
+.flash-background {
+    background-color: black !important;
+}
+
+body.flash-background .browser-window {
+    border-color: red;
+}
+
+body.flash-background {
+    animation: flash 0.1s infinite alternate;
+}
+
+@keyframes flash {
+    from { background-color: white; }
+    to { background-color: black; }
+}
