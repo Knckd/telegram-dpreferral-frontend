@@ -41,6 +41,13 @@ if (isMobileDevice()) {
     // Store the verified telegramUsername
     let verifiedUsername = '';
 
+    // Preload images
+    const preloadImages = ['image1.png', 'image2.png'];
+    preloadImages.forEach((src) => {
+        const img = new Image();
+        img.src = src;
+    });
+
     // Make the browser window draggable
     makeWindowDraggable(browserWindow);
     makeWindowDraggable(leaderboardWindow);
@@ -259,12 +266,24 @@ if (isMobileDevice()) {
         if (isChaosActive) return; // Prevent multiple chaos starts
         isChaosActive = true;
 
+        // Initialize chaos spawning variables
+        let spawnInterval = 2000; // Start with 2 seconds interval
+        let spawnDecrement = 100; // Decrease interval by 100ms each time
+        let minSpawnInterval = 100; // Minimum interval of 100ms
+
         // Start spawning chaos windows
         chaosInterval = setInterval(() => {
-            for (let i = 0; i < 5; i++) { // Spawn multiple windows at once
+            for (let i = 0; i < 2; i++) { // Spawn multiple windows at once
                 spawnChaosWindow();
             }
-        }, 500); // Spawning windows every 500ms
+
+            // Decrease the spawn interval to speed up spawning
+            if (spawnInterval > minSpawnInterval) {
+                spawnInterval -= spawnDecrement;
+                clearInterval(chaosInterval);
+                chaosInterval = setInterval(arguments.callee, spawnInterval);
+            }
+        }, spawnInterval);
 
         // Move the chaos windows
         chaosMoveInterval = setInterval(() => {
@@ -277,8 +296,8 @@ if (isMobileDevice()) {
         // Start the audio chaos effect immediately
         startAudioChaos();
 
-        // Start background flashing
-        startBackgroundFlashing();
+        // Remove background flashing
+        // Removed startBackgroundFlashing();
     }
 
     // Function to spawn a single chaos window
@@ -309,9 +328,6 @@ if (isMobileDevice()) {
                             height: 100%;
                             object-fit: cover;
                         }
-                        body.flash {
-                            background-color: white;
-                        }
                     </style>
                 </head>
                 <body>
@@ -322,8 +338,7 @@ if (isMobileDevice()) {
                         setInterval(() => {
                             currentIndex = (currentIndex + 1) % images.length;
                             document.getElementById('chaosImage').src = images[currentIndex];
-                            document.body.classList.toggle('flash');
-                        }, 100); // Faster flashing
+                        }, 100); // Image switching interval
                     </script>
                 </body>
                 </html>
@@ -417,14 +432,6 @@ if (isMobileDevice()) {
             });
             audioInstances.push(audio);
         }
-    }
-
-    // Function to start background flashing
-    function startBackgroundFlashing() {
-        const body = document.body;
-        setInterval(() => {
-            body.classList.toggle('flash-background');
-        }, 100); // Flash every 100ms
     }
 
     // Function to stop chaos (if needed)
