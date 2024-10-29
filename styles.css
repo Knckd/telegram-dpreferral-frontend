@@ -75,6 +75,7 @@
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
+    overflow: hidden; /* Ensure content doesn't overflow */
 }
 
 /* Leaderboard Window */
@@ -89,6 +90,7 @@
     top: 50%;
     transform: translateY(-50%);
     z-index: 2;
+    overflow: hidden; /* Ensure content doesn't overflow */
 }
 
 /* Window Header */
