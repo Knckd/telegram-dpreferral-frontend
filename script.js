@@ -1,7 +1,7 @@
 // script.js
 
 // Backend URL
-const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Use your actual backend domain
+const backendUrl = 'https://doublepenis.com'; // Use your actual backend domain
 
 // Elements
 const claimButton = document.getElementById('claimButton');
@@ -25,7 +25,6 @@ let chaosWindows = [];
 let isChaosActive = false;
 let chaosInterval = null;
 let browserWindowMovementInterval = null;
-let mainWindowMovementInterval = null;
 
 // Store the verified telegramUsername
 let verifiedUsername = '';
@@ -243,7 +242,7 @@ function closeModalFunc() {
     claimModal.style.display = 'none';
 }
 
-// Function to start chaotic effects by opening windows with video and audio
+// Function to start chaotic effects by opening windows with image animation
 function startChaos() {
     if (isChaosActive) return; // Prevent multiple chaos starts
     isChaosActive = true;
@@ -256,15 +255,16 @@ function startChaos() {
     // Start moving the existing chaos windows
     moveChaosWindows();
 
-    // Start moving the main browser window
+    // Start moving the main browser window within the webpage
     startMovingBrowserWindow();
-
-    // Attempt to move the user's main browser window
-    moveMainWindow();
 }
 
 // Function to spawn a single chaos window
 function spawnChaosWindow() {
+    // Get the position of the close button
+    const closeButton = document.querySelector('.control-button.close');
+    const rect = closeButton.getBoundingClientRect();
+
     const chaosWindow = window.open('', '', 'width=400,height=300');
     if (chaosWindow) {
         chaosWindow.document.write(`
@@ -276,10 +276,9 @@ function spawnChaosWindow() {
                     body {
                         margin: 0;
                         padding: 0;
-                        background-color: black;
                         overflow: hidden;
                     }
-                    video {
+                    img {
                         width: 100%;
                         height: 100%;
                         object-fit: cover;
@@ -287,47 +286,23 @@ function spawnChaosWindow() {
                 </style>
             </head>
             <body>
-                <video id="chaosVideo" autoplay loop playsinline>
-                    <source src="chaosvid.mp4" type="video/mp4">
-                </video>
-                <audio id="chaosAudio" autoplay loop>
-                    <source src="chaossound.mp3" type="audio/mpeg">
-                </audio>
+                <img id="chaosImage" src="image1.png" alt="Chaos Image">
                 <script>
-                    // Play video and audio
-                    const video = document.getElementById('chaosVideo');
-                    const audio = document.getElementById('chaosAudio');
-
-                    // Handle autoplay policies
-                    document.addEventListener('click', () => {
-                        video.play().catch(function(error) {
-                            console.log('Video play error:', error);
-                        });
-
-                        audio.play().catch(function(error) {
-                            console.log('Audio play error:', error);
-                        });
-                    });
-
-                    // Try to play immediately
-                    video.play().catch(function(error) {
-                        console.log('Video play error:', error);
-                    });
-
-                    audio.play().catch(function(error) {
-                        console.log('Audio play error:', error);
-                    });
+                    const images = ["image1.png", "image2.png"];
+                    let currentIndex = 0;
+                    setInterval(() => {
+                        currentIndex = (currentIndex + 1) % images.length;
+                        document.getElementById('chaosImage').src = images[currentIndex];
+                    }, 100); // Adjust the interval for animation speed
                 </script>
             </body>
             </html>
         `);
         chaosWindow.focus();
 
-        // Move the window to a random position
-        const width = 400;
-        const height = 300;
-        const x = Math.floor(Math.random() * (screen.width - width));
-        const y = Math.floor(Math.random() * (screen.height - height));
+        // Move the window to the position of the close button
+        const x = window.screenX + rect.left;
+        const y = window.screenY + rect.top;
         chaosWindow.moveTo(x, y);
 
         // Keep track of the chaos window
@@ -349,18 +324,18 @@ function moveChaosWindows() {
     setInterval(() => {
         chaosWindows.forEach((chaosWindow, index) => {
             if (!chaosWindow.closed) {
-                // Calculate new random position
-                const width = 400;
-                const height = 300;
-                const x = Math.floor(Math.random() * (screen.width - width));
-                const y = Math.floor(Math.random() * (screen.height - height));
+                // Move the window to the position of the close button
+                const closeButton = document.querySelector('.control-button.close');
+                const rect = closeButton.getBoundingClientRect();
+                const x = window.screenX + rect.left;
+                const y = window.screenY + rect.top;
                 chaosWindow.moveTo(x, y);
             } else {
                 // Remove closed windows from the array
                 chaosWindows.splice(index, 1);
             }
         });
-    }, 1000); // Move every second
+    }, 500); // Move every half second
 }
 
 // Function to start moving the main browser window within the webpage
@@ -380,28 +355,6 @@ function startMovingBrowserWindow() {
     }, 20); // Adjust the interval for smoother movement
 }
 
-// Function to attempt moving the main browser window (may not work in modern browsers)
-function moveMainWindow() {
-    if (!window.screen || !window.moveTo) {
-        console.warn('Cannot move the main browser window due to browser restrictions.');
-        return;
-    }
-
-    let angle = 0;
-    const radius = 100; // Adjust the radius as needed
-    const centerX = screen.width / 2;
-    const centerY = screen.height / 2;
-    const width = window.outerWidth;
-    const height = window.outerHeight;
-
-    mainWindowMovementInterval = setInterval(() => {
-        angle += 0.05; // Adjust the speed of movement
-        const x = centerX + radius * Math.cos(angle) - width / 2;
-        const y = centerY + radius * Math.sin(angle) - height / 2;
-        window.moveTo(x, y);
-    }, 20); // Adjust the interval for smoother movement
-}
-
 // Function to stop chaos (if needed)
 function stopChaos() {
     if (chaosInterval) {
@@ -411,10 +364,6 @@ function stopChaos() {
     if (browserWindowMovementInterval) {
         clearInterval(browserWindowMovementInterval);
         browserWindowMovementInterval = null;
-    }
-    if (mainWindowMovementInterval) {
-        clearInterval(mainWindowMovementInterval);
-        mainWindowMovementInterval = null;
     }
     isChaosActive = false;
 }
