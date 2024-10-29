@@ -132,7 +132,7 @@ submitUsername.addEventListener('click', async () => {
         } else {
             // Display instructions and link to verification bot
             displayModalMessage(
-                `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot" target="_blank">@DoublePenisVerifyBot</a>`,
+                `Verification failed. Please do /verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot" target="_blank">@DoublePenisVerifyBot</a>`,
                 'error'
             );
         }
