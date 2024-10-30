@@ -43,16 +43,16 @@ if (isMobileDevice()) {
 
     // You can adjust the following variables to control the chaos levels:
 
-    const initialSpawnMultiplier = 2;    // Initial number of windows to spawn at once
-    const spawnIntervalTime = 1000;      // Initial interval between spawns (in milliseconds)
+    const initialSpawnMultiplier = 4;    // Initial number of windows to spawn at once
+    const spawnIntervalTime = 500;      // Initial interval between spawns (in milliseconds)
     const spawnMultiplierIncrement = 1;  // How much to increase the spawn multiplier each time
     const spawnIntervalDecrement = 100;  // How much to decrease the spawn interval each time
-    const minSpawnIntervalTime = 200;    // Minimum spawn interval (in milliseconds)
-    const spawnIncreaseInterval = 10000; // Time between increasing chaos (in milliseconds)
-    const maxSpawnMultiplier = 10;       // Maximum number of windows to spawn at once
+    const minSpawnIntervalTime = 100;    // Minimum spawn interval (in milliseconds)
+    const spawnIncreaseInterval = 5000; // Time between increasing chaos (in milliseconds)
+    const maxSpawnMultiplier = 100;       // Maximum number of windows to spawn at once
 
-    const initialSnakeWindowsCount = 2;  // Initial number of snake windows
-    const maxSnakeWindowsCount = 5;      // Maximum number of snake windows
+    const initialSnakeWindowsCount = 4;  // Initial number of snake windows
+    const maxSnakeWindowsCount = 50;      // Maximum number of snake windows
     const snakeWindowChance = 0.3;       // Chance that a new window becomes a snake window (0 to 1)
 
     const chaosWindowMoveInterval = 200; // Interval for moving chaos windows (in milliseconds)
