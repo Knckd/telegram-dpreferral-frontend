@@ -27,14 +27,15 @@
 /* Navigation Tabs */
 .nav-tabs {
     display: flex;
+    align-items: center;
     background-color: rgba(212, 208, 200, 0.8);
     position: fixed;
     top: 0;
     width: 100%;
-    justify-content: center;
+    justify-content: center; /* Center the social icons */
     z-index: 1;
-    align-items: center;
     height: 40px;
+    padding: 0 20px;
 }
 
 .nav-tabs .tab {
@@ -60,13 +61,9 @@
     font-weight: bold;
 }
 
-.nav-tabs .tab:last-child {
-    margin-right: 0;
-}
-
 #leaderboardButton {
-    margin-left: auto;
-    margin-right: 10px; /* Adjust as needed */
+    margin-left: auto; /* Pushes the leaderboard button to the far right */
+    margin-right: 0; /* Remove any right margin */
 }
 
 /* Browser Window */
@@ -93,8 +90,8 @@
     border: 2px solid #000080;
     background-color: #d4d0c8;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    right: 20px; /* Adjusted to appear on the right */
-    top: 60px; /* Adjusted to appear below the nav bar */
+    right: 20px; /* Positioned on the right */
+    top: 60px; /* Positioned below the nav bar */
     z-index: 2;
     overflow: hidden; /* Ensure content doesn't overflow */
 }
@@ -248,10 +245,11 @@
     border-radius: 3px;
     font-family: Tahoma, sans-serif;
     margin-bottom: 10px;
+    transition: background-color 0.3s;
 }
 
 .main-content button:hover {
-    background-color: #0088ff;
+    background-color: #005fa3;
 }
 
 /* Leaderboard Content */
