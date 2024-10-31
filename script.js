@@ -8,8 +8,6 @@ function isMobileDevice() {
 if (isMobileDevice()) {
     document.body.innerHTML = '<div class="mobile-message">Sorry, this site isn\'t available on mobile.</div>';
 } else {
-    // The rest of your code
-
     // Backend URL
     const backendUrl = 'https://telegram-dpreferral-backend.onrender.com';
 
@@ -280,10 +278,8 @@ if (isMobileDevice()) {
             <div class="modal-content rounded-modal">
                 <span class="close" id="closeTutorial">&times;</span>
                 <h2>How to Disable Popup Blocker</h2>
-                <video width="100%" controls>
-                    <source src="tutorial1.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+                <!-- Replace the video with a GIF for autoplay -->
+                <img src="tutorial1.gif" alt="Tutorial" style="width:100%; height:auto;">
                 <p>Please disable your popup blocker and refresh the page to proceed.</p>
             </div>
         `;
