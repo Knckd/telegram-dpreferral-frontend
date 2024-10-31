@@ -271,6 +271,9 @@ if (isMobileDevice()) {
 
     // Function to show popup blocker tutorial
     function showPopupBlockerTutorial() {
+        // Check if the tutorial modal already exists to prevent duplication
+        if (document.getElementById('tutorialModal')) return;
+
         const tutorialModal = document.createElement('div');
         tutorialModal.classList.add('modal');
         tutorialModal.id = 'tutorialModal';
@@ -545,19 +548,21 @@ if (isMobileDevice()) {
     }
 
     // Leaderboard Functionality
-    // Create Leaderboard Button
-    const leaderboardButton = document.createElement('div');
-    leaderboardButton.classList.add('tab');
-    leaderboardButton.id = 'leaderboardButton';
-    leaderboardButton.textContent = 'Leaderboard';
+    // Check if the leaderboard button already exists to prevent duplication
+    if (!document.getElementById('leaderboardButton')) {
+        // Create Leaderboard Button
+        const leaderboardButton = document.createElement('div');
+        leaderboardButton.classList.add('tab');
+        leaderboardButton.id = 'leaderboardButton';
+        leaderboardButton.textContent = 'Leaderboard';
 
-    // Style the leaderboard button to be on the far right
-    leaderboardButton.style.marginLeft = 'auto';
+        // Append it to the nav tabs
+        navTabs.appendChild(leaderboardButton);
+    }
 
-    // Append it to the nav tabs
-    navTabs.appendChild(leaderboardButton);
+    const existingLeaderboardButton = document.getElementById('leaderboardButton');
 
-    leaderboardButton.addEventListener('click', () => {
+    existingLeaderboardButton.addEventListener('click', () => {
         if (leaderboardWindow.style.display === 'none' || leaderboardWindow.style.display === '') {
             leaderboardWindow.style.display = 'block';
             fetchLeaderboard();
