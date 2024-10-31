@@ -61,6 +61,7 @@
     font-weight: bold;
 }
 
+/* Leaderboard Button Positioning */
 #leaderboardButton {
     margin-left: auto; /* Pushes the leaderboard button to the far right */
     margin-right: 0; /* Remove any right margin */
