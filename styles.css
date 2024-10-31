@@ -31,11 +31,13 @@
     position: fixed;
     top: 0;
     width: 100%;
-    justify-content: flex-start;
+    justify-content: center;
     z-index: 1;
+    align-items: center;
+    height: 40px;
 }
 
-.tab {
+.nav-tabs .tab {
     padding: 5px 15px;
     cursor: pointer;
     background-color: rgba(228, 228, 228, 0.8);
@@ -43,23 +45,28 @@
     border-bottom: none;
     font-family: Tahoma, sans-serif;
     font-size: 14px;
-    margin-right: 2px;
+    margin: 0 5px;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
     transition: background-color 0.3s;
 }
 
-.tab:hover {
+.nav-tabs .tab:hover {
     background-color: rgba(255, 255, 255, 0.8);
 }
 
-.tab.active {
+.nav-tabs .tab.active {
     background-color: rgba(255, 255, 255, 0.8);
     font-weight: bold;
 }
 
-.tab:last-child {
+.nav-tabs .tab:last-child {
     margin-right: 0;
+}
+
+#leaderboardButton {
+    margin-left: auto;
+    margin-right: 10px; /* Adjust as needed */
 }
 
 /* Browser Window */
@@ -86,8 +93,8 @@
     border: 2px solid #000080;
     background-color: #d4d0c8;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    right: 20px; /* Slide it slightly to the left from the edge */
-    top: 50px; /* Adjusted to appear below the nav bar */
+    right: 20px; /* Adjusted to appear on the right */
+    top: 60px; /* Adjusted to appear below the nav bar */
     z-index: 2;
     overflow: hidden; /* Ensure content doesn't overflow */
 }
@@ -247,9 +254,6 @@
     background-color: #0088ff;
 }
 
-/* Leaderboard Button */
-/* Removed standalone leaderboard button styles */
-
 /* Leaderboard Content */
 .leaderboard-content {
     text-align: left;
@@ -308,8 +312,12 @@
     width: 80%;
     max-width: 600px;
     text-align: left;
-    border-radius: 5px;
     position: relative;
+}
+
+.modal-content.rounded-modal {
+    border-radius: 15px;
+    overflow: hidden;
 }
 
 .close {
