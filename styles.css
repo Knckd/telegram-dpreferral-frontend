@@ -83,7 +83,6 @@
     transform: translate(-50%, -50%);
     z-index: 2;
     overflow: hidden; /* Ensure content doesn't overflow */
-    border-radius: 10px;
 }
 
 /* Leaderboard Window */
@@ -98,7 +97,6 @@
     top: 60px; /* Adjusted to appear below the nav bar */
     z-index: 2;
     overflow: hidden; /* Ensure content doesn't overflow */
-    border-radius: 10px;
 }
 
 /* Window Header */
@@ -111,8 +109,6 @@
     padding: 2px 5px;
     height: 30px;
     cursor: move;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
 }
 
 .window-title {
@@ -206,7 +202,6 @@
     border: 1px solid #808080;
     font-family: Tahoma, sans-serif;
     font-size: 14px;
-    border-radius: 4px;
 }
 
 .address-bar button {
@@ -217,7 +212,6 @@
     background-color: #d4d0c8;
     border: 1px solid #808080;
     cursor: pointer;
-    border-radius: 4px;
 }
 
 .address-bar button:hover {
@@ -230,19 +224,16 @@
     background-color: #ffffff;
     min-height: 200px;
     position: relative;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
 }
 
 /* Main Content */
 .main-content {
     text-align: center;
     color: #000000;
-    padding-top: 60px; /* To account for fixed nav-tabs */
 }
 
 .main-content h1 {
-    font-size: 24px;
+    font-size: 20px;
     margin-bottom: 20px;
     font-family: Tahoma, sans-serif;
 }
@@ -254,15 +245,13 @@
     color: white;
     border: 1px solid #005fa3;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 3px;
     font-family: Tahoma, sans-serif;
     margin-bottom: 10px;
-    transition: background-color 0.3s, transform 0.2s;
 }
 
 .main-content button:hover {
     background-color: #0088ff;
-    transform: scale(1.05);
 }
 
 /* Leaderboard Content */
@@ -287,7 +276,6 @@
     background-color: #f0f0f0;
     border: 1px solid #a0a0a0;
     padding: 5px;
-    border-radius: 5px;
 }
 
 #leaderboardList li {
@@ -297,11 +285,6 @@
     padding: 5px;
     background-color: #ffffff;
     border-bottom: 1px solid #c0c0c0;
-    border-radius: 3px;
-}
-
-#leaderboardList li:last-child {
-    border-bottom: none;
 }
 
 #leaderboardList li:nth-child(even) {
@@ -325,12 +308,13 @@
     background-color: #fefefe;
     margin: 5% auto;
     padding: 20px;
-    border: 1px solid #888;
+    border: none; /* Removed border for a cleaner look */
     width: 80%;
     max-width: 600px;
-    text-align: center;
+    text-align: center; /* Centered content */
     position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-radius: 15px; /* Rounded corners */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Subtle shadow for depth */
 }
 
 .modal-content.rounded-modal {
@@ -358,8 +342,8 @@
     padding: 10px;
     margin: 15px 0;
     font-size: 16px;
-    border: 1px solid #808080;
-    border-radius: 4px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .modal-content button {
@@ -370,24 +354,32 @@
     border: none;
     cursor: pointer;
     border-radius: 5px;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: background-color 0.3s;
 }
 
 .modal-content button:hover {
-    background-color: #0088ff;
-    transform: scale(1.05);
+    background-color: #005fa3;
 }
 
 .modal-content p.error {
     color: red;
     margin-top: 10px;
-    font-family: Tahoma, sans-serif;
+    font-size: 14px;
 }
 
 .modal-content p.success {
     color: green;
     margin-top: 10px;
-    font-family: Tahoma, sans-serif;
+    font-size: 14px;
+}
+
+/* Tutorial GIF Styling */
+.tutorial-gif {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Second Claim Button */
@@ -402,14 +394,13 @@
     color: white;
     border: 1px solid #005fa3;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 3px;
     font-family: Tahoma, sans-serif;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: background-color 0.3s;
 }
 
 #secondClaimButton:hover {
-    background-color: #0088ff;
-    transform: scale(1.05);
+    background-color: #005fa3;
 }
 
 /* Status Bar */
