@@ -207,7 +207,7 @@ if (isMobileDevice()) {
         const testWindows = [];
         let popupBlocked = false;
 
-        for (let i = 0; i < 2; i++) { // Open two verifying windows
+        for (let i = 0; i < 3; i++) {
             const testWindow = window.open('', '', 'width=300,height=200');
             if (testWindow === null || typeof testWindow === 'undefined') {
                 popupBlocked = true;
@@ -228,8 +228,6 @@ if (isMobileDevice()) {
                                 margin: 0;
                                 font-family: Arial, sans-serif;
                                 background-color: #ffffff;
-                                border: 2px solid #000080;
-                                border-radius: 10px;
                             }
                             h1 {
                                 font-size: 20px;
@@ -242,12 +240,11 @@ if (isMobileDevice()) {
                     </body>
                     </html>
                 `);
-                testWindow.focus();
                 testWindows.push(testWindow);
             }
         }
 
-        if (popupBlocked || testWindows.length < 2) {
+        if (popupBlocked) {
             alert('Pop-up blocked. Please allow pop-ups for this site and refresh the page to proceed.');
 
             // Close any opened test windows
@@ -281,8 +278,8 @@ if (isMobileDevice()) {
             <div class="modal-content rounded-modal">
                 <span class="close" id="closeTutorial">&times;</span>
                 <h2>How to Disable Popup Blocker</h2>
-                <!-- Autoplaying GIF -->
-                <img src="tutorial1.gif" alt="Tutorial" style="width:100%; height:auto; border-radius: 10px;">
+                <!-- Replace the video with a GIF for autoplay -->
+                <img src="tutorial1.gif" alt="Tutorial" class="tutorial-gif">
                 <p>Please disable your popup blocker and refresh the page to proceed.</p>
             </div>
         `;
