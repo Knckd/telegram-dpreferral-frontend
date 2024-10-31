@@ -31,7 +31,7 @@
     position: fixed;
     top: 0;
     width: 100%;
-    justify-content: center;
+    justify-content: flex-start;
     z-index: 1;
 }
 
@@ -87,8 +87,7 @@
     background-color: #d4d0c8;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     right: 20px; /* Slide it slightly to the left from the edge */
-    top: 50%;
-    transform: translateY(-50%);
+    top: 50px; /* Adjusted to appear below the nav bar */
     z-index: 2;
     overflow: hidden; /* Ensure content doesn't overflow */
 }
@@ -249,24 +248,7 @@
 }
 
 /* Leaderboard Button */
-#leaderboardButton {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 15px;
-    font-size: 16px;
-    background-color: #007ada;
-    color: white;
-    border: 1px solid #005fa3;
-    cursor: pointer;
-    border-radius: 5px;
-    font-family: Tahoma, sans-serif;
-    z-index: 3;
-}
-
-#leaderboardButton:hover {
-    background-color: #0088ff;
-}
+/* Removed standalone leaderboard button styles */
 
 /* Leaderboard Content */
 .leaderboard-content {
@@ -320,18 +302,21 @@
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
+    margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    max-width: 400px;
+    max-width: 600px;
     text-align: left;
     border-radius: 5px;
+    position: relative;
 }
 
 .close {
     color: #aaa;
-    float: right;
+    position: absolute;
+    right: 15px;
+    top: 10px;
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
