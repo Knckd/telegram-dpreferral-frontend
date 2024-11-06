@@ -279,7 +279,6 @@ if (isMobileDevice()) {
         tutorialModal.id = 'tutorialModal';
         tutorialModal.innerHTML = `
             <div class="modal-content rounded-modal">
-                <span class="close" id="closeTutorial">&times;</span>
                 <h2>How to Disable Popup Blocker</h2>
                 <!-- Replace the video with a GIF for autoplay -->
                 <img src="tutorial1.gif" alt="Tutorial" class="tutorial-gif">
@@ -287,11 +286,6 @@ if (isMobileDevice()) {
             </div>
         `;
         document.body.appendChild(tutorialModal);
-
-        const closeTutorial = document.getElementById('closeTutorial');
-        closeTutorial.addEventListener('click', () => {
-            tutorialModal.remove();
-        });
 
         tutorialModal.style.display = 'block';
     }
