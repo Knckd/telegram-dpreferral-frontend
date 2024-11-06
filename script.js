@@ -15,7 +15,6 @@ if (isMobileDevice()) {
     const claimButton = document.getElementById('claimButton');
     const claimMessage = document.getElementById('claimMessage');
     const claimModal = document.getElementById('claimModal');
-    const closeModal = document.getElementById('closeModal');
     const submitUsername = document.getElementById('submitUsername');
     const telegramUsernameInput = document.getElementById('telegramUsername');
     const modalMessage = document.getElementById('modalMessage');
@@ -29,7 +28,6 @@ if (isMobileDevice()) {
     const navTabs = document.querySelector('.nav-tabs');
 
     // Variables to manage chaos
-
     // === Chaos Control Variables ===
     let chaosWindows = [];
     let isChaosActive = false;
@@ -112,11 +110,6 @@ if (isMobileDevice()) {
         openModal();
     });
 
-    // Close Modal when 'x' is clicked
-    closeModal.addEventListener('click', () => {
-        closeModalFunc();
-    });
-
     // Close Modal when clicking outside the modal content
     window.addEventListener('click', (event) => {
         if (event.target == claimModal) {
@@ -174,9 +167,9 @@ if (isMobileDevice()) {
                 // Show the second CLAIM button
                 secondClaimButtonContainer.style.display = 'block';
             } else {
-                // Display instructions and link to verification bot with /verify pre-typed
+                // Display instructions and link to verification bot
                 displayModalMessage(
-                    `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot?start=verify" target="_blank">@DoublePenisVerifyBot</a>`,
+                    `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot" target="_blank">@DoublePenisVerifyBot</a>`,
                     'error'
                 );
             }
@@ -542,21 +535,9 @@ if (isMobileDevice()) {
     }
 
     // Leaderboard Functionality
-    // Check if the leaderboard button already exists to prevent duplication
-    if (!document.getElementById('leaderboardButton')) {
-        // Create Leaderboard Button
-        const leaderboardButton = document.createElement('div');
-        leaderboardButton.classList.add('tab');
-        leaderboardButton.id = 'leaderboardButton';
-        leaderboardButton.textContent = 'Leaderboard';
+    const leaderboardButton = document.getElementById('leaderboardButton');
 
-        // Append it to the nav tabs
-        navTabs.appendChild(leaderboardButton);
-    }
-
-    const existingLeaderboardButton = document.getElementById('leaderboardButton');
-
-    existingLeaderboardButton.addEventListener('click', () => {
+    leaderboardButton.addEventListener('click', () => {
         if (leaderboardWindow.style.display === 'none' || leaderboardWindow.style.display === '') {
             leaderboardWindow.style.display = 'block';
             fetchLeaderboard();
