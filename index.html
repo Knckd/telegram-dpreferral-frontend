@@ -104,11 +104,25 @@
 
     <!-- Modal for username input -->
     <div id="claimModal" class="modal">
-        <div class="modal-content rounded-modal">
-            <h2>Enter Your Telegram Username</h2>
+        <div class="modal-header">
+            <span class="modal-title">Enter Your Telegram Username</span>
+        </div>
+        <div class="modal-content">
             <input type="text" id="telegramUsername" placeholder="@username">
             <button id="submitUsername">Verify</button>
             <p id="modalMessage"></p>
+        </div>
+    </div>
+
+    <!-- Tutorial Modal -->
+    <div id="tutorialModal" class="modal">
+        <div class="modal-header">
+            <span class="modal-title">How to Disable Popup Blocker</span>
+        </div>
+        <div class="modal-content">
+            <!-- Replace the video with a GIF for autoplay -->
+            <img src="tutorial1.gif" alt="Tutorial" class="tutorial-gif">
+            <p>Please disable your popup blocker and refresh the page to proceed.</p>
         </div>
     </div>
 
