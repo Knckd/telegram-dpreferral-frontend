@@ -32,7 +32,7 @@
     position: fixed;
     top: 0;
     width: 100%;
-    justify-content: center; /* Center the social icons */
+    justify-content: center;
     z-index: 1;
     height: 40px;
     padding: 0 20px;
@@ -61,12 +61,6 @@
     font-weight: bold;
 }
 
-/* Leaderboard Button Positioning */
-#leaderboardButton {
-    margin-left: auto; /* Pushes the leaderboard button to the far right */
-    margin-right: 0; /* Remove any right margin */
-}
-
 /* Browser Window */
 .browser-window {
     width: 600px;
@@ -80,7 +74,7 @@
     top: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
-    overflow: hidden; /* Ensure content doesn't overflow */
+    overflow: hidden;
 }
 
 /* Leaderboard Window */
@@ -91,10 +85,10 @@
     border: 2px solid #000080;
     background-color: #d4d0c8;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    right: 20px; /* Positioned on the right */
-    top: 60px; /* Positioned below the nav bar */
+    right: 20px;
+    top: 60px;
     z-index: 2;
-    overflow: hidden; /* Ensure content doesn't overflow */
+    overflow: hidden;
 }
 
 /* Window Header */
@@ -239,7 +233,7 @@
 .main-content button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007ada; /* Updated blue color */
+    background-color: #007ada;
     color: white;
     border: 1px solid #005fa3;
     cursor: pointer;
@@ -300,36 +294,76 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.8); /* Darker overlay */
 }
 
 .modal-content {
-    background-color: #fefefe;
+    background-color: #1a1a1a; /* Dark background */
+    color: #f0f0f0; /* Light text */
     margin: 5% auto;
-    padding: 20px;
-    border: none; /* Removed border for a cleaner look */
+    padding: 30px;
+    border: none;
     width: 80%;
-    max-width: 600px;
-    text-align: center; /* Centered content */
+    max-width: 500px;
+    text-align: center;
     position: relative;
-    border-radius: 15px; /* Rounded corners */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3); /* Subtle shadow for depth */
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    font-family: Tahoma, sans-serif;
 }
 
 .modal-content.rounded-modal {
-    border-radius: 15px;
+    border-radius: 10px;
     overflow: hidden;
 }
 
-/* Removed styles for the close button as it's no longer used */
+/* Removed close button styles */
 
-/* Tutorial GIF Styling */
-.tutorial-gif {
+/* Modal Input Field */
+.modal-content input[type="text"] {
     width: 100%;
-    height: auto;
-    border-radius: 10px;
+    padding: 12px;
     margin: 20px 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #2a2a2a;
+    color: #fff;
+}
+
+/* Modal Button */
+.modal-content button {
+    padding: 12px 25px;
+    font-size: 16px;
+    background-color: #e6007a;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: #cc005f;
+}
+
+.modal-content p.error {
+    color: #ff4d4d;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.modal-content p.success {
+    color: #4dff4d;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+/* Modal Heading */
+.modal-content h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #e6007a;
 }
 
 /* Second Claim Button */
@@ -340,7 +374,7 @@
 #secondClaimButton {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007ada; /* Updated blue color */
+    background-color: #007ada;
     color: white;
     border: 1px solid #005fa3;
     cursor: pointer;
