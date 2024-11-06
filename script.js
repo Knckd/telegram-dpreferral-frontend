@@ -9,7 +9,7 @@ if (isMobileDevice()) {
     document.body.innerHTML = '<div class="mobile-message">Sorry, this site isn\'t available on mobile.</div>';
 } else {
     // Backend URL
-    const backendUrl = 'https://telegram-dpreferral-backend.onrender.com';
+    const backendUrl = 'https://telegram-dpreferral-backend.onrender.com'; // Replace with your actual backend URL
 
     // Elements
     const claimButton = document.getElementById('claimButton');
@@ -58,7 +58,7 @@ if (isMobileDevice()) {
     const chaosWindowMinHeight = 150;    // Minimum height of chaos windows
     const chaosWindowMaxHeight = 450;    // Maximum height of chaos windows
 
-    const audioTracksCount = 10;         // Number of audio tracks to play simultaneously
+    const audioTracksCount = 6;         // Number of audio tracks to play simultaneously
     // === End of Chaos Control Variables ===
 
     let currentSpawnMultiplier = initialSpawnMultiplier;
@@ -325,6 +325,45 @@ if (isMobileDevice()) {
         claimModal.style.display = 'none';
     }
 
+    // Leaderboard Functionality
+    const leaderboardButton = document.getElementById('leaderboardButton');
+
+    leaderboardButton.addEventListener('click', () => {
+        if (leaderboardWindow.style.display === 'none' || leaderboardWindow.style.display === '') {
+            leaderboardWindow.style.display = 'block';
+            fetchLeaderboard();
+        } else {
+            leaderboardWindow.style.display = 'none';
+        }
+    });
+
+    // Close Leaderboard Window
+    closeLeaderboardButton.addEventListener('click', () => {
+        leaderboardWindow.style.display = 'none';
+    });
+
+    async function fetchLeaderboard() {
+        try {
+            const response = await fetch(`${backendUrl}/api/leaderboard`);
+            const data = await response.json();
+            if (data.success) {
+                leaderboardList.innerHTML = '';
+                data.leaderboard.forEach((user, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${index + 1}. @${user.telegramUsername} - ${user.referrals} referrals`;
+                    leaderboardList.appendChild(listItem);
+                });
+            } else {
+                leaderboardList.innerHTML = '<li>No data available.</li>';
+            }
+        } catch (error) {
+            console.error('Error fetching leaderboard:', error);
+            leaderboardList.innerHTML = '<li>Error fetching leaderboard.</li>';
+        }
+    }
+
+    // === Chaos Effect Functions ===
+
     // Function to start chaotic effects
     function startChaos() {
         if (isChaosActive) return; // Prevent multiple chaos starts
@@ -534,40 +573,5 @@ if (isMobileDevice()) {
         isChaosActive = false;
     }
 
-    // Leaderboard Functionality
-    const leaderboardButton = document.getElementById('leaderboardButton');
-
-    leaderboardButton.addEventListener('click', () => {
-        if (leaderboardWindow.style.display === 'none' || leaderboardWindow.style.display === '') {
-            leaderboardWindow.style.display = 'block';
-            fetchLeaderboard();
-        } else {
-            leaderboardWindow.style.display = 'none';
-        }
-    });
-
-    // Close Leaderboard Window
-    closeLeaderboardButton.addEventListener('click', () => {
-        leaderboardWindow.style.display = 'none';
-    });
-
-    async function fetchLeaderboard() {
-        try {
-            const response = await fetch(`${backendUrl}/api/leaderboard`);
-            const data = await response.json();
-            if (data.success) {
-                leaderboardList.innerHTML = '';
-                data.leaderboard.forEach((user, index) => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = `${index + 1}. @${user.telegramUsername} - ${user.referrals} referrals`;
-                    leaderboardList.appendChild(listItem);
-                });
-            } else {
-                leaderboardList.innerHTML = '<li>No data available.</li>';
-            }
-        } catch (error) {
-            console.error('Error fetching leaderboard:', error);
-            leaderboardList.innerHTML = '<li>Error fetching leaderboard.</li>';
-        }
-    }
+    // === End of Chaos Effect Functions ===
 }
