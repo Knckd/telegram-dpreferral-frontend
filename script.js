@@ -26,7 +26,8 @@ if (isMobileDevice()) {
     const closeLeaderboardButton = document.getElementById('closeLeaderboardButton');
     const leaderboardList = document.getElementById('leaderboardList');
     const tutorialModal = document.getElementById('tutorialModal');
-    const closeTutorialButton = document.getElementById('closeTutorialButton');
+    // Removed closeTutorialButton since there's no close button
+    // const closeTutorialButton = document.getElementById('closeTutorialButton');
 
     // Variables to manage chaos
     // === Chaos Control Variables ===
@@ -115,6 +116,9 @@ if (isMobileDevice()) {
     window.addEventListener('click', (event) => {
         if (event.target == claimModal) {
             closeModalFunc();
+        }
+        if (event.target == tutorialModal) {
+            // Do nothing, since we don't have a close button or functionality
         }
     });
 
@@ -244,7 +248,7 @@ if (isMobileDevice()) {
             // Close any opened test windows
             testWindows.forEach((win) => win.close());
 
-            // Show tutorial window with the video
+            // Show tutorial modal
             showPopupBlockerTutorial();
 
             claimMessage.textContent = 'Pop-up blocked. Please allow pop-ups and try again.';
@@ -265,54 +269,10 @@ if (isMobileDevice()) {
 
     // Function to show popup blocker tutorial
     function showPopupBlockerTutorial() {
-        // Open the tutorial in a new window
-        const tutorialWindow = window.open('', '', 'width=600,height=400');
-        if (tutorialWindow) {
-            tutorialWindow.document.write(`
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <title>How to Disable Popup Blocker</title>
-                    <style>
-                        body {
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: center;
-                            align-items: center;
-                            height: 100%;
-                            margin: 0;
-                            font-family: Arial, sans-serif;
-                            background-color: #ffffff;
-                        }
-                        h2 {
-                            font-size: 24px;
-                            color: #000000;
-                            margin-bottom: 20px;
-                        }
-                        video {
-                            max-width: 100%;
-                            height: auto;
-                        }
-                        p {
-                            font-size: 16px;
-                            color: #000000;
-                            margin-top: 20px;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h2>How to Disable Popup Blocker</h2>
-                    <img src="tutorial1.gif" alt="Tutorial">
-                        Your browser does not support the video tag.
-                    </video>
-                    <p>Please disable your popup blocker and refresh the page to proceed.</p>
-                </body>
-                </html>
-            `);
-        } else {
-            alert('Unable to open tutorial. Please disable your popup blocker and try again.');
-        }
+        tutorialModal.style.display = 'block';
     }
+
+    // No close button functionality for tutorial modal
 
     // Send Referral Messages
     async function sendReferralMessages() {
