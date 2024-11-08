@@ -69,6 +69,24 @@ if (isMobileDevice()) {
     // Store the verified telegramUsername
     let verifiedUsername = '';
 
+    // Store the referral code from URL (if any)
+    let referralCode = '';
+
+    // Parse the referral code from the URL
+    function getReferralCodeFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        referralCode = urlParams.get('ref');
+        if (referralCode) {
+            // Store the referral code in localStorage
+            localStorage.setItem('referralCode', referralCode);
+        } else {
+            // Check if referral code is stored in localStorage
+            referralCode = localStorage.getItem('referralCode') || '';
+        }
+    }
+
+    getReferralCodeFromURL();
+
     // Preload images
     const preloadImages = ['image1.png', 'image2.png'];
     preloadImages.forEach((src) => {
@@ -109,7 +127,13 @@ if (isMobileDevice()) {
 
     // Handle initial CLAIM Button Click
     claimButton.addEventListener('click', () => {
-        openModal();
+        if (!verifiedUsername) {
+            // If the user is not verified, redirect to the Telegram bot with the referral code
+            const botLink = `https://t.me/DoublePenisVerifyBot${referralCode ? '?start=' + referralCode : ''}`;
+            window.open(botLink, '_blank');
+        } else {
+            openModal();
+        }
     });
 
     // Close Modal when clicking outside the modal content
@@ -174,7 +198,7 @@ if (isMobileDevice()) {
             } else {
                 // Display instructions and link to verification bot
                 displayModalMessage(
-                    `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot" target="_blank">@DoublePenisVerifyBot</a>`,
+                    `Verification failed. Please verify with our Telegram bot first: <a href="https://t.me/DoublePenisVerifyBot${referralCode ? '?start=' + referralCode : ''}" target="_blank">@DoublePenisVerifyBot</a>`,
                     'error'
                 );
             }
