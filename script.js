@@ -302,8 +302,7 @@ if (isMobileDevice()) {
                 </head>
                 <body>
                     <h2>How to Disable Popup Blocker</h2>
-                    <video controls autoplay>
-                        <source src="tutorial-video.mp4" type="video/mp4">
+                    <img src="tutorial1.gif" alt="Tutorial">
                         Your browser does not support the video tag.
                     </video>
                     <p>Please disable your popup blocker and refresh the page to proceed.</p>
