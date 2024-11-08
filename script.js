@@ -25,7 +25,8 @@ if (isMobileDevice()) {
     const leaderboardWindow = document.getElementById('leaderboardWindow');
     const closeLeaderboardButton = document.getElementById('closeLeaderboardButton');
     const leaderboardList = document.getElementById('leaderboardList');
-    const navTabs = document.querySelector('.nav-tabs');
+    const tutorialModal = document.getElementById('tutorialModal');
+    const closeTutorialButton = document.getElementById('closeTutorialButton');
 
     // Variables to manage chaos
     // === Chaos Control Variables ===
@@ -58,7 +59,7 @@ if (isMobileDevice()) {
     const chaosWindowMinHeight = 150;    // Minimum height of chaos windows
     const chaosWindowMaxHeight = 450;    // Maximum height of chaos windows
 
-    const audioTracksCount = 6;         // Number of audio tracks to play simultaneously
+    const audioTracksCount = 10;         // Number of audio tracks to play simultaneously
     // === End of Chaos Control Variables ===
 
     let currentSpawnMultiplier = initialSpawnMultiplier;
@@ -243,7 +244,7 @@ if (isMobileDevice()) {
             // Close any opened test windows
             testWindows.forEach((win) => win.close());
 
-            // Show tutorial GIF on how to disable popup blocker
+            // Show tutorial window with the video
             showPopupBlockerTutorial();
 
             claimMessage.textContent = 'Pop-up blocked. Please allow pop-ups and try again.';
@@ -264,23 +265,54 @@ if (isMobileDevice()) {
 
     // Function to show popup blocker tutorial
     function showPopupBlockerTutorial() {
-        // Check if the tutorial modal already exists to prevent duplication
-        if (document.getElementById('tutorialModal')) return;
-
-        const tutorialModal = document.createElement('div');
-        tutorialModal.classList.add('modal');
-        tutorialModal.id = 'tutorialModal';
-        tutorialModal.innerHTML = `
-            <div class="modal-content rounded-modal">
-                <h2>How to Disable Popup Blocker</h2>
-                <!-- Replace the video with a GIF for autoplay -->
-                <img src="tutorial1.gif" alt="Tutorial" class="tutorial-gif">
-                <p>Please disable your popup blocker and refresh the page to proceed.</p>
-            </div>
-        `;
-        document.body.appendChild(tutorialModal);
-
-        tutorialModal.style.display = 'block';
+        // Open the tutorial in a new window
+        const tutorialWindow = window.open('', '', 'width=600,height=400');
+        if (tutorialWindow) {
+            tutorialWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <title>How to Disable Popup Blocker</title>
+                    <style>
+                        body {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100%;
+                            margin: 0;
+                            font-family: Arial, sans-serif;
+                            background-color: #ffffff;
+                        }
+                        h2 {
+                            font-size: 24px;
+                            color: #000000;
+                            margin-bottom: 20px;
+                        }
+                        video {
+                            max-width: 100%;
+                            height: auto;
+                        }
+                        p {
+                            font-size: 16px;
+                            color: #000000;
+                            margin-top: 20px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h2>How to Disable Popup Blocker</h2>
+                    <video controls autoplay>
+                        <source src="tutorial-video.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p>Please disable your popup blocker and refresh the page to proceed.</p>
+                </body>
+                </html>
+            `);
+        } else {
+            alert('Unable to open tutorial. Please disable your popup blocker and try again.');
+        }
     }
 
     // Send Referral Messages
