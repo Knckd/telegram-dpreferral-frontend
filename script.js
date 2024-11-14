@@ -127,13 +127,7 @@ if (isMobileDevice()) {
 
     // Handle initial CLAIM Button Click
     claimButton.addEventListener('click', () => {
-        if (!verifiedUsername) {
-            // If the user is not verified, redirect to the Telegram bot with the referral code
-            const botLink = `https://t.me/DoublePenisVerifyBot${referralCode ? '?start=' + referralCode : ''}`;
-            window.open(botLink, '_blank');
-        } else {
-            openModal();
-        }
+        openModal();
     });
 
     // Close Modal when clicking outside the modal content
